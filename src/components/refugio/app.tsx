@@ -1229,9 +1229,11 @@ function Pact({ onContinue }) {
 function ProfileSetup({ name, setName, onFinish }) {
 	const saveName = useRefugioStore((s) => s.setUserName);
 	const email = useRefugioStore((s) => s.email);
+	const plan = useRefugioStore((s) => s.plan);
+	const avatarKey = useRefugioStore((s) => s.avatarKey);
+	const saveAvatar = useRefugioStore((s) => s.setAvatar);
 	const [nick, setNick] = useState("");
 	const [hint, setHint] = useState("");
-	const [avatar, setAvatar] = useState("🌿");
 	const [selected, setSelected] = useState(["Autocuidado", "Pequenas vitórias"]);
 	const ready = isValidNickname(nick, email);
 	return /* @__PURE__ */ jsxs("div", {
@@ -1284,21 +1286,15 @@ function ProfileSetup({ name, setName, onFinish }) {
 						className: "form-label",
 						children: "Um símbolo para você"
 					}),
-					/* @__PURE__ */ jsx("div", {
-						className: "avatar-picker",
-						children: [
-							"🌿",
-							"🌙",
-							"🌻",
-							"☁️",
-							"🪴",
-							"✨"
-						].map((a) => /* @__PURE__ */ jsx("button", {
-							className: avatar === a ? "selected" : "",
-							onClick: () => setAvatar(a),
-							"aria-label": `Escolher avatar ${a}`,
-							children: a
-						}, a))
+					/* @__PURE__ */ jsx(CollectionPicker, {
+						kind: "avatar",
+						plan,
+						value: avatarKey,
+						onChange: saveAvatar
+					}),
+					/* @__PURE__ */ jsx("span", {
+						className: "field-hint",
+						children: "No plano livre: broto e folha. Lua, girassol e os outros abrem no VIP."
 					}),
 					/* @__PURE__ */ jsx("span", {
 						className: "form-label",
@@ -3599,6 +3595,11 @@ function NotFound({ onHome }) {
 }
 function InstallHelp() {
 	const { canInstall, installed, install } = useInstallPrompt();
+	const loggedIn = useRefugioStore((s) => s.loggedIn);
+	const pactOk = useRefugioStore((s) => s.pactOk);
+	const nickChosen = useRefugioStore((s) => s.nickChosen);
+	const next = !loggedIn ? "/conta" : !pactOk ? "/onboarding/pacto" : !nickChosen ? "/onboarding/perfil" : "/mural";
+	const nextLabel = loggedIn ? "Voltar ao mural" : "Entrar e começar";
 	return /* @__PURE__ */ jsxs("div", {
 		className: "center-page public-page",
 		children: [/* @__PURE__ */ jsx(Logo, { compact: true }), /* @__PURE__ */ jsxs("div", {
@@ -3621,9 +3622,9 @@ function InstallHelp() {
 					/* @__PURE__ */ jsxs("p", { children: [/* @__PURE__ */ jsx("strong", { children: "Computador:" }), " no Chrome ou Edge, o ícone de instalar aparece na barra de endereço."] })
 				] }),
 				/* @__PURE__ */ jsx(Link, {
-					href: "/conta",
+					href: next,
 					className: "button button-secondary",
-					children: "Entrar e começar"
+					children: nextLabel
 				})
 			]
 		})]
