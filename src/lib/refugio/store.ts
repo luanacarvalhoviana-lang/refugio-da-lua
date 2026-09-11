@@ -65,6 +65,95 @@ function normalizeGrove(seeds: AmazonSeed[], energiesReceived: number) {
   return [...mature, ...growing.slice(0, 1)];
 }
 
+function vaultKey(email: string) {
+  return `refugio-vault:${email.trim().toLowerCase()}`;
+}
+
+function readVault(email: string): Partial<RefugioState> | null {
+  if (typeof window === "undefined" || !email.trim()) return null;
+  try {
+    const raw = window.localStorage.getItem(vaultKey(email));
+    return raw ? (JSON.parse(raw) as Partial<RefugioState>) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeVault(email: string, state: Partial<RefugioState>) {
+  if (typeof window === "undefined" || !email.trim()) return;
+  window.localStorage.setItem(vaultKey(email), JSON.stringify(state));
+}
+
+function sessionSlice(state: RefugioState): Partial<RefugioState> {
+  return {
+    userName: state.userName,
+    nickChosen: state.nickChosen,
+    email: state.email,
+    plan: state.plan,
+    avatarKey: state.avatarKey,
+    frameKey: state.frameKey,
+    envelopeKey: state.envelopeKey,
+    fontKey: state.fontKey,
+    pinEnabled: state.pinEnabled,
+    pin: state.pin,
+    energiesSent: state.energiesSent,
+    energiesReceived: state.energiesReceived,
+    dewDropsReceived: state.dewDropsReceived,
+    lettersRead: state.lettersRead,
+    adviceSent: state.adviceSent,
+    lettersPublished: state.lettersPublished,
+    days: state.days,
+    amazonSeeds: state.amazonSeeds,
+    islandTreeKey: state.islandTreeKey,
+    islandBornCare: state.islandBornCare,
+    grownIslandKeys: state.grownIslandKeys,
+    thankedAdviceIds: state.thankedAdviceIds,
+    adviceDay: state.adviceDay,
+    adviceToday: state.adviceToday,
+    letterWeek: state.letterWeek,
+    lettersThisWeek: state.lettersThisWeek,
+    protectScreen: state.protectScreen,
+    notices: state.notices,
+    humusCount: state.humusCount,
+    pendingDew: state.pendingDew,
+    letters: state.letters,
+  };
+}
+
+const FRESH_PROFILE: Partial<RefugioState> = {
+  userName: "Girassol sereno",
+  nickChosen: false,
+  plan: "free",
+  avatarKey: "leaf",
+  frameKey: "none",
+  envelopeKey: "kraft",
+  fontKey: "serif",
+  pinEnabled: false,
+  pin: "",
+  unlocked: false,
+  energiesSent: 0,
+  energiesReceived: 0,
+  dewDropsReceived: 0,
+  lettersRead: 0,
+  adviceSent: 0,
+  lettersPublished: 0,
+  days: 1,
+  amazonSeeds: [],
+  islandTreeKey: null,
+  islandBornCare: 0,
+  grownIslandKeys: [],
+  thankedAdviceIds: [],
+  adviceDay: todayKey(),
+  adviceToday: 0,
+  letterWeek: weekKey(),
+  lettersThisWeek: 0,
+  protectScreen: false,
+  notices: [],
+  humusCount: 0,
+  pendingDew: [],
+  letters: demoLetters,
+};
+
 type RefugioState = {
   ageOk: boolean;
   pactOk: boolean;
@@ -197,32 +286,44 @@ export const useRefugioStore = create<RefugioState>()(
         }),
       login: (input) => {
         const state = get();
-        const nextEmail = input?.email || state.email;
+        const nextEmail = (input?.email || state.email).trim().toLowerCase();
+        const prevEmail = state.email.trim().toLowerCase();
+        if (nextEmail && prevEmail && nextEmail !== prevEmail) {
+          writeVault(prevEmail, sessionSlice(state));
+          const saved = readVault(nextEmail);
+          set({
+            ...(saved ?? FRESH_PROFILE),
+            loggedIn: true,
+            isAnonymous: false,
+            email: nextEmail,
+            ageOk: state.ageOk,
+            pactOk: state.pactOk,
+            theme: state.theme,
+          });
+          return;
+        }
         set({
           loggedIn: true,
           isAnonymous: false,
-          email: nextEmail,
-          userName: state.nickChosen ? state.userName : state.userName,
+          email: nextEmail || state.email,
         });
       },
       register: (input) => {
-        const state = get();
-        set({
-          loggedIn: true,
-          isAnonymous: false,
-          email: input.email,
-          userName: state.nickChosen ? state.userName : state.userName,
-        });
+        get().login({ email: input.email, name: input.name });
       },
-      logout: () =>
+      logout: () => {
+        const state = get();
+        if (state.email) writeVault(state.email, sessionSlice(state));
         set({
+          ...FRESH_PROFILE,
           loggedIn: false,
           isAnonymous: false,
-          plan: "free",
-          pinEnabled: false,
-          unlocked: false,
-          protectScreen: false,
-        }),
+          email: "",
+          ageOk: state.ageOk,
+          pactOk: state.pactOk,
+          theme: state.theme,
+        });
+      },
       enterAnonymous: () => set({ isAnonymous: true, loggedIn: false }),
       setPlan: (plan) => {
         set({
