@@ -107,7 +107,10 @@ p {
 .brand img {
   width: 42px;
   height: 42px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 50%;
+  background: #174b59;
+  box-shadow: 0 0 0 1px rgba(23, 75, 89, 0.18);
 }
 .brand span {
   display: inline-flex;
@@ -3027,7 +3030,8 @@ html[data-theme="night"] .public-topbar, html[data-theme="night"] .app-header {
 }
 .brand img {
   border-radius: 50%;
-  background: #0c3442;
+  background: #174b59;
+  object-fit: cover;
 }
 h1.slogan {
   font-size: clamp(34px, 5.2vw, 58px);

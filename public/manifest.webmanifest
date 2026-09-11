@@ -1,6 +1,6 @@
 {
   "name": "Refúgio da Lua",
-  "short_name": "Refúgio",
+  "short_name": "Refúgio da Lua",
   "description": "Seu lugar de paz em meio ao caos. Escreva, respire e encontre presença.",
   "start_url": "/inicio",
   "scope": "/",
@@ -12,6 +12,8 @@
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
     { "src": "/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
   ]
 }

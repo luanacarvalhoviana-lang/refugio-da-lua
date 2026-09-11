@@ -35,7 +35,7 @@ import { authEnabled, signIn } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
 
-var logo = "/icons/logo.jpg";
+var logo = "/icons/logo.png";
 var cards = [
 	{
 		id: "carta-1",
@@ -520,7 +520,7 @@ function Landing({ onEnter, onExplore }) {
 					children: [
 						/* @__PURE__ */ jsxs("div", {
 							className: "eyebrow",
-							children: [/* @__PURE__ */ jsx("span", { className: "eyebrow-dot" }), " um lugar para pousar"]
+							children: [/* @__PURE__ */ jsx("span", { className: "eyebrow-dot" }), " Bem-vindo"]
 						}),
 						/* @__PURE__ */ jsxs("div", {
 							className: "hero-with-luna",
