@@ -32,7 +32,7 @@ import { MoonMascot, LunaCompanion } from "@/components/refugio/moon-mascot";
 import { PeacePlayer } from "@/components/refugio/peace-player";
 import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
-import { useGardenSync } from "@/lib/refugio/garden-sync";
+import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
@@ -240,6 +240,7 @@ function App() {
 		"/conta/redefinir-senha",
 		"/login",
 		"/apoio",
+		"/contato",
 		"/onboarding/pacto",
 		"/onboarding/perfil",
 		"/mural-publico"
@@ -479,6 +480,10 @@ function App() {
 						children: /* @__PURE__ */ jsx(Support, { onBack: () => go("/jardim") })
 					}),
 					/* @__PURE__ */ jsx(Route, {
+						path: "/contato",
+						children: /* @__PURE__ */ jsx(Contact, { onBack: () => go("/inicio") })
+					}),
+					/* @__PURE__ */ jsx(Route, {
 						path: "/perfil",
 						children: /* @__PURE__ */ jsx(Profile, {
 							name: userName,
@@ -688,6 +693,15 @@ function Landing({ onEnter, onExplore }) {
 									/* @__PURE__ */ jsx("strong", { children: "Apoio imediato" }),
 									/* @__PURE__ */ jsx("span", { children: "CVV 188 e caminhos de ajuda profissional em uma crise." })
 								]
+							}),
+							/* @__PURE__ */ jsxs(Link, {
+								href: "/contato",
+								className: "info-tile",
+								children: [
+									/* @__PURE__ */ jsx(Mail, { size: 18 }),
+									/* @__PURE__ */ jsx("strong", { children: "Fale com o Refúgio" }),
+									/* @__PURE__ */ jsx("span", { children: "Relatar uma carta, um problema no site ou falar com a gente." })
+								]
 							})
 						]
 					})
@@ -717,6 +731,10 @@ function Landing({ onEnter, onExplore }) {
 						/* @__PURE__ */ jsx(Link, {
 							href: "/apoio",
 							children: "Apoio"
+						}),
+						/* @__PURE__ */ jsx(Link, {
+							href: "/contato",
+							children: "Contato"
 						}),
 						/* @__PURE__ */ jsx(Link, {
 							href: "/instalar",
@@ -3176,7 +3194,106 @@ function Support({ onBack }) {
     title: "Apoio imediato",
     eyebrow: "você não está sozinho",
     onBack,
-    children: /* @__PURE__ */ jsx(CarePage, { onNavigate: (path) => window.location.assign(path) }),
+    children: /* @__PURE__ */ jsxs(Fragment, {
+      children: [
+        /* @__PURE__ */ jsx(CarePage, { onNavigate: (path) => window.location.assign(path) }),
+        /* @__PURE__ */ jsx("p", {
+          className: "auth-optional",
+          children: /* @__PURE__ */ jsx(Link, { href: "/contato", children: "Relatar algo ou falar com o Refúgio" })
+        })
+      ]
+    })
+  });
+}
+function Contact({ onBack }) {
+  const [topic, setTopic] = useState("relato");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [body, setBody] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const [sent, setSent] = useState(false);
+  return /* @__PURE__ */ jsxs("div", {
+    className: "center-page public-page",
+    children: [
+      /* @__PURE__ */ jsx(Logo, { compact: true }),
+      /* @__PURE__ */ jsxs("div", {
+        className: "simple-card",
+        children: [
+          /* @__PURE__ */ jsx("div", { className: "icon-disc", children: /* @__PURE__ */ jsx(Mail, { size: 24 }) }),
+          /* @__PURE__ */ jsx("h1", { children: sent ? "Recebemos." : "Fale com o Refúgio." }),
+          /* @__PURE__ */ jsx("p", {
+            children: sent
+              ? "A mensagem chegou até nós. Se você deixou um e-mail, respondemos por ele. Crise agora: 188."
+              : "Use este espaço para relatar uma carta, um erro no site ou falar com a gente. Não é o CVV. Se estiver em risco, ligue 188."
+          }),
+          !sent && /* @__PURE__ */ jsxs("form", {
+            onSubmit: (e) => {
+              e.preventDefault();
+              setError("");
+              if (body.trim().length < 8) {
+                setError("Escreva um pouco mais, para entendermos.");
+                return;
+              }
+              setPending(true);
+              void sendContactNote({
+                data: { name, email, topic, body: body.trim() }
+              }).then(() => setSent(true)).catch((err) => {
+                setError(err instanceof Error ? err.message : "Não foi possível enviar.");
+              }).finally(() => setPending(false));
+            },
+            children: [
+              /* @__PURE__ */ jsx("label", { htmlFor: "contact-topic", children: "Sobre o quê?" }),
+              /* @__PURE__ */ jsxs("select", {
+                id: "contact-topic",
+                value: topic,
+                onChange: (e) => setTopic(e.target.value),
+                children: [
+                  /* @__PURE__ */ jsx("option", { value: "relato", children: "Relatar uma carta ou conduta" }),
+                  /* @__PURE__ */ jsx("option", { value: "tecnico", children: "Problema no site" }),
+                  /* @__PURE__ */ jsx("option", { value: "outro", children: "Outro assunto" })
+                ]
+              }),
+              /* @__PURE__ */ jsx("label", { htmlFor: "contact-name", children: "Como te chamamos (opcional)" }),
+              /* @__PURE__ */ jsx("input", {
+                id: "contact-name",
+                value: name,
+                onChange: (e) => setName(e.target.value),
+                placeholder: "Pseudônimo"
+              }),
+              /* @__PURE__ */ jsx("label", { htmlFor: "contact-email", children: "E-mail para resposta (opcional)" }),
+              /* @__PURE__ */ jsx("input", {
+                id: "contact-email",
+                type: "email",
+                value: email,
+                onChange: (e) => setEmail(e.target.value),
+                placeholder: "voce@email.com"
+              }),
+              /* @__PURE__ */ jsx("label", { htmlFor: "contact-body", children: "Mensagem" }),
+              /* @__PURE__ */ jsx("textarea", {
+                id: "contact-body",
+                value: body,
+                onChange: (e) => setBody(e.target.value),
+                rows: 6,
+                maxLength: 4000,
+                placeholder: "Conte com calma o que aconteceu."
+              }),
+              error && /* @__PURE__ */ jsx("p", { className: "checkout-error", role: "alert", children: error }),
+              /* @__PURE__ */ jsxs(Button, {
+                className: "button button-primary full-button",
+                disabled: pending,
+                children: [pending ? "Enviando..." : "Enviar", " ", /* @__PURE__ */ jsx(ArrowRight, { size: 17 })]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs("button", {
+            className: "button-quiet",
+            onClick: onBack,
+            children: [/* @__PURE__ */ jsx(ArrowLeft, { size: 16 }), " Voltar"]
+          })
+        ]
+      })
+    ]
   });
 }
 function Subpage({ title, eyebrow, onBack, children }) {
