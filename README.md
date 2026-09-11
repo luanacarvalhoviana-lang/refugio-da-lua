@@ -2,4 +2,4 @@
 
 Seu lugar de paz em meio ao caos.
 
-Site de acolhimento: mural de cartas, Pacto de Empatia, jardim e Luna.
+Mural de cartas, Pacto de Empatia, jardim e Luna.
