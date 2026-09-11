@@ -3235,31 +3235,32 @@ html.protect-on .diary-card::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  background: #174b59;
+  gap: 22px;
+  background: #0b2430;
   cursor: pointer;
   animation: welcome-in 0.5s ease;
 }
 .welcome-splash-logo {
-  width: 112px;
-  height: 112px;
+  width: min(208px, 52vw);
+  height: min(208px, 52vw);
   border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+  object-fit: contain;
+  background: #f3f0f8;
+  box-shadow: 0 0 0 8px rgba(247, 241, 230, 0.16), 0 20px 48px rgba(0, 0, 0, 0.42);
 }
 .welcome-splash-hello {
   margin: 0;
   font-family: Fraunces, Georgia, serif;
-  font-size: 34px;
+  font-size: clamp(32px, 8vw, 42px);
   font-weight: 500;
   color: #f7f1e6;
   letter-spacing: 0.02em;
 }
 .welcome-splash-name {
-  font-size: 14px;
-  letter-spacing: 0.18em;
+  font-size: 13px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(247, 241, 230, 0.7);
+  color: rgba(247, 241, 230, 0.78);
 }
 @keyframes welcome-in {
   from { opacity: 0; }

@@ -5,15 +5,15 @@ export function WelcomeSplash() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("refugio-welcome") === "1") {
+    if (sessionStorage.getItem("refugio-welcome-v2") === "1") {
       setVisible(false);
       return;
     }
     const hide = () => {
-      sessionStorage.setItem("refugio-welcome", "1");
+      sessionStorage.setItem("refugio-welcome-v2", "1");
       setVisible(false);
     };
-    const timer = window.setTimeout(hide, 2400);
+    const timer = window.setTimeout(hide, 3200);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -23,11 +23,11 @@ export function WelcomeSplash() {
     <div
       className="welcome-splash"
       onClick={() => {
-        sessionStorage.setItem("refugio-welcome", "1");
+        sessionStorage.setItem("refugio-welcome-v2", "1");
         setVisible(false);
       }}
     >
-      <img src="/icons/logo.png" alt="" className="welcome-splash-logo" />
+      <img src="/icons/icon-512.png" alt="Refúgio da Lua" className="welcome-splash-logo" />
       <p className="welcome-splash-hello">Bem-vindo</p>
       <span className="welcome-splash-name">Refúgio da Lua</span>
     </div>
