@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 
 export function WelcomeSplash() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("refugio-welcome") === "1") return;
-    setVisible(true);
+    if (sessionStorage.getItem("refugio-welcome") === "1") {
+      setVisible(false);
+      return;
+    }
     const hide = () => {
       sessionStorage.setItem("refugio-welcome", "1");
       setVisible(false);
