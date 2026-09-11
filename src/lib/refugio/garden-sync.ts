@@ -3,11 +3,11 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadUserGarden, saveUserGarden } from "@/lib/refugio/garden.server";
 import { sessionSlice, useRefugioStore } from "@/lib/refugio/store";
 
-function payloadOf() {
-  const slice = sessionSlice(useRefugioStore.getState());
+function payloadJsonOf() {
+  const slice = sessionSlice(useRefugioStore.getState()) as Record<string, unknown>;
   delete slice.loggedIn;
   delete slice.isAnonymous;
-  return slice as Record<string, unknown>;
+  return JSON.stringify(slice);
 }
 
 export function useGardenSync() {
@@ -24,15 +24,16 @@ export function useGardenSync() {
       .then((remote) => {
         if (cancelled) return;
         const localStamp = useRefugioStore.getState().cloudStamp || 0;
-        if (remote?.payload && Number(remote.stamp) >= localStamp) {
-          useRefugioStore.getState().hydrateFromCloud(remote.payload, Number(remote.stamp));
-          lastSent.current = JSON.stringify(remote.payload);
+        if (remote?.payloadJson && Number(remote.stamp) >= localStamp) {
+          const parsed = JSON.parse(remote.payloadJson) as Record<string, unknown>;
+          useRefugioStore.getState().hydrateFromCloud(parsed as never, Number(remote.stamp));
+          lastSent.current = remote.payloadJson;
         } else {
-          const payload = payloadOf();
+          const payloadJson = payloadJsonOf();
           const stamp = Date.now();
           useRefugioStore.setState({ cloudStamp: stamp });
-          lastSent.current = JSON.stringify(payload);
-          void saveUserGarden({ data: { payload, stamp } }).catch(() => undefined);
+          lastSent.current = payloadJson;
+          void saveUserGarden({ data: { payloadJson, stamp } }).catch(() => undefined);
         }
       })
       .catch(() => undefined)
@@ -54,13 +55,12 @@ export function useGardenSync() {
       timer = window.setTimeout(() => {
         const state = useRefugioStore.getState();
         if (!state.loggedIn || !state.email) return;
-        const payload = payloadOf();
-        const encoded = JSON.stringify(payload);
-        if (encoded === lastSent.current) return;
-        lastSent.current = encoded;
+        const payloadJson = payloadJsonOf();
+        if (payloadJson === lastSent.current) return;
+        lastSent.current = payloadJson;
         const stamp = Date.now();
         useRefugioStore.setState({ cloudStamp: stamp });
-        void saveUserGarden({ data: { payload, stamp } }).catch(() => undefined);
+        void saveUserGarden({ data: { payloadJson, stamp } }).catch(() => undefined);
       }, 1500);
     });
     return () => {
