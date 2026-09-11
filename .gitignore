@@ -1,5 +1,10 @@
-node_modules/
-.project_id
-.github_repo
+node_modules
+dist
+.output
+.tanstack
+.nitro
+*.local
 .env
 .env.*
+!.env.example
+.DS_Store

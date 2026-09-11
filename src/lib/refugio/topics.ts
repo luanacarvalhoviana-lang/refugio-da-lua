@@ -1,0 +1,40 @@
+export const muralTopics = [
+  "Carta da noite",
+  "Ansiedade",
+  "Autocuidado",
+  "Burnout",
+  "Trabalho",
+  "Estudo",
+  "Relacionamentos",
+  "Família",
+  "Amizade",
+  "Solidão",
+  "Luto",
+  "Corpo e saúde",
+  "Identidade",
+  "Dinheiro",
+  "Insônia",
+  "Raiva",
+  "Culpa e vergonha",
+  "Esperança",
+  "Pequenas vitórias",
+  "Recomeço",
+] as const;
+
+export const writeTopics = muralTopics.filter((topic) => topic !== "Carta da noite");
+
+export const emotionOptions = [
+  "Cansaço",
+  "Esperança",
+  "Tristeza",
+  "Alívio",
+  "Ansiedade",
+  "Gratidão",
+  "Raiva",
+  "Saudade",
+  "Medo",
+  "Solidão",
+  "Confusão",
+  "Alívio misto",
+  "Orgulho quieto",
+] as const;
