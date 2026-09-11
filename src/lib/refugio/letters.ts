@@ -141,3 +141,14 @@ export const demoLetters: Letter[] = [
     body: "As tarefas cabem na planilha. Eu que não estou cabendo entre uma e outra.\nEntrego tudo no prazo e mesmo assim sinto que estou atrasada da minha própria vida.\nHoje eu só queria dizer isso em voz alta, sem transformar em plano de ação.",
   },
 ];
+
+export const demoLetterIds = new Set(demoLetters.map((letter) => letter.id));
+
+export function withoutDemoLetters(letters: Letter[]) {
+  return letters.filter((letter) => !demoLetterIds.has(letter.id));
+}
+
+export function withDemoLetters(letters: Letter[] | undefined) {
+  const own = withoutDemoLetters(Array.isArray(letters) ? letters : []);
+  return [...demoLetters, ...own];
+}

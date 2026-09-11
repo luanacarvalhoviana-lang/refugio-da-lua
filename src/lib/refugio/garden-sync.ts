@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadUserGarden, saveUserGarden } from "@/lib/refugio/garden-cloud";
-import { sessionSlice, useRefugioStore } from "@/lib/refugio/store";
+import { gardenWeight, sessionSlice, useRefugioStore } from "@/lib/refugio/store";
 
 function payloadJsonOf() {
   const slice = sessionSlice(useRefugioStore.getState()) as Record<string, unknown>;
@@ -10,30 +10,46 @@ function payloadJsonOf() {
   return JSON.stringify(slice);
 }
 
+function pushGarden() {
+  const state = useRefugioStore.getState();
+  if (!state.loggedIn || !state.email) return;
+  const payloadJson = payloadJsonOf();
+  const stamp = Date.now();
+  useRefugioStore.setState({ cloudStamp: stamp });
+  void saveUserGarden({ data: { payloadJson, stamp } }).catch(() => undefined);
+  return payloadJson;
+}
+
 export function useGardenSync() {
   const { user, isPending } = useCurrentUserState();
+  const email = useRefugioStore((s) => s.email);
+  const loggedIn = useRefugioStore((s) => s.loggedIn);
   const ready = useRef(false);
   const hydrating = useRef(false);
   const lastSent = useRef("");
 
   useEffect(() => {
-    if (isPending || !user || user.isDevFallback) return;
+    const googleEmail = (user?.primaryEmail || "").toLowerCase();
+    if (isPending || !user || user.isDevFallback || !loggedIn) return;
+    if (!googleEmail || googleEmail !== (email || "").toLowerCase()) return;
     let cancelled = false;
     hydrating.current = true;
     loadUserGarden()
       .then((remote) => {
         if (cancelled) return;
-        const localStamp = useRefugioStore.getState().cloudStamp || 0;
-        if (remote?.payloadJson && Number(remote.stamp) >= localStamp) {
-          const parsed = JSON.parse(remote.payloadJson) as Record<string, unknown>;
-          useRefugioStore.getState().hydrateFromCloud(parsed as never, Number(remote.stamp));
-          lastSent.current = remote.payloadJson;
-        } else {
-          const payloadJson = payloadJsonOf();
-          const stamp = Date.now();
-          useRefugioStore.setState({ cloudStamp: stamp });
-          lastSent.current = payloadJson;
-          void saveUserGarden({ data: { payloadJson, stamp } }).catch(() => undefined);
+        const local = useRefugioStore.getState();
+        const localScore = gardenWeight(local);
+        let remoteScore = -1;
+        let parsed: Record<string, unknown> | null = null;
+        if (remote?.payloadJson) {
+          parsed = JSON.parse(remote.payloadJson) as Record<string, unknown>;
+          remoteScore = gardenWeight(parsed);
+        }
+        if (parsed && remoteScore > localScore) {
+          useRefugioStore.getState().hydrateFromCloud(parsed as never, Number(remote?.stamp || Date.now()));
+          lastSent.current = remote?.payloadJson || "";
+        } else if (localScore >= 0) {
+          lastSent.current = pushGarden() || "";
         }
       })
       .catch(() => undefined)
@@ -44,10 +60,10 @@ export function useGardenSync() {
     return () => {
       cancelled = true;
     };
-  }, [user?.id, isPending]);
+  }, [user?.id, user?.primaryEmail, isPending, email, loggedIn]);
 
   useEffect(() => {
-    if (!user || user.isDevFallback) return;
+    if (!user || user.isDevFallback || !loggedIn) return;
     let timer = 0;
     const unsub = useRefugioStore.subscribe(() => {
       if (!ready.current || hydrating.current) return;
@@ -61,11 +77,11 @@ export function useGardenSync() {
         const stamp = Date.now();
         useRefugioStore.setState({ cloudStamp: stamp });
         void saveUserGarden({ data: { payloadJson, stamp } }).catch(() => undefined);
-      }, 1500);
+      }, 2000);
     });
     return () => {
       window.clearTimeout(timer);
       unsub();
     };
-  }, [user?.id]);
+  }, [user?.id, loggedIn]);
 }

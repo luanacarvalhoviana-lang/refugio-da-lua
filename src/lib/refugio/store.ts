@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { dailyAdviceLimit, entitlementsFor, REST_MESSAGE, weeklyLetterLimit, type VipPlanKey, type VipSubscriptionStatus } from "@/lib/refugio/vip";
 import { reviewLetterText, canPublish } from "@/lib/refugio/letterReview";
-import { demoLetters, type Letter } from "@/lib/refugio/letters";
+import { demoLetters, withDemoLetters, withoutDemoLetters, type Letter } from "@/lib/refugio/letters";
 import { addLocalDiary } from "@/lib/refugio/localGarden";
 import { islandCareScore, islandCareSince, islandChoicesFor, islandStage, type IslandTreeKey } from "@/lib/refugio/islandTrees";
 import { dewPhase } from "@/lib/refugio/dew";
@@ -116,9 +116,24 @@ export function sessionSlice(state: RefugioState): Partial<RefugioState> {
     notices: state.notices,
     humusCount: state.humusCount,
     pendingDew: state.pendingDew,
-    letters: state.letters,
+    letters: withoutDemoLetters(state.letters),
     cloudStamp: state.cloudStamp ?? 0,
   };
+}
+
+export function gardenWeight(state: Partial<RefugioState>) {
+  let n = 0;
+  if (state.nickChosen) n += 4;
+  if (state.userName && state.userName !== "Girassol sereno") n += 3;
+  if (state.islandTreeKey) n += 5;
+  n += (state.amazonSeeds?.length || 0) * 3;
+  n += state.lettersPublished || 0;
+  n += state.energiesSent || 0;
+  n += state.adviceSent || 0;
+  n += withoutDemoLetters(state.letters || []).length * 2;
+  if (state.avatarKey && state.avatarKey !== "leaf") n += 2;
+  if (state.frameKey && state.frameKey !== "none") n += 1;
+  return n;
 }
 
 const FRESH_PROFILE: Partial<RefugioState> = {
@@ -578,13 +593,16 @@ export const useRefugioStore = create<RefugioState>()(
           notices: state.notices.map((item) => (item.id === id ? { ...item, read: true } : item)),
         })),
       unreadNotices: () => get().notices.filter((item) => !item.read).length,
-      hydrateFromCloud: (slice, stamp) =>
+      hydrateFromCloud: (slice, stamp) => {
+        const incoming = slice as Partial<RefugioState>;
         set({
-          ...slice,
+          ...incoming,
+          letters: withDemoLetters(incoming.letters),
           cloudStamp: stamp,
           loggedIn: true,
           isAnonymous: false,
-        }),
+        });
+      },
     }),
     {
       name: "refugio-session",
