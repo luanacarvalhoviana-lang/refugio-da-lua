@@ -20,12 +20,26 @@ export function PeacePlayer({ compact = false, onNeedPlan }: { compact?: boolean
 
   const ensure = () => {
     if (!audioRef.current) {
-      const el = new Audio(sound.src);
+      const el = new Audio();
       el.loop = true;
       el.preload = "auto";
       audioRef.current = el;
     }
     return audioRef.current;
+  };
+
+  const start = (src: string) => {
+    const el = ensure();
+    if (el.src && !el.src.endsWith(src) && !el.src.includes(src)) {
+      el.pause();
+    }
+    if (!el.src.includes(src)) {
+      el.src = src;
+      el.load();
+    }
+    el.loop = true;
+    el.volume = 0.55;
+    return el.play();
   };
 
   const playName = (name: string) => {
@@ -35,12 +49,7 @@ export function PeacePlayer({ compact = false, onNeedPlan }: { compact?: boolean
     }
     const next = peaceSounds.find((item) => item.name === name) ?? peaceSounds[0];
     setCurrent(name);
-    const el = ensure();
-    el.src = next.src;
-    el.loop = true;
-    el.volume = 0.5;
-    el.play().catch(() => undefined);
-    setPlaying(true);
+    void start(next.src).then(() => setPlaying(true)).catch(() => setPlaying(false));
   };
 
   const toggle = () => {
@@ -54,11 +63,7 @@ export function PeacePlayer({ compact = false, onNeedPlan }: { compact?: boolean
       setPlaying(false);
       return;
     }
-    el.src = sound.src;
-    el.loop = true;
-    el.volume = 0.5;
-    el.play().catch(() => undefined);
-    setPlaying(true);
+    void start(sound.src).then(() => setPlaying(true)).catch(() => setPlaying(false));
   };
 
   if (compact) {
