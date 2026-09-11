@@ -115,14 +115,18 @@ var energies = [
 	"Você não está sozinho"
 ];
 function Logo({ compact = false }) {
+	const theme = useRefugioStore((s) => s.theme);
+	const src = compact ? "/icons/icon-192.png" : theme === "night" ? "/icons/logo-night.png" : "/icons/logo-day.png";
 	return /* @__PURE__ */ jsxs(Link, {
 		href: "/inicio",
-		className: `brand ${compact ? "brand-compact" : ""}`,
+		className: `brand ${compact ? "brand-compact" : "brand-badge"}`,
 		"aria-label": "Voltar ao início",
 		children: [/* @__PURE__ */ jsx("img", {
-			src: logo,
-			alt: ""
-		}), /* @__PURE__ */ jsxs("span", { children: [/* @__PURE__ */ jsx("strong", { children: "Refúgio" }), " ", /* @__PURE__ */ jsx("em", { children: "da Lua" })] })]
+			src,
+			alt: "Refúgio da Lua"
+		}), compact ? /* @__PURE__ */ jsx("span", {
+			children: /* @__PURE__ */ jsx("strong", { children: "Refúgio" })
+		}) : null]
 	});
 }
 function IconButton({ label, children, onClick }) {

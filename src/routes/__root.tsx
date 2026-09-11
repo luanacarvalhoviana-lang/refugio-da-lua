@@ -18,7 +18,8 @@ export const Route = createRootRoute({
       { name: "mobile-web-app-capable", content: "yes" },
     ],
     links: [
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/icon-192.png" },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },

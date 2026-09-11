@@ -109,8 +109,8 @@ p {
   height: 42px;
   object-fit: cover;
   border-radius: 50%;
-  background: #174b59;
-  box-shadow: 0 0 0 1px rgba(23, 75, 89, 0.18);
+  background: transparent;
+  box-shadow: none;
 }
 .brand span {
   display: inline-flex;
@@ -138,7 +138,11 @@ p {
   font-size: 16px;
 }
 .brand-compact em {
-  font-size: 12px;
+  display: none;
+}
+.brand-badge img {
+  width: 92px;
+  height: 92px;
 }
 .button {
   border: 0;
@@ -3030,7 +3034,7 @@ html[data-theme="night"] .public-topbar, html[data-theme="night"] .app-header {
 }
 .brand img {
   border-radius: 50%;
-  background: #174b59;
+  background: transparent;
   object-fit: cover;
 }
 h1.slogan {
