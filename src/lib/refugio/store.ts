@@ -84,7 +84,7 @@ function writeVault(email: string, state: Partial<RefugioState>) {
   window.localStorage.setItem(vaultKey(email), JSON.stringify(state));
 }
 
-function sessionSlice(state: RefugioState): Partial<RefugioState> {
+export function sessionSlice(state: RefugioState): Partial<RefugioState> {
   return {
     userName: state.userName,
     nickChosen: state.nickChosen,
@@ -117,6 +117,7 @@ function sessionSlice(state: RefugioState): Partial<RefugioState> {
     humusCount: state.humusCount,
     pendingDew: state.pendingDew,
     letters: state.letters,
+    cloudStamp: state.cloudStamp ?? 0,
   };
 }
 
@@ -192,6 +193,7 @@ type RefugioState = {
   notices: GardenNotice[];
   humusCount: number;
   pendingDew: Letter[];
+  cloudStamp: number;
   confirmAge: () => void;
   acceptPact: () => void;
   setUserName: (name: string) => void;
@@ -235,6 +237,7 @@ type RefugioState = {
   pushNotice: (notice: Omit<GardenNotice, "id" | "time" | "read">) => void;
   markNoticeRead: (id: string) => void;
   unreadNotices: () => number;
+  hydrateFromCloud: (slice: Partial<RefugioState>, stamp: number) => void;
 };
 
 export const useRefugioStore = create<RefugioState>()(
@@ -277,6 +280,7 @@ export const useRefugioStore = create<RefugioState>()(
       notices: [],
       humusCount: 0,
       pendingDew: [],
+      cloudStamp: 0,
       confirmAge: () => set({ ageOk: true }),
       acceptPact: () => set({ pactOk: true, ageOk: true }),
       setUserName: (userName) =>
@@ -322,6 +326,7 @@ export const useRefugioStore = create<RefugioState>()(
           ageOk: state.ageOk,
           pactOk: state.pactOk,
           theme: state.theme,
+          cloudStamp: 0,
         });
       },
       enterAnonymous: () => set({ isAnonymous: true, loggedIn: false }),
@@ -573,6 +578,13 @@ export const useRefugioStore = create<RefugioState>()(
           notices: state.notices.map((item) => (item.id === id ? { ...item, read: true } : item)),
         })),
       unreadNotices: () => get().notices.filter((item) => !item.read).length,
+      hydrateFromCloud: (slice, stamp) =>
+        set({
+          ...slice,
+          cloudStamp: stamp,
+          loggedIn: true,
+          isAnonymous: false,
+        }),
     }),
     {
       name: "refugio-session",
@@ -613,6 +625,7 @@ export const useRefugioStore = create<RefugioState>()(
         humusCount: state.humusCount,
         pendingDew: state.pendingDew,
         letters: state.letters,
+        cloudStamp: state.cloudStamp,
       }),
     },
   ),

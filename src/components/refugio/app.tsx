@@ -32,6 +32,7 @@ import { MoonMascot, LunaCompanion } from "@/components/refugio/moon-mascot";
 import { PeacePlayer } from "@/components/refugio/peace-player";
 import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
+import { useGardenSync } from "@/lib/refugio/garden-sync";
 import { authEnabled, signIn, signInGoogle } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
@@ -135,6 +136,7 @@ function IconButton({ label, children, onClick }) {
 function App() {
 	const [location, navigate] = useLocation();
 	const auth = useAuth();
+	useGardenSync();
 	const loggedIn = useRefugioStore((s) => s.loggedIn);
 	const nickChosen = useRefugioStore((s) => s.nickChosen);
 	useEffect(() => {
