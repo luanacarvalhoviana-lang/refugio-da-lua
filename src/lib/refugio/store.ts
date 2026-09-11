@@ -307,6 +307,8 @@ export const useRefugioStore = create<RefugioState>()(
         const state = get();
         const nextEmail = (input?.email || state.email).trim().toLowerCase();
         const prevEmail = state.email.trim().toLowerCase();
+        const nick = input?.name?.trim() || "";
+        const nickPatch = nick && isValidNickname(nick, nextEmail) ? { userName: nick, nickChosen: true } : {};
         if (nextEmail && prevEmail && nextEmail !== prevEmail) {
           writeVault(prevEmail, sessionSlice(state));
           const saved = readVault(nextEmail);
@@ -318,6 +320,7 @@ export const useRefugioStore = create<RefugioState>()(
             ageOk: state.ageOk,
             pactOk: state.pactOk,
             theme: state.theme,
+            ...(saved ? {} : nickPatch),
           });
           return;
         }
@@ -325,6 +328,7 @@ export const useRefugioStore = create<RefugioState>()(
           loggedIn: true,
           isAnonymous: false,
           email: nextEmail || state.email,
+          ...nickPatch,
         });
       },
       register: (input) => {

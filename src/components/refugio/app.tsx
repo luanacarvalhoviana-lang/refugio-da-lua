@@ -33,7 +33,7 @@ import { PeacePlayer } from "@/components/refugio/peace-player";
 import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
 import { useGardenSync } from "@/lib/refugio/garden-sync";
-import { authEnabled, signIn, signInGoogle } from "@/lib/auth/client";
+import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
 
@@ -723,22 +723,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 	const [tab, setTab] = useState("login");
 	const [showPassword, setShowPassword] = useState(false);
 	const [error, setError] = useState("");
-	const utils = trpc.useUtils();
-	const login = trpc.auth.login.useMutation({
-		onSuccess: async () => {
-			await utils.auth.me.invalidate();
-			onLogin();
-		},
-		onError: (err) => setError(err.message)
-	});
-	const register = trpc.auth.register.useMutation({
-		onSuccess: async () => {
-			await utils.auth.me.invalidate();
-			onLogin();
-		},
-		onError: (err) => setError(err.message)
-	});
-	const pending = login.isPending || register.isPending;
+	const [pending, setPending] = useState(false);
 	const googleIn = () => {
 		setError("");
 		void signInGoogle({ callbackURL: "/mural", errorCallbackURL: "/conta" }).catch((err) => {
@@ -823,16 +808,16 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 								setError("Aceite os Termos e a Privacidade para criar a conta.");
 								return;
 							}
-							if (tab === "register") register.mutate({
-								name,
-								email,
-								password,
-								isAdult
-							});
-							else login.mutate({
-								email,
-								password
-							});
+							setPending(true);
+							const run = tab === "register"
+								? signUpEmail({ name, email, password })
+								: signInEmail(email, password);
+							void run.then(() => {
+								useRefugioStore.getState().login({ email, name });
+								onLogin();
+							}).catch((err) => {
+								setError(err instanceof Error ? err.message : "Não foi possível entrar com e-mail.");
+							}).finally(() => setPending(false));
 						},
 						children: [
 							tab === "register" && /* @__PURE__ */ jsxs(Fragment, { children: [/* @__PURE__ */ jsx("label", {
@@ -945,8 +930,8 @@ function Recover({ onBack }) {
 					className: "icon-disc",
 					children: /* @__PURE__ */ jsx(Mail, { size: 24 })
 				}),
-				/* @__PURE__ */ jsx("h1", { children: sent ? "Acesso provisório criado." : "Vamos encontrar seu acesso." }),
-				/* @__PURE__ */ jsx("p", { children: sent ? (typeof window !== "undefined" && window.sessionStorage.getItem("refugio-temp-pass") ? `Sua senha temporária é ${window.sessionStorage.getItem("refugio-temp-pass")?.split("|")[1]}. Entre e troque quando puder. Em um servidor real isso iria só para o e-mail.` : "Se existir uma conta com esse endereço, o pedido foi registrado.") : "Digite o e-mail da sua conta. Se ele existir, geramos um acesso provisório neste aparelho." }),
+				/* @__PURE__ */ jsx("h1", { children: sent ? "Recebemos o pedido." : "Vamos encontrar seu acesso." }),
+				/* @__PURE__ */ jsx("p", { children: sent ? "Ainda não enviamos senha por e-mail. Entre com o Google, se puder, ou crie a conta de novo neste aparelho." : "A recuperação por e-mail ainda não está ligada. Se você criou a conta com Google, entre por ele. Senão, use Criar conta com o mesmo e-mail ou o Google." }),
 				!sent && /* @__PURE__ */ jsxs("form", {
 					onSubmit: (e) => {
 						e.preventDefault();

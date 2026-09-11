@@ -235,7 +235,9 @@ export const auth = betterAuth({
   },
 
   // Local email/password — toggled only via `./email-password` (not a plugin).
-  ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
+  ...(emailAndPasswordEnabled
+    ? { emailAndPassword: { enabled: true, requireEmailVerification: false } }
+    : {}),
   ...(env("GOOGLE_CLIENT_ID") && env("GOOGLE_CLIENT_SECRET")
     ? {
         socialProviders: {

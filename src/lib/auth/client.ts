@@ -170,6 +170,39 @@ export async function signInGoogle(
   if (data?.url) window.location.href = data.url;
 }
 
+function mapEmailAuthError(message?: string) {
+  const text = (message || "").toLowerCase();
+  if (text.includes("exist") || text.includes("already")) {
+    return "Já existe uma conta com este e-mail. Entre nela ou use o Google.";
+  }
+  if (text.includes("invalid") || text.includes("credential") || text.includes("password")) {
+    return "E-mail ou senha não conferem.";
+  }
+  if (text.includes("too short") || text.includes("8 character")) {
+    return "A senha precisa ter pelo menos 8 caracteres.";
+  }
+  return message || "Não foi possível entrar com e-mail.";
+}
+
+export async function signInEmail(email: string, password: string): Promise<void> {
+  const { error } = await authClient.signIn.email({
+    email: email.trim().toLowerCase(),
+    password,
+    callbackURL: "/mural",
+  });
+  if (error) throw new Error(mapEmailAuthError(error.message));
+}
+
+export async function signUpEmail(input: { email: string; password: string; name: string }): Promise<void> {
+  const { error } = await authClient.signUp.email({
+    email: input.email.trim().toLowerCase(),
+    password: input.password,
+    name: input.name.trim() || "Visitante",
+    callbackURL: "/mural",
+  });
+  if (error) throw new Error(mapEmailAuthError(error.message));
+}
+
 /**
  * Open `/auth/popup` in a new window. Must run synchronously inside the click
  * handler (no await before this). The path is served by the template Vite
