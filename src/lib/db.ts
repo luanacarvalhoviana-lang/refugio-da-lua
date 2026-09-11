@@ -6,7 +6,13 @@ export type DbSource = "neon" | "pglite";
 // An empty/whitespace DATABASE_URL (an easy misconfig in deploy UIs) must mean
 // "unset" — otherwise production would silently run on the PGLite fallback.
 const rawDatabaseUrl =
-  typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
+  typeof process !== "undefined"
+    ? process.env.DATABASE_URL ||
+      process.env.POSTGRES_URL_NON_POOLING ||
+      process.env.DATABASE_URL_UNPOOLED ||
+      process.env.POSTGRES_URL ||
+      process.env.POSTGRES_PRISMA_URL
+    : undefined;
 const databaseUrl =
   rawDatabaseUrl && rawDatabaseUrl.trim() ? rawDatabaseUrl : undefined;
 
@@ -93,7 +99,10 @@ function createNeonSql(): Promise<Sql> {
     types.setTypeParser(OID_INT8, Number);
     types.setTypeParser(OID_DATE, identity);
     types.setTypeParser(OID_INTERVAL, identity);
-    const pool = new Pool({ connectionString: databaseUrl });
+    const pool = new Pool({
+      connectionString: databaseUrl,
+      ssl: process.env.VERCEL ? { rejectUnauthorized: false } : undefined,
+    });
     return toSql(async <T>(text: string, params: unknown[]) => {
       const res = await pool.query(text, params);
       return res.rows as T[];

@@ -136,7 +136,12 @@ const trustedOrigins: string[] = explicitBaseURL
       "https://refugio-da-lua.vercel.app",
     ];
 
-const databaseUrl = env("DATABASE_URL");
+const databaseUrl =
+  env("DATABASE_URL") ||
+  env("POSTGRES_URL_NON_POOLING") ||
+  env("DATABASE_URL_UNPOOLED") ||
+  env("POSTGRES_URL") ||
+  env("POSTGRES_PRISMA_URL");
 
 // Static broker OAuth endpoints (skip OIDC discovery on every sign-in / callback).
 // Discovery would cost an extra network hop to the broker before the popup can
@@ -153,7 +158,10 @@ const grokUserInfoUrl = `${issuerBase}/api/auth/oauth2/userinfo`;
 // schema from `migrations/auth/0001_auth.sql`, copied into `migrations/` when
 // the app turns sign-in on.
 const database = databaseUrl
-  ? new Pool({ connectionString: databaseUrl })
+  ? new Pool({
+      connectionString: databaseUrl,
+      ssl: env("VERCEL") ? { rejectUnauthorized: false } : undefined,
+    })
   : { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
 
 /** Session token cookie name — also read by the live-preview popup completion page. */
