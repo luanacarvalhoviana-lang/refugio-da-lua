@@ -152,6 +152,24 @@ export async function signIn(
   if (data?.url) window.location.href = data.url;
 }
 
+/** Google nativo no site publicado; no preview do Grok continua o broker. */
+export async function signInGoogle(
+  opts: { callbackURL?: string; errorCallbackURL?: string } = {},
+): Promise<void> {
+  if (inLivePreview()) {
+    return signIn("grok-google", opts);
+  }
+  const callbackURL = opts.callbackURL ?? "/mural";
+  const errorCallbackURL = opts.errorCallbackURL ?? "/conta";
+  const { data, error } = await authClient.signIn.social({
+    provider: "google",
+    callbackURL,
+    errorCallbackURL,
+  });
+  if (error) throw new Error(error.message ?? "Não foi possível entrar com o Google.");
+  if (data?.url) window.location.href = data.url;
+}
+
 /**
  * Open `/auth/popup` in a new window. Must run synchronously inside the click
  * handler (no await before this). The path is served by the template Vite

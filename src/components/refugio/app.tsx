@@ -32,7 +32,7 @@ import { MoonMascot, LunaCompanion } from "@/components/refugio/moon-mascot";
 import { PeacePlayer } from "@/components/refugio/peace-player";
 import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
-import { authEnabled, signIn } from "@/lib/auth/client";
+import { authEnabled, signIn, signInGoogle } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
 
@@ -731,7 +731,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 	const pending = login.isPending || register.isPending;
 	const googleIn = () => {
 		setError("");
-		void signIn("grok-google", { callbackURL: "/mural", errorCallbackURL: "/conta" }).catch((err) => {
+		void signInGoogle({ callbackURL: "/mural", errorCallbackURL: "/conta" }).catch((err) => {
 			setError(err instanceof Error ? err.message : "Não foi possível entrar com o Google.");
 		});
 	};
