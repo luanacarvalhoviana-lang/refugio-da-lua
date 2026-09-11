@@ -135,6 +135,14 @@ function IconButton({ label, children, onClick }) {
 function App() {
 	const [location, navigate] = useLocation();
 	const auth = useAuth();
+	const loggedIn = useRefugioStore((s) => s.loggedIn);
+	const nickChosen = useRefugioStore((s) => s.nickChosen);
+	useEffect(() => {
+		if (auth.pending) return;
+		if (location !== "/" && location !== "/inicio") return;
+		if (!(auth.user || loggedIn)) return;
+		navigate(nickChosen ? "/mural" : "/onboarding/perfil");
+	}, [auth.pending, auth.user, loggedIn, location, nickChosen, navigate]);
 	const [userName, setUserName] = useState("Girassol sereno");
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	const storedName = useRefugioStore((s) => s.userName);
