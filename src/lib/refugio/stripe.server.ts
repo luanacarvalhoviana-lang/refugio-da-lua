@@ -113,12 +113,28 @@ export async function createCheckoutSession(input: {
   name?: string;
   origin: string;
 }) {
+  try {
+    return await openCheckout(input, input.plan === "annual");
+  } catch (error) {
+    if (input.plan !== "annual") throw error;
+    return openCheckout(input, false);
+  }
+}
+
+async function openCheckout(
+  input: {
+    plan: VipPlanKey;
+    email: string;
+    name?: string;
+    origin: string;
+  },
+  pix: boolean,
+) {
   const details = vipPlanCatalog[input.plan];
   const priceId =
     input.plan === "annual" ? process.env.STRIPE_PRICE_ANNUAL : process.env.STRIPE_PRICE_MONTHLY;
   const success = `${input.origin}/planos?checkout=success&session_id={CHECKOUT_SESSION_ID}`;
   const cancel = `${input.origin}/planos?checkout=cancelled`;
-  const pix = input.plan === "annual";
   const body: Record<string, string> = {
     mode: pix ? "payment" : "subscription",
     success_url: success,
