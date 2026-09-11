@@ -1,4 +1,4 @@
-const CACHE = "refugio-lua-v6";
+const CACHE = "refugio-lua-v7";
 const PRECACHE = ["/", "/inicio", "/instalar", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/logo.png"];
 
 self.addEventListener("install", (event) => {
@@ -42,6 +42,21 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => cached);
       return fetched || cached;
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windows) => {
+      for (const client of windows) {
+        if ("focus" in client) {
+          client.navigate("/notificacoes");
+          return client.focus();
+        }
+      }
+      if (self.clients.openWindow) return self.clients.openWindow("/notificacoes");
     }),
   );
 });

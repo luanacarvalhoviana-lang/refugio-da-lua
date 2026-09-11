@@ -113,6 +113,7 @@ export function sessionSlice(state: RefugioState): Partial<RefugioState> {
     letterWeek: state.letterWeek,
     lettersThisWeek: state.lettersThisWeek,
     protectScreen: state.protectScreen,
+    liveNotices: state.liveNotices,
     notices: state.notices,
     humusCount: state.humusCount,
     pendingDew: state.pendingDew,
@@ -164,6 +165,7 @@ const FRESH_PROFILE: Partial<RefugioState> = {
   letterWeek: weekKey(),
   lettersThisWeek: 0,
   protectScreen: false,
+  liveNotices: true,
   notices: [],
   humusCount: 0,
   pendingDew: [],
@@ -205,6 +207,7 @@ type RefugioState = {
   lettersThisWeek: number;
   theme: "day" | "night";
   protectScreen: boolean;
+  liveNotices: boolean;
   notices: GardenNotice[];
   humusCount: number;
   pendingDew: Letter[];
@@ -249,6 +252,8 @@ type RefugioState = {
   setEnvelope: (key: string) => void;
   setLetterFont: (key: string) => void;
   setTheme: (theme: "day" | "night") => void;
+  setLiveNotices: (on: boolean) => void;
+  receiveEnergy: (n?: number) => void;
   pushNotice: (notice: Omit<GardenNotice, "id" | "time" | "read">) => void;
   markNoticeRead: (id: string) => void;
   unreadNotices: () => number;
@@ -292,6 +297,7 @@ export const useRefugioStore = create<RefugioState>()(
       lettersThisWeek: 0,
       theme: "day",
       protectScreen: false,
+      liveNotices: true,
       notices: [],
       humusCount: 0,
       pendingDew: [],
@@ -448,6 +454,11 @@ export const useRefugioStore = create<RefugioState>()(
           letterWeek: week,
           lettersThisWeek: used + 1,
         });
+        get().pushNotice({
+          kind: "letter",
+          title: "Sua carta está no mural",
+          text: "Quem passar por ali pode deixar um conselho ou uma energia.",
+        });
       },
       addAdvice: (input) => {
         const state = get();
@@ -481,6 +492,11 @@ export const useRefugioStore = create<RefugioState>()(
               : letter,
           ),
         });
+        get().pushNotice({
+          kind: "garden",
+          title: "Conselho enviado",
+          text: "Sua escuta chegou até a carta. Obrigada por cuidar.",
+        });
         return null;
       },
       openAdvice: (adviceId) =>
@@ -499,6 +515,11 @@ export const useRefugioStore = create<RefugioState>()(
         set({
           dewDropsReceived: drops,
           thankedAdviceIds: [...state.thankedAdviceIds, adviceId],
+        });
+        get().pushNotice({
+          kind: "energy",
+          title: "Agradecimento enviado",
+          text: "Quem aconselhou recebe esse orvalho no jardim.",
         });
         return { drops };
       },
@@ -585,6 +606,8 @@ export const useRefugioStore = create<RefugioState>()(
       setEnvelope: (key) => set({ envelopeKey: key }),
       setLetterFont: (key) => set({ fontKey: key }),
       setTheme: (theme) => set({ theme }),
+      setLiveNotices: (on) => set({ liveNotices: on }),
+      receiveEnergy: (n = 1) => set((state) => ({ energiesReceived: state.energiesReceived + n })),
       pushNotice: (notice) =>
         set((state) => ({
           notices: [
@@ -643,6 +666,7 @@ export const useRefugioStore = create<RefugioState>()(
         lettersThisWeek: state.lettersThisWeek,
         theme: state.theme,
         protectScreen: state.protectScreen,
+        liveNotices: state.liveNotices,
         notices: state.notices,
         humusCount: state.humusCount,
         pendingDew: state.pendingDew,

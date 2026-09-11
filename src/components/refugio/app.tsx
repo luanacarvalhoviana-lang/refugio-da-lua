@@ -32,6 +32,9 @@ import { MoonMascot, LunaCompanion } from "@/components/refugio/moon-mascot";
 import { PeacePlayer } from "@/components/refugio/peace-player";
 import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
+import { useGardenSync } from "@/lib/refugio/garden-sync";
+import { useLiveNotices } from "@/lib/refugio/live-notices";
+import { askNoticePermission } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
@@ -141,6 +144,7 @@ function App() {
 	const [location, navigate] = useLocation();
 	const auth = useAuth();
 	useGardenSync();
+	useLiveNotices();
 	const loggedIn = useRefugioStore((s) => s.loggedIn);
 	const nickChosen = useRefugioStore((s) => s.nickChosen);
 	useEffect(() => {
@@ -3404,6 +3408,8 @@ function SettingsPage({ onBack, onLogout }) {
 	const [error, setError] = useState("");
 	const theme = useRefugioStore((s) => s.theme);
 	const setTheme = useRefugioStore((s) => s.setTheme);
+	const liveNotices = useRefugioStore((s) => s.liveNotices);
+	const setLiveNotices = useRefugioStore((s) => s.setLiveNotices);
 	const plan = useRefugioStore((s) => s.plan);
 	const vipProtect = plan === "monthly" || plan === "annual";
 	const deleteAccount = trpc.auth.deleteAccount.useMutation({
@@ -3431,6 +3437,26 @@ function SettingsPage({ onBack, onLogout }) {
 						description: "Um fundo mais baixo para ler à noite, sem mudar o que você escreveu.",
 						action: theme === "night" ? "Desativar" : "Ativar",
 						onClick: () => setTheme(theme === "night" ? "day" : "night")
+					}),
+					/* @__PURE__ */ jsx(SettingRow, {
+						icon: /* @__PURE__ */ jsx(Bell, { size: 18 }),
+						title: "Avisos na tela",
+						description: liveNotices
+							? "Quando algo acontece no seu jardim, o celular pode avisar mesmo com o app ao fundo."
+							: "Ligue para receber um aviso na tela (carta, conselho, orvalho).",
+						action: liveNotices ? "Ligados" : "Ligar",
+						onClick: () => {
+							if (liveNotices) {
+								setLiveNotices(false);
+								return;
+							}
+							void askNoticePermission().then((ok) => {
+								setLiveNotices(true);
+								if (!ok) {
+									/* still keep in-app bell */
+								}
+							});
+						}
 					}),
 					/* @__PURE__ */ jsx(SettingRow, {
 						icon: /* @__PURE__ */ jsx(ShieldCheck, { size: 18 }),
