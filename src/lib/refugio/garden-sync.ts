@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { loadUserGarden, saveUserGarden } from "@/lib/refugio/garden.server";
+import { loadUserGarden, saveUserGarden } from "@/lib/refugio/garden-cloud";
 import { sessionSlice, useRefugioStore } from "@/lib/refugio/store";
 
 function payloadJsonOf() {

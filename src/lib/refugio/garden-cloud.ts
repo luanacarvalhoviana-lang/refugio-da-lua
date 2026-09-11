@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getSessionUser, UnauthorizedError } from "@/lib/auth/verify.server";
-import { getSql } from "@/lib/db";
 
 export const loadUserGarden = createServerFn({ method: "POST" }).handler(async () => {
+  const { getSessionUser } = await import("@/lib/auth/verify.server");
+  const { getSql } = await import("@/lib/db");
   const user = await getSessionUser();
   if (!user) return null;
   const sql = await getSql();
@@ -28,6 +28,8 @@ export const saveUserGarden = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
+    const { getSessionUser, UnauthorizedError } = await import("@/lib/auth/verify.server");
+    const { getSql } = await import("@/lib/db");
     const user = await getSessionUser();
     if (!user) throw new UnauthorizedError();
     JSON.parse(data.payloadJson);
