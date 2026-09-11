@@ -3218,3 +3218,42 @@ html.protect-on .diary-card::after {
   .hero-with-luna { align-items: flex-start; }
   .hero-with-luna .moon-mascot { width: 84px !important; }
 }
+.welcome-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #174b59;
+  cursor: pointer;
+  animation: welcome-in 0.5s ease;
+}
+.welcome-splash-logo {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+}
+.welcome-splash-hello {
+  margin: 0;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 34px;
+  font-weight: 500;
+  color: #f7f1e6;
+  letter-spacing: 0.02em;
+}
+.welcome-splash-name {
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(247, 241, 230, 0.7);
+}
+@keyframes welcome-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+

@@ -30,6 +30,7 @@ import { AboutPage, PrivacyPage, TermsPage } from "@/components/refugio/public-i
 import { ThemeToggle } from "@/components/refugio/theme-toggle";
 import { MoonMascot, LunaCompanion } from "@/components/refugio/moon-mascot";
 import { PeacePlayer } from "@/components/refugio/peace-player";
+import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
 import { authEnabled, signIn } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
@@ -520,7 +521,7 @@ function Landing({ onEnter, onExplore }) {
 					children: [
 						/* @__PURE__ */ jsxs("div", {
 							className: "eyebrow",
-							children: [/* @__PURE__ */ jsx("span", { className: "eyebrow-dot" }), " Bem-vindo"]
+							children: [/* @__PURE__ */ jsx("span", { className: "eyebrow-dot" }), " um lugar para pousar"]
 						}),
 						/* @__PURE__ */ jsxs("div", {
 							className: "hero-with-luna",
@@ -3379,6 +3380,8 @@ function InstallHelp() {
 	});
 }
 function RefugioApp() {
-	return /* @__PURE__ */ jsx(App, {});
+	return /* @__PURE__ */ jsxs(Fragment, {
+		children: [/* @__PURE__ */ jsx(WelcomeSplash, {}), /* @__PURE__ */ jsx(App, {})]
+	});
 }
 export { RefugioApp };
