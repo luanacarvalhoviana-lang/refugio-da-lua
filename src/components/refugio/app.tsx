@@ -117,19 +117,26 @@ var energies = [
 	"Paz",
 	"Você não está sozinho"
 ];
-function Logo({ compact = false }) {
-	const theme = useRefugioStore((s) => s.theme);
-	const src = compact ? "/icons/icon-192.png" : theme === "night" ? "/icons/logo-night.png" : "/icons/logo-day.png";
+function Logo({ compact = true }) {
 	return /* @__PURE__ */ jsxs(Link, {
 		href: "/inicio",
-		className: `brand ${compact ? "brand-compact" : "brand-badge"}`,
+		className: `brand ${compact ? "brand-compact" : ""}`,
 		"aria-label": "Voltar ao início",
 		children: [/* @__PURE__ */ jsx("img", {
-			src,
-			alt: "Refúgio da Lua"
-		}), compact ? /* @__PURE__ */ jsx("span", {
+			src: "/icons/icon-192.png",
+			alt: ""
+		}), /* @__PURE__ */ jsx("span", {
 			children: /* @__PURE__ */ jsx("strong", { children: "Refúgio" })
-		}) : null]
+		})]
+	});
+}
+function BrandMark() {
+	const theme = useRefugioStore((s) => s.theme);
+	const src = theme === "night" ? "/icons/logo-night.png" : "/icons/logo-day.png";
+	return /* @__PURE__ */ jsx("img", {
+		className: "brand-hero-mark",
+		src,
+		alt: "Refúgio da Lua"
 	});
 }
 function IconButton({ label, children, onClick }) {
@@ -551,6 +558,7 @@ function Landing({ onEnter, onExplore }) {
 							className: "eyebrow",
 							children: [/* @__PURE__ */ jsx("span", { className: "eyebrow-dot" }), " um lugar para pousar"]
 						}),
+						/* @__PURE__ */ jsx(BrandMark, {}),
 						/* @__PURE__ */ jsxs("div", {
 							className: "hero-with-luna",
 							children: [

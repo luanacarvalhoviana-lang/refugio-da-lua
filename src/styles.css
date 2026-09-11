@@ -140,9 +140,14 @@ p {
 .brand-compact em {
   display: none;
 }
-.brand-badge img {
-  width: 92px;
-  height: 92px;
+.brand-hero-mark {
+  width: min(220px, 58vw);
+  height: min(220px, 58vw);
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin: 6px 0 18px;
+  background: transparent;
 }
 .button {
   border: 0;
