@@ -33,7 +33,7 @@ import { PeacePlayer } from "@/components/refugio/peace-player";
 import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
 import { useGardenSync } from "@/lib/refugio/garden-sync";
-import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail } from "@/lib/auth/client";
+import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
 
@@ -233,6 +233,7 @@ function App() {
 		"/instalar",
 		"/conta",
 		"/conta/recuperar-senha",
+		"/conta/redefinir-senha",
 		"/login",
 		"/apoio",
 		"/onboarding/pacto",
@@ -328,6 +329,10 @@ function App() {
 					/* @__PURE__ */ jsx(Route, {
 						path: "/conta/recuperar-senha",
 						children: /* @__PURE__ */ jsx(Recover, { onBack: () => go("/conta") })
+					}),
+					/* @__PURE__ */ jsx(Route, {
+						path: "/conta/redefinir-senha",
+						children: /* @__PURE__ */ jsx(ResetPassword, { onBack: () => go("/conta") })
 					}),
 					/* @__PURE__ */ jsx(Route, {
 						path: "/onboarding/pacto",
@@ -920,7 +925,8 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 function Recover({ onBack }) {
 	const [sent, setSent] = useState(false);
 	const [email, setEmail] = useState("");
-	const requestReset = trpc.auth.requestPasswordReset.useMutation({ onSuccess: () => setSent(true) });
+	const [error, setError] = useState("");
+	const [pending, setPending] = useState(false);
 	return /* @__PURE__ */ jsxs("div", {
 		className: "center-page public-page",
 		children: [/* @__PURE__ */ jsx(Logo, { compact: true }), /* @__PURE__ */ jsxs("div", {
@@ -930,12 +936,20 @@ function Recover({ onBack }) {
 					className: "icon-disc",
 					children: /* @__PURE__ */ jsx(Mail, { size: 24 })
 				}),
-				/* @__PURE__ */ jsx("h1", { children: sent ? "Recebemos o pedido." : "Vamos encontrar seu acesso." }),
-				/* @__PURE__ */ jsx("p", { children: sent ? "Ainda não enviamos senha por e-mail. Entre com o Google, se puder, ou crie a conta de novo neste aparelho." : "A recuperação por e-mail ainda não está ligada. Se você criou a conta com Google, entre por ele. Senão, use Criar conta com o mesmo e-mail ou o Google." }),
+				/* @__PURE__ */ jsx("h1", { children: sent ? "Se essa conta existir, o e-mail saiu." : "Vamos encontrar seu acesso." }),
+				/* @__PURE__ */ jsx("p", { children: sent ? "Abra o e-mail e toque no link para escolher uma senha nova. Olhe também o spam." : "Digite o e-mail da conta. Se ele existir, mandamos um link. Contas só do Google não usam senha — entre pelo botão Google." }),
 				!sent && /* @__PURE__ */ jsxs("form", {
 					onSubmit: (e) => {
 						e.preventDefault();
-						requestReset.mutate({ email });
+						setError("");
+						if (!email.includes("@")) {
+							setError("Escreva um e-mail.");
+							return;
+						}
+						setPending(true);
+						void requestPasswordReset(email).then(() => setSent(true)).catch((err) => {
+							setError(err instanceof Error ? err.message : "Não foi possível enviar.");
+						}).finally(() => setPending(false));
 					},
 					children: [
 						/* @__PURE__ */ jsx("label", {
@@ -950,14 +964,100 @@ function Recover({ onBack }) {
 							placeholder: "voce@email.com",
 							required: true
 						}),
+						error && /* @__PURE__ */ jsx("p", {
+							className: "checkout-error",
+							role: "alert",
+							children: error
+						}),
 						/* @__PURE__ */ jsxs(Button, {
 							className: "button button-primary full-button",
-							disabled: requestReset.isPending,
+							disabled: pending,
 							children: [
-								requestReset.isPending ? "Enviando..." : "Enviar pedido",
+								pending ? "Enviando..." : "Enviar link",
 								" ",
 								/* @__PURE__ */ jsx(ArrowRight, { size: 17 })
 							]
+						})
+					]
+				}),
+				/* @__PURE__ */ jsxs("button", {
+					className: "button-quiet",
+					onClick: onBack,
+					children: [/* @__PURE__ */ jsx(ArrowLeft, { size: 16 }), " Voltar para entrar"]
+				})
+			]
+		})]
+	});
+}
+function ResetPassword({ onBack }) {
+	const [password, setPassword] = useState("");
+	const [confirm, setConfirm] = useState("");
+	const [error, setError] = useState("");
+	const [pending, setPending] = useState(false);
+	const [done, setDone] = useState(false);
+	const token = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("token") || "" : "";
+	return /* @__PURE__ */ jsxs("div", {
+		className: "center-page public-page",
+		children: [/* @__PURE__ */ jsx(Logo, { compact: true }), /* @__PURE__ */ jsxs("div", {
+			className: "simple-card",
+			children: [
+				/* @__PURE__ */ jsx("h1", { children: done ? "Senha nova guardada." : "Escolha uma senha nova." }),
+				/* @__PURE__ */ jsx("p", { children: done ? "Pode entrar no Refúgio com o e-mail e a senha nova." : "Use pelo menos 8 caracteres. O link do e-mail só funciona uma vez." }),
+				!done && /* @__PURE__ */ jsxs("form", {
+					onSubmit: (e) => {
+						e.preventDefault();
+						setError("");
+						if (!token) {
+							setError("Abra o link que chegou no e-mail. Este endereço sozinho não troca a senha.");
+							return;
+						}
+						if (password.length < 8) {
+							setError("A senha precisa ter pelo menos 8 caracteres.");
+							return;
+						}
+						if (password !== confirm) {
+							setError("As duas senhas não são iguais.");
+							return;
+						}
+						setPending(true);
+						void confirmPasswordReset(password, token).then(() => setDone(true)).catch((err) => {
+							setError(err instanceof Error ? err.message : "Não foi possível salvar a senha.");
+						}).finally(() => setPending(false));
+					},
+					children: [
+						/* @__PURE__ */ jsx("label", {
+							htmlFor: "reset-pass",
+							children: "Senha nova"
+						}),
+						/* @__PURE__ */ jsx("input", {
+							id: "reset-pass",
+							type: "password",
+							value: password,
+							onChange: (e) => setPassword(e.target.value),
+							autoComplete: "new-password",
+							required: true
+						}),
+						/* @__PURE__ */ jsx("label", {
+							htmlFor: "reset-pass-2",
+							children: "Repetir senha"
+						}),
+						/* @__PURE__ */ jsx("input", {
+							id: "reset-pass-2",
+							type: "password",
+							value: confirm,
+							onChange: (e) => setConfirm(e.target.value),
+							autoComplete: "new-password",
+							required: true
+						}),
+						error && /* @__PURE__ */ jsx("p", {
+							className: "checkout-error",
+							role: "alert",
+							children: error
+						}),
+						/* @__PURE__ */ jsx(Button, {
+							className: "button button-primary full-button",
+							disabled: pending,
+							children: pending ? "Salvando..." : "Guardar senha"
 						})
 					]
 				}),

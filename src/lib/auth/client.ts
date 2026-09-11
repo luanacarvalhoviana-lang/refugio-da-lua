@@ -203,6 +203,28 @@ export async function signUpEmail(input: { email: string; password: string; name
   if (error) throw new Error(mapEmailAuthError(error.message));
 }
 
+export async function requestPasswordReset(email: string): Promise<void> {
+  const redirectTo = `${window.location.origin}/conta/redefinir-senha`;
+  const response = await fetch("/api/auth/request-password-reset", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email: email.trim().toLowerCase(), redirectTo }),
+  });
+  if (!response.ok) {
+    const data = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(data.message || "Não foi possível pedir a senha nova.");
+  }
+}
+
+export async function confirmPasswordReset(password: string, token: string): Promise<void> {
+  const { error } = await authClient.resetPassword({
+    newPassword: password,
+    token,
+  });
+  if (error) throw new Error(mapEmailAuthError(error.message));
+}
+
 /**
  * Open `/auth/popup` in a new window. Must run synchronously inside the click
  * handler (no await before this). The path is served by the template Vite
