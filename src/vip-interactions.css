@@ -2435,23 +2435,36 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
   animation: lt-sway 8s ease-in-out infinite;
   transform-origin: 50% 100%;
 }
-.garden-plant-art .living-tree.stage-seed,
-.garden-plant-art .living-tree.stage-sprout {
+.garden-plant-art .living-tree.painted.stage-seed,
+.garden-plant-art .living-tree.painted.stage-sprout {
   height: 380px;
   overflow: hidden;
   border-radius: 22px;
 }
+.lt-bed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+  display: block;
+  z-index: 0;
+  animation: none;
+}
 .living-tree.stage-seed .lt-paint,
 .living-tree.stage-sprout .lt-paint {
+  position: relative;
+  z-index: 1;
   object-fit: cover;
   object-position: center 62%;
   padding: 0;
-  animation: sprout-breeze 7.2s ease-in-out infinite;
-  transform-origin: 50% 80%;
+  animation: sprout-breeze 8.5s ease-in-out infinite;
+  transform-origin: 50% 74%;
 }
 @keyframes sprout-breeze {
-  0%, 100% { transform: rotate(-1.15deg) scale(1.05); }
-  50% { transform: rotate(1.35deg) scale(1.07); }
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.7deg); }
 }
 .living-tree .lt-mist {
   pointer-events: none;

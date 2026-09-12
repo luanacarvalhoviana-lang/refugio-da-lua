@@ -61,11 +61,13 @@ export function LivingTree({
   const src =
     stage === "young" || stage === "mature" ? painted[kind] : stageArt[stage];
   const showFruit = (goldenFruit || Boolean(onPick)) && (stage === "young" || stage === "mature") && !picked;
+  const planted = stage === "seed" || stage === "sprout";
 
   return (
     <div className={`living-tree painted stage-${stage} ${compact ? "is-compact" : ""} ${goldenFruit ? "is-gold" : ""} ${extraFlowers ? "is-bloom" : ""} ${picked ? "is-picked" : ""}`} aria-hidden={onPick ? undefined : "true"}>
       {stage === "sapling" ? <span className="lt-ground" /> : null}
-      <img className="lt-paint" src={src} alt="" />
+      {planted ? <img className="lt-bed" src="/trees/sprout-bed.jpg" alt="" /> : null}
+      <img className="lt-paint" src={planted ? "/trees/sprout-only.png" : src} alt="" />
       {extraFlowers && (stage === "young" || stage === "mature") ? <span className="lt-bloom" /> : null}
       {showFruit ? (
         <span className={`lt-fruits ${onPick ? "is-pickable" : ""}`}>
