@@ -147,12 +147,6 @@ function App() {
 	useLiveNotices();
 	const loggedIn = useRefugioStore((s) => s.loggedIn);
 	const nickChosen = useRefugioStore((s) => s.nickChosen);
-	useEffect(() => {
-		if (auth.pending) return;
-		if (location !== "/" && location !== "/inicio") return;
-		if (!(auth.user || loggedIn)) return;
-		navigate(nickChosen ? "/mural" : "/onboarding/perfil");
-	}, [auth.pending, auth.user, loggedIn, location, nickChosen, navigate]);
 	const [userName, setUserName] = useState("Girassol sereno");
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	const storedName = useRefugioStore((s) => s.userName);
@@ -200,6 +194,29 @@ function App() {
 	useEffect(() => {
 		if (window.localStorage.getItem("refugio-pact-ok") === "1" || storePactOk) setPactOk(true);
 	}, [storePactOk]);
+	useEffect(() => {
+		if (auth.pending) return;
+		const open = new Set([
+			"/", "/inicio", "/mapa", "/sobre", "/privacidade", "/termos", "/instalar",
+			"/apoio", "/contato", "/mural-publico", "/onboarding/pacto",
+			"/conta", "/login", "/conta/recuperar-senha", "/conta/redefinir-senha",
+		]);
+		if (!pactOk) {
+			if (!open.has(location)) navigate("/onboarding/pacto");
+			return;
+		}
+		if (!(auth.user || loggedIn)) {
+			if (!open.has(location)) navigate("/conta");
+			return;
+		}
+		if (location === "/" || location === "/inicio") {
+			navigate(nickChosen ? "/mural" : "/onboarding/perfil");
+			return;
+		}
+		if (!nickChosen && location !== "/onboarding/perfil" && location !== "/conta") {
+			navigate("/onboarding/perfil");
+		}
+	}, [auth.pending, auth.user, loggedIn, location, nickChosen, pactOk, navigate]);
 	const theme = useRefugioStore((s) => s.theme);
 	const protectScreen = useRefugioStore((s) => s.protectScreen);
 	useEffect(() => {
@@ -246,13 +263,12 @@ function App() {
 		"/apoio",
 		"/contato",
 		"/onboarding/pacto",
-		"/onboarding/perfil",
 		"/mural-publico"
 	])).has(location)) return /* @__PURE__ */ jsxs("div", {
 		className: `app-root theme-${theme ?? "day"}`,
 		children: [/* @__PURE__ */ jsx(Pact, { onContinue: () => {
 			markPact();
-			go("/onboarding/perfil");
+			go("/conta");
 		} })]
 	});
 	const inShell = [
@@ -294,21 +310,21 @@ function App() {
 						path: "/",
 						children: /* @__PURE__ */ jsx(Landing, {
 							onEnter: () => go("/conta"),
-							onExplore: () => enterAs(true)
+							onExplore: () => go("/mural-publico")
 						})
 					}),
 					/* @__PURE__ */ jsx(Route, {
 						path: "/inicio",
 						children: /* @__PURE__ */ jsx(Landing, {
 							onEnter: () => go("/conta"),
-							onExplore: () => enterAs(true)
+							onExplore: () => go("/mural-publico")
 						})
 					}),
 					/* @__PURE__ */ jsx(Route, {
 						path: "/mapa",
 						children: /* @__PURE__ */ jsx(Landing, {
 							onEnter: () => go("/conta"),
-							onExplore: () => enterAs(true)
+							onExplore: () => go("/mural-publico")
 						})
 					}),
 					/* @__PURE__ */ jsx(Route, {
@@ -331,7 +347,7 @@ function App() {
 						path: "/conta",
 						children: /* @__PURE__ */ jsx(Auth, {
 							onLogin: () => enterAs(false),
-							onAnonymous: () => enterAs(true),
+							onAnonymous: () => go("/mural-publico"),
 							onBack: () => go("/inicio")
 						})
 					}),
@@ -347,7 +363,7 @@ function App() {
 						path: "/onboarding/pacto",
 						children: /* @__PURE__ */ jsx(Pact, { onContinue: () => {
 							markPact();
-							go("/onboarding/perfil");
+							go("/conta");
 						} })
 					}),
 					/* @__PURE__ */ jsx(Route, {
@@ -578,7 +594,7 @@ function Landing({ onEnter, onExplore }) {
 							}), /* @__PURE__ */ jsxs("button", {
 								className: "button-quiet",
 								onClick: onExplore,
-								children: ["Continuar sem conta ", /* @__PURE__ */ jsx(ChevronRight, { size: 16 })]
+								children: ["Olhar o mural ", /* @__PURE__ */ jsx(ChevronRight, { size: 16 })]
 							}), /* @__PURE__ */ jsx(Link, {
 								href: "/instalar",
 								className: "button-quiet",
@@ -758,7 +774,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 	const [pending, setPending] = useState(false);
 	const googleIn = () => {
 		setError("");
-		void signInGoogle({ callbackURL: "/mural", errorCallbackURL: "/conta" }).catch((err) => {
+		void signInGoogle({ callbackURL: "/inicio", errorCallbackURL: "/conta" }).catch((err) => {
 			setError(err instanceof Error ? err.message : "Não foi possível entrar com o Google.");
 		});
 	};
@@ -785,7 +801,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 					/* @__PURE__ */ jsxs("button", {
 						className: "anonymous-link",
 						onClick: onAnonymous,
-						children: ["Continuar sem conta ", /* @__PURE__ */ jsx(ArrowRight, { size: 15 })]
+						children: ["Olhar o mural sem conta ", /* @__PURE__ */ jsx(ArrowRight, { size: 15 })]
 					})
 				]
 			}), /* @__PURE__ */ jsxs("div", {
