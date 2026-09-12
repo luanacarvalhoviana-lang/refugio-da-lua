@@ -3249,7 +3249,7 @@ html.protect-on .diary-card::after {
   object-fit: contain;
   background: transparent;
   margin-bottom: 14px;
-  animation: welcome-logo 0.7s ease both;
+  animation: welcome-together 0.45s ease both;
 }
 .welcome-splash-hello {
   margin: 0;
@@ -3258,24 +3258,18 @@ html.protect-on .diary-card::after {
   font-weight: 500;
   color: #f7f1e6;
   letter-spacing: 0.02em;
-  opacity: 0;
-  animation: welcome-line 0.55s ease 0.8s both;
+  animation: welcome-together 0.45s ease both;
 }
 .welcome-splash-name {
   font-size: 13px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(247, 241, 230, 0.78);
-  opacity: 0;
-  animation: welcome-line 0.55s ease 1.4s both;
+  animation: welcome-together 0.45s ease both;
 }
-@keyframes welcome-logo {
-  from { opacity: 0; transform: scale(0.92); }
-  to { opacity: 1; transform: none; }
-}
-@keyframes welcome-line {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
+@keyframes welcome-together {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .welcome-splash-logo,

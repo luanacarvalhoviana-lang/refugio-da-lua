@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 
-const KEY = "refugio-welcome-v3";
+const KEY = "refugio-welcome-v4";
 
-function seen() {
+function alreadyCovered() {
   try {
-    return sessionStorage.getItem(KEY) === "1";
+    if (sessionStorage.getItem(KEY) === "1") return true;
   } catch {
-    return false;
+    /* ignore */
   }
+  if (typeof window === "undefined") return true;
+  return window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: fullscreen)").matches;
 }
 
 export function WelcomeSplash() {
-  const [visible, setVisible] = useState(() => (typeof window === "undefined" ? false : !seen()));
+  const [visible, setVisible] = useState(() => (typeof window === "undefined" ? false : !alreadyCovered()));
 
   useEffect(() => {
     if (!visible) return;
@@ -23,7 +25,7 @@ export function WelcomeSplash() {
       }
       setVisible(false);
     };
-    const timer = window.setTimeout(hide, 4200);
+    const timer = window.setTimeout(hide, 2400);
     return () => window.clearTimeout(timer);
   }, [visible]);
 
