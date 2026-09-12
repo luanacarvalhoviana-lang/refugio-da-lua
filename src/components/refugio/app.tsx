@@ -2317,7 +2317,6 @@ function Garden({ anonymous, onAction, onSync, entitlements = emptyEntitlements 
           onChoose={chooseIslandTree}
         />
       )}
-      <GardenStage />
       <HouseShop />
       {plan === "annual" ? <PeacePlayer onNeedPlan={() => onAction("/planos")} /> : null}
       {pendingDew.length > 0 && (
