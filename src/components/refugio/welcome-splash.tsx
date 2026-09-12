@@ -1,21 +1,31 @@
 import { useEffect, useState } from "react";
 
+const KEY = "refugio-welcome-v3";
+
+function seen() {
+  try {
+    return sessionStorage.getItem(KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function WelcomeSplash() {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(() => (typeof window === "undefined" ? false : !seen()));
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("refugio-welcome-v2") === "1") {
-      setVisible(false);
-      return;
-    }
+    if (!visible) return;
     const hide = () => {
-      sessionStorage.setItem("refugio-welcome-v2", "1");
+      try {
+        sessionStorage.setItem(KEY, "1");
+      } catch {
+        /* ignore */
+      }
       setVisible(false);
     };
-    const timer = window.setTimeout(hide, 3200);
+    const timer = window.setTimeout(hide, 4200);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [visible]);
 
   if (!visible) return null;
 
@@ -23,11 +33,15 @@ export function WelcomeSplash() {
     <div
       className="welcome-splash"
       onClick={() => {
-        sessionStorage.setItem("refugio-welcome-v2", "1");
+        try {
+          sessionStorage.setItem(KEY, "1");
+        } catch {
+          /* ignore */
+        }
         setVisible(false);
       }}
     >
-      <img src="/icons/icon-512.png" alt="Refúgio da Lua" className="welcome-splash-logo" />
+      <img src="/icons/logo.png" alt="" className="welcome-splash-logo" />
       <p className="welcome-splash-hello">Bem-vindo</p>
       <span className="welcome-splash-name">Refúgio da Lua</span>
     </div>

@@ -3238,18 +3238,18 @@ html.protect-on .diary-card::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 22px;
+  gap: 10px;
   background: #0b2430;
   cursor: pointer;
-  animation: welcome-in 0.5s ease;
 }
 .welcome-splash-logo {
-  width: min(208px, 52vw);
-  height: min(208px, 52vw);
+  width: min(196px, 48vw);
+  height: min(196px, 48vw);
   border-radius: 50%;
   object-fit: contain;
-  background: #f3f0f8;
-  box-shadow: 0 0 0 8px rgba(247, 241, 230, 0.16), 0 20px 48px rgba(0, 0, 0, 0.42);
+  background: transparent;
+  margin-bottom: 14px;
+  animation: welcome-logo 0.7s ease both;
 }
 .welcome-splash-hello {
   margin: 0;
@@ -3258,15 +3258,32 @@ html.protect-on .diary-card::after {
   font-weight: 500;
   color: #f7f1e6;
   letter-spacing: 0.02em;
+  opacity: 0;
+  animation: welcome-line 0.55s ease 0.8s both;
 }
 .welcome-splash-name {
   font-size: 13px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(247, 241, 230, 0.78);
+  opacity: 0;
+  animation: welcome-line 0.55s ease 1.4s both;
 }
-@keyframes welcome-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes welcome-logo {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes welcome-line {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-splash-logo,
+  .welcome-splash-hello,
+  .welcome-splash-name {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
