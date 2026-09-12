@@ -64,6 +64,7 @@ export function LivingTree({
 
   return (
     <div className={`living-tree painted stage-${stage} ${compact ? "is-compact" : ""} ${goldenFruit ? "is-gold" : ""} ${extraFlowers ? "is-bloom" : ""} ${picked ? "is-picked" : ""}`} aria-hidden={onPick ? undefined : "true"}>
+      {(stage === "seed" || stage === "sprout" || stage === "sapling") ? <span className="lt-ground" /> : null}
       <img className="lt-paint" src={src} alt="" />
       {extraFlowers && (stage === "young" || stage === "mature") ? <span className="lt-bloom" /> : null}
       {showFruit ? (

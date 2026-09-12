@@ -2463,11 +2463,28 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
   border-radius: 0;
   background: transparent;
 }
+.lt-ground {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 2%;
+  height: 46%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 78% 62% at 50% 88%, #5a4330 0%, #3a2c20 38%, transparent 72%),
+    radial-gradient(ellipse 90% 40% at 50% 100%, #2c241c 0%, transparent 70%);
+}
+html[data-theme="night"] .lt-ground {
+  background:
+    radial-gradient(ellipse 80% 64% at 50% 90%, #4a3828 0%, #2a2118 40%, transparent 74%),
+    radial-gradient(ellipse 95% 42% at 50% 100%, #1c1814 0%, transparent 72%);
+}
 .living-tree.stage-sprout .lt-paint,
-.living-tree.stage-seed .lt-paint {
-  height: 280px;
-  object-fit: contain;
-  background: transparent;
+.living-tree.stage-seed .lt-paint,
+.living-tree.stage-sapling .lt-paint {
+  position: relative;
+  z-index: 1;
 }
 .island-choice .living-tree {
   height: 176px;
