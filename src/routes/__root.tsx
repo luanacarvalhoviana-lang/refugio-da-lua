@@ -24,6 +24,7 @@ export const Route = createRootRoute({
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
+      { rel: "preload", href: "/icons/logo-splash.webp", as: "image", type: "image/webp" },
     ],
   }),
   component: () => (

@@ -125,11 +125,14 @@ function Logo({ compact = true }) {
 }
 function BrandMark() {
 	const theme = useRefugioStore((s) => s.theme);
-	const src = theme === "night" ? "/icons/logo-night.png" : "/icons/logo-day.png";
+	const src = theme === "night" ? "/icons/logo-night-sm.webp" : "/icons/logo-day-sm.webp";
 	return /* @__PURE__ */ jsx("img", {
 		className: "brand-hero-mark",
 		src,
-		alt: "Refúgio da Lua"
+		alt: "Refúgio da Lua",
+		width: "240",
+		height: "240",
+		decoding: "async"
 	});
 }
 function IconButton({ label, children, onClick }) {
