@@ -35,7 +35,7 @@ const painted: Record<LivingKind, string> = {
 
 const stageArt: Record<GrowthStage, string> = {
   seed: "/trees/seed.jpg",
-  sprout: "/trees/sprout-plantado.png",
+  sprout: "/trees/sprout-plantado.jpg",
   sapling: "/trees/sapling.jpg",
   young: "",
   mature: "",

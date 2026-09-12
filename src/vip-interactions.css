@@ -2435,10 +2435,23 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
   animation: lt-sway 8s ease-in-out infinite;
   transform-origin: 50% 100%;
 }
-.living-tree.stage-seed .lt-paint, .living-tree.stage-sprout .lt-paint, .living-tree.stage-sapling .lt-paint {
-  object-fit: contain;
-  object-position: center;
-  padding: 8px;
+.garden-plant-art .living-tree.stage-seed,
+.garden-plant-art .living-tree.stage-sprout {
+  height: 380px;
+  overflow: hidden;
+  border-radius: 22px;
+}
+.living-tree.stage-seed .lt-paint,
+.living-tree.stage-sprout .lt-paint {
+  object-fit: cover;
+  object-position: center 62%;
+  padding: 0;
+  animation: sprout-breeze 7.2s ease-in-out infinite;
+  transform-origin: 50% 80%;
+}
+@keyframes sprout-breeze {
+  0%, 100% { transform: rotate(-1.15deg) scale(1.05); }
+  50% { transform: rotate(1.35deg) scale(1.07); }
 }
 .living-tree .lt-mist {
   pointer-events: none;
@@ -2467,6 +2480,12 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
 .living-tree.painted.stage-sprout,
 .living-tree.painted.stage-sapling {
   overflow: visible;
+}
+.garden-plant-art .living-tree.painted.stage-seed,
+.garden-plant-art .living-tree.painted.stage-sprout {
+  height: 380px;
+  overflow: hidden;
+  border-radius: 22px;
 }
 .living-tree.stage-seed .lt-mist,
 .living-tree.stage-sprout .lt-mist,
