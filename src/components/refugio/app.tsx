@@ -34,6 +34,7 @@ import { WelcomeSplash } from "@/components/refugio/welcome-splash";
 import { useAuth, startLogin } from "@/lib/refugio/use-auth";
 import { useGardenSync } from "@/lib/refugio/garden-sync";
 import { useLiveNotices } from "@/lib/refugio/live-notices";
+import { useMuralLetters } from "@/lib/refugio/use-mural";
 import { askNoticePermission } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
@@ -1332,6 +1333,8 @@ function ProfileSetup({ name, setName, onFinish }) {
 	});
 }
 function PublicMural({ onEnter, onCard }) {
+	const mural = useMuralLetters();
+	const shown = mural.data.length ? mural.data : cards;
 	return /* @__PURE__ */ jsxs("div", {
 		className: "public-page public-mural",
 		children: [
@@ -1360,7 +1363,7 @@ function PublicMural({ onEnter, onCard }) {
 					}),
 					/* @__PURE__ */ jsx("div", {
 						className: "cards-grid public-cards",
-						children: cards.map((card) => /* @__PURE__ */ jsx(CardPreview, {
+						children: shown.slice(0, 12).map((card) => /* @__PURE__ */ jsx(CardPreview, {
 							card,
 							onOpen: () => onCard(card.id),
 							onEnergy: onEnter
@@ -1557,7 +1560,7 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 	const [age, setAge] = useState("");
 	const [emotion, setEmotion] = useState("");
 	const [hour, setHour] = useState("");
-	const remoteLetters = trpc.letters.list.useQuery();
+	const remoteLetters = useMuralLetters();
 	const sendEnergy = trpc.letters.sendEnergy.useMutation();
 	const source = (remoteLetters.data && remoteLetters.data.length ? remoteLetters.data : cards).filter((card) => dewPhase(card) !== "due");
 	const hourRange = hourBuckets.find((bucket) => bucket.key === hour);

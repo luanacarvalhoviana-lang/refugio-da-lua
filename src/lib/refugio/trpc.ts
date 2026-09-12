@@ -2,6 +2,8 @@ import { useRefugioStore, currentSubscription } from "@/lib/refugio/store";
 import { loadLocalDiary, loadLocalMemories } from "@/lib/refugio/localGarden";
 import { findAccount, removeAccount, resetPassword, upsertAccount, verifyAccount } from "@/lib/refugio/accounts";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
+import { adviseMuralLetter, energyMuralLetter, hideMuralLetter, publishMuralLetter } from "@/lib/refugio/mural-cloud";
+import { cachedMuralLetters } from "@/lib/refugio/use-mural";
 
 type Handlers<TData, TVars> = {
   onSuccess?: (data: TData, vars: TVars) => void;
@@ -113,20 +115,28 @@ export const trpc = {
     get: {
       useQuery: ({ letterId }: { letterId: string }, _opts?: { enabled?: boolean; retry?: boolean }) => {
         const letters = useRefugioStore((s) => s.letters);
-        const data = letters.find((letter) => letter.id === letterId);
+        const data = letters.find((letter) => letter.id === letterId) || cachedMuralLetters().find((letter) => letter.id === letterId);
         return { data, isLoading: false };
       },
     },
     sendEnergy: {
       useMutation: (handlers?: Handlers<{ grewSeed: boolean }, { letterId: string; label?: string }>) =>
         useMutation((vars) => {
-          return useRefugioStore.getState().sendEnergy(vars.letterId);
+          const result = useRefugioStore.getState().sendEnergy(vars.letterId);
+          void energyMuralLetter({ data: { letterId: vars.letterId } }).catch(() => undefined);
+          return result;
         }, handlers),
     },
     advise: {
       useMutation: (handlers?: Handlers<AmazonSeed | null, { letterId: string; body: string; envelopeKey?: string; fontKey?: string }>) =>
         useMutation((vars) => {
-          return useRefugioStore.getState().addAdvice(vars);
+          const result = useRefugioStore.getState().addAdvice(vars);
+          const letter = useRefugioStore.getState().letters.find((item) => item.id === vars.letterId);
+          const last = letter?.advice?.[letter.advice.length - 1];
+          if (last) {
+            void adviseMuralLetter({ data: { letterId: vars.letterId, advice: last } }).catch(() => undefined);
+          }
+          return result;
         }, handlers),
     },
     openAdvice: {
@@ -159,13 +169,35 @@ export const trpc = {
         >,
       ) =>
         useMutation((vars) => {
-          useRefugioStore.getState().publishLetter(vars);
+          const letter = useRefugioStore.getState().publishLetter(vars);
+          void publishMuralLetter({
+            data: {
+              id: letter.id,
+              title: letter.title,
+              author: letter.author,
+              initials: letter.initials,
+              topic: letter.topic,
+              excerpt: letter.excerpt,
+              body: letter.body,
+              color: letter.color,
+              gender: letter.gender || undefined,
+              ageGroup: letter.ageGroup || undefined,
+              emotion: letter.emotion || undefined,
+              hour: letter.hour,
+              priority: letter.priority,
+              paperKey: letter.paperKey,
+              sealKey: letter.sealKey,
+              afterMural: letter.afterMural,
+            },
+          }).catch(() => undefined);
         }, handlers),
     },
     retire: {
       useMutation: (handlers?: Handlers<{ destiny: "humus" | "diary" }, { letterId: string; destiny: "humus" | "diary" }>) =>
         useMutation((vars) => {
-          return useRefugioStore.getState().retireLetter(vars.letterId, vars.destiny);
+          const result = useRefugioStore.getState().retireLetter(vars.letterId, vars.destiny);
+          void hideMuralLetter({ data: { letterId: vars.letterId } }).catch(() => undefined);
+          return result;
         }, handlers),
     },
   },

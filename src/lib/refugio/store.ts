@@ -236,7 +236,7 @@ type RefugioState = {
     paperKey?: string;
     sealKey?: string;
     afterMural?: "humus" | "diary";
-  }) => void;
+  }) => Letter;
   addAdvice: (input: { letterId: string; body: string; envelopeKey?: string; fontKey?: string }) => AmazonSeed | null;
   openAdvice: (adviceId: string) => void;
   thankAdvice: (adviceId: string) => { drops: number } | null;
@@ -459,6 +459,7 @@ export const useRefugioStore = create<RefugioState>()(
           title: "Sua carta está no mural",
           text: "Quem passar por ali pode deixar um conselho ou uma energia.",
         });
+        return letter;
       },
       addAdvice: (input) => {
         const state = get();
