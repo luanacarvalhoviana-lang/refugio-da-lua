@@ -1,14 +1,15 @@
 import { lunaSceneLines, type LunaScene } from "@/lib/refugio/luna";
 
-export type LunaMood = "hug" | "hi" | "listen" | "write" | "rest" | "care";
+export type LunaMood = "hug" | "hi" | "listen" | "write" | "rest" | "care" | "pause";
 
 const src: Record<LunaMood, string> = {
   hug: "/mascot/luna-happy.png",
   hi: "/mascot/luna-waving.png",
-  listen: "/mascot/luna-heart.png",
+  listen: "/mascot/luna-mural.png",
   write: "/mascot/luna-read.png",
   rest: "/mascot/luna-sleeping.png",
-  care: "/mascot/luna-yawn.png",
+  care: "/mascot/luna-care.png",
+  pause: "/mascot/luna-yawn.png",
 };
 
 const sceneMood: Record<LunaScene, LunaMood> = {
@@ -18,8 +19,8 @@ const sceneMood: Record<LunaScene, LunaMood> = {
   letter: "listen",
   write: "write",
   garden: "rest",
-  care: "listen",
-  rest: "care",
+  care: "care",
+  rest: "pause",
 };
 
 export function MoonMascot({
