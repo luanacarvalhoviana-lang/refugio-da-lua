@@ -17,8 +17,11 @@ export async function exportRefugioBackup() {
 
 export function backupSecretOk(request: Request) {
   const expected = process.env.BACKUP_SECRET?.trim();
-  if (!expected) return false;
+  const cron = process.env.CRON_SECRET?.trim();
   const header = request.headers.get("x-backup-secret") || "";
+  const auth = request.headers.get("authorization") || "";
   const query = new URL(request.url).searchParams.get("secret") || "";
-  return header === expected || query === expected;
+  if (expected && (header === expected || query === expected)) return true;
+  if (cron && auth === `Bearer ${cron}`) return true;
+  return false;
 }

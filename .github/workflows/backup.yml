@@ -1,0 +1,21 @@
+name: Backup diário do Refúgio
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gerar backup e enviar e-mail
+        env:
+          BACKUP_SECRET: ${{ secrets.BACKUP_SECRET }}
+        run: |
+          if [ -z "$BACKUP_SECRET" ]; then
+            echo "Falta o secret BACKUP_SECRET no GitHub."
+            exit 1
+          fi
+          curl -fS -H "x-backup-secret: $BACKUP_SECRET" \
+            "https://refugio-da-lua.vercel.app/api/backup?email=1"

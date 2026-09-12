@@ -2,7 +2,13 @@ const FROM = () => process.env.RESEND_FROM?.trim() || "Refúgio da Lua <beth.t@e
 const CONTACT_INBOX = () =>
   process.env.CONTACT_EMAIL?.trim() || "contato.refugiodalua@gmail.com";
 
-async function resendEmail(input: { to: string; subject: string; html: string; replyTo?: string }) {
+async function resendEmail(input: {
+  to: string;
+  subject: string;
+  html: string;
+  replyTo?: string;
+  attachments?: { filename: string; content: string }[];
+}) {
   const key = process.env.RESEND_API_KEY?.trim();
   if (!key) throw new Error("O envio de e-mail ainda não está ligado neste host.");
   const body: Record<string, unknown> = {
@@ -12,6 +18,7 @@ async function resendEmail(input: { to: string; subject: string; html: string; r
     html: input.html,
   };
   if (input.replyTo) body.reply_to = input.replyTo;
+  if (input.attachments?.length) body.attachments = input.attachments;
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -70,5 +77,23 @@ export async function sendContactEmail(input: {
 <p><strong>E-mail para resposta:</strong> ${esc(reply || "(não informou)")}</p>
 <p><strong>Mensagem:</strong></p>
 <p>${esc(input.body).replaceAll("\n", "<br>")}</p>`,
+  });
+}
+
+export async function sendBackupEmail(dump: { at: string; tables: Record<string, unknown[]> }) {
+  const counts = Object.entries(dump.tables)
+    .map(([name, rows]) => `${name}: ${rows.length}`)
+    .join(" · ");
+  const json = JSON.stringify(dump);
+  await resendEmail({
+    to: CONTACT_INBOX(),
+    subject: `Backup do Refúgio — ${dump.at.slice(0, 10)}`,
+    html: `<p>Backup automático do Refúgio da Lua.</p><p>${counts}</p><p>O JSON vai em anexo. Guarde esse e-mail; não compartilhe.</p>`,
+    attachments: [
+      {
+        filename: `refugio-backup-${dump.at.slice(0, 10)}.json`,
+        content: Buffer.from(json).toString("base64"),
+      },
+    ],
   });
 }
