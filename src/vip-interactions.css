@@ -2105,14 +2105,14 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
   padding: 8px 12px 28px;
   margin: 8px 0 22px;
   border-radius: 22px;
-  background: linear-gradient(180deg, #eef6ef, #f7f3ea);
+  background: transparent;
 }
 .garden-plant-art {
   position: relative;
   width: min(100%, 420px);
   border-radius: 18px;
-  overflow: hidden;
-  background: #f3eee3;
+  overflow: visible;
+  background: transparent;
 }
 .garden-plant-art img {
   width: 100%;
@@ -2424,7 +2424,7 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
   position: relative;
   overflow: hidden;
   border-radius: 14px;
-  background: #efe6d4;
+  background: transparent;
 }
 .living-tree.painted .lt-paint {
   width: 100%;

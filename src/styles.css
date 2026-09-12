@@ -3000,7 +3000,10 @@ html[data-theme="night"] .hero-copy h1 {
 html[data-theme="night"] .public-topbar {
   background: rgba(18,24,32,.92);
 }
-html[data-theme="night"] .garden-plant-card, html[data-theme="night"] .island-picker, html[data-theme="night"] .amazon-grove, html[data-theme="night"] .care-breath {
+html[data-theme="night"] .garden-plant-card {
+  background: transparent;
+}
+html[data-theme="night"] .island-picker, html[data-theme="night"] .amazon-grove, html[data-theme="night"] .care-breath {
   background: linear-gradient(180deg, #1c2a28, #1a2220);
 }
 html[data-theme="night"] .care-cvv {
