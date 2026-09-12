@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApoioRouteImport } from './routes/apoio'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ContaRouteImport } from './routes/conta'
+import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CuidarRouteImport } from './routes/cuidar'
 import { Route as DiarioRouteImport } from './routes/diario'
 import { Route as EscreverRouteImport } from './routes/escrever'
@@ -31,6 +32,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as SelosRouteImport } from './routes/selos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as ApiBackupRouteImport } from './routes/api/backup'
 import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
 import { Route as EscreverConfirmacaoRouteImport } from './routes/escrever.confirmacao'
@@ -57,6 +59,11 @@ const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
 const ContaRoute = ContaRouteImport.update({
   id: '/conta',
   path: '/conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CuidarRoute = CuidarRouteImport.update({
@@ -149,6 +156,11 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBackupRoute = ApiBackupRouteImport.update({
+  id: '/api/backup',
+  path: '/api/backup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartaIdRoute = CartaIdRouteImport.update({
   id: '/carta/$id',
   path: '/carta/$id',
@@ -190,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/apoio': typeof ApoioRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
+  '/contato': typeof ContatoRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
   '/escrever': typeof EscreverRouteWithChildren
@@ -208,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -221,6 +235,7 @@ export interface FileRoutesByTo {
   '/apoio': typeof ApoioRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
+  '/contato': typeof ContatoRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
   '/escrever': typeof EscreverRouteWithChildren
@@ -239,6 +254,7 @@ export interface FileRoutesByTo {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -253,6 +269,7 @@ export interface FileRoutesById {
   '/apoio': typeof ApoioRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
+  '/contato': typeof ContatoRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
   '/escrever': typeof EscreverRouteWithChildren
@@ -271,6 +288,7 @@ export interface FileRoutesById {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -286,6 +304,7 @@ export interface FileRouteTypes {
     | '/apoio'
     | '/configuracoes'
     | '/conta'
+    | '/contato'
     | '/cuidar'
     | '/diario'
     | '/escrever'
@@ -304,6 +323,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/escrever/confirmacao'
@@ -317,6 +337,7 @@ export interface FileRouteTypes {
     | '/apoio'
     | '/configuracoes'
     | '/conta'
+    | '/contato'
     | '/cuidar'
     | '/diario'
     | '/escrever'
@@ -335,6 +356,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/escrever/confirmacao'
@@ -348,6 +370,7 @@ export interface FileRouteTypes {
     | '/apoio'
     | '/configuracoes'
     | '/conta'
+    | '/contato'
     | '/cuidar'
     | '/diario'
     | '/escrever'
@@ -366,6 +389,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/escrever/confirmacao'
@@ -380,6 +404,7 @@ export interface RootRouteChildren {
   ApoioRoute: typeof ApoioRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ContaRoute: typeof ContaRouteWithChildren
+  ContatoRoute: typeof ContatoRoute
   CuidarRoute: typeof CuidarRoute
   DiarioRoute: typeof DiarioRoute
   EscreverRoute: typeof EscreverRouteWithChildren
@@ -398,6 +423,7 @@ export interface RootRouteChildren {
   SelosRoute: typeof SelosRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  ApiBackupRoute: typeof ApiBackupRoute
   CartaIdRoute: typeof CartaIdRoute
   OnboardingPactoRoute: typeof OnboardingPactoRoute
   OnboardingPerfilRoute: typeof OnboardingPerfilRoute
@@ -433,6 +459,13 @@ declare module '@tanstack/react-router' {
       path: '/conta'
       fullPath: '/conta'
       preLoaderRoute: typeof ContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cuidar': {
@@ -561,6 +594,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/backup': {
+      id: '/api/backup'
+      path: '/api/backup'
+      fullPath: '/api/backup'
+      preLoaderRoute: typeof ApiBackupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/carta/$id': {
       id: '/carta/$id'
       path: '/carta/$id'
@@ -640,6 +680,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApoioRoute: ApoioRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ContaRoute: ContaRouteWithChildren,
+  ContatoRoute: ContatoRoute,
   CuidarRoute: CuidarRoute,
   DiarioRoute: DiarioRoute,
   EscreverRoute: EscreverRouteWithChildren,
@@ -658,6 +699,7 @@ const rootRouteChildren: RootRouteChildren = {
   SelosRoute: SelosRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  ApiBackupRoute: ApiBackupRoute,
   CartaIdRoute: CartaIdRoute,
   OnboardingPactoRoute: OnboardingPactoRoute,
   OnboardingPerfilRoute: OnboardingPerfilRoute,

@@ -56,6 +56,19 @@ export function CarePage({ onNavigate }: { onNavigate: (path: string) => void })
         </div>
       </section>
 
+      <section className="care-cvv care-samu">
+        <span className="eyebrow"><Phone size={14} /> risco à vida agora</span>
+        <p className="care-cvv-kicker">SAMU</p>
+        <a className="care-cvv-number" href="tel:192">192</a>
+        <p>
+          Se a vida estiver em risco neste momento — desmaio, tentativa, ferimento, alguém que não
+          consegue ficar em segurança — ligue 192. O SAMU é emergência médica, não conversa.
+        </p>
+        <div className="care-cvv-actions">
+          <a className="button button-primary" href="tel:192">Ligar 192 <Phone size={16} /></a>
+        </div>
+      </section>
+
       <div className="care-grid">
         <article>
           <strong>Risco imediato</strong>

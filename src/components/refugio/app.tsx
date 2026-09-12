@@ -205,12 +205,13 @@ function App() {
 			"/apoio", "/contato", "/mural-publico", "/onboarding/pacto",
 			"/conta", "/login", "/conta/recuperar-senha", "/conta/redefinir-senha",
 		]);
+		const allowed = open.has(location) || location.startsWith("/carta/");
 		if (!pactOk) {
-			if (!open.has(location)) navigate("/onboarding/pacto");
+			if (!allowed) navigate("/onboarding/pacto");
 			return;
 		}
 		if (!(auth.user || loggedIn)) {
-			if (!open.has(location)) navigate("/conta");
+			if (!allowed) navigate("/conta");
 			return;
 		}
 		if (location === "/" || location === "/inicio") {
@@ -268,7 +269,7 @@ function App() {
 		"/contato",
 		"/onboarding/pacto",
 		"/mural-publico"
-	])).has(location)) return /* @__PURE__ */ jsxs("div", {
+	])).has(location) && !location.startsWith("/carta/")) return /* @__PURE__ */ jsxs("div", {
 		className: `app-root theme-${theme ?? "day"}`,
 		children: [/* @__PURE__ */ jsx(Pact, { onContinue: () => {
 			markPact();
@@ -595,9 +596,9 @@ function Landing({ onEnter, onExplore }) {
 								href: "/conta",
 								className: "button button-primary button-large",
 								children: "Entrar no Refúgio"
-							}), /* @__PURE__ */ jsxs("button", {
+							}), /* @__PURE__ */ jsxs(Link, {
+								href: "/mural-publico",
 								className: "button-quiet",
-								onClick: onExplore,
 								children: ["Olhar o mural ", /* @__PURE__ */ jsx(ChevronRight, { size: 16 })]
 							}), /* @__PURE__ */ jsx(Link, {
 								href: "/instalar",
