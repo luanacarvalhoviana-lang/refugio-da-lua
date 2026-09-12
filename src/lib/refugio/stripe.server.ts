@@ -113,30 +113,22 @@ export async function createCheckoutSession(input: {
   name?: string;
   origin: string;
 }) {
-  try {
-    return await openCheckout(input, input.plan === "annual");
-  } catch (error) {
-    if (input.plan !== "annual") throw error;
-    return openCheckout(input, false);
-  }
+  return openCheckout(input);
 }
 
-async function openCheckout(
-  input: {
-    plan: VipPlanKey;
-    email: string;
-    name?: string;
-    origin: string;
-  },
-  pix: boolean,
-) {
+async function openCheckout(input: {
+  plan: VipPlanKey;
+  email: string;
+  name?: string;
+  origin: string;
+}) {
   const details = vipPlanCatalog[input.plan];
   const priceId =
     input.plan === "annual" ? process.env.STRIPE_PRICE_ANNUAL : process.env.STRIPE_PRICE_MONTHLY;
   const success = `${input.origin}/planos?checkout=success&session_id={CHECKOUT_SESSION_ID}`;
   const cancel = `${input.origin}/planos?checkout=cancelled`;
   const body: Record<string, string> = {
-    mode: pix ? "payment" : "subscription",
+    mode: "subscription",
     success_url: success,
     cancel_url: cancel,
     customer_email: input.email,
@@ -145,23 +137,18 @@ async function openCheckout(
     locale: "pt-BR",
     "line_items[0][quantity]": "1",
     "payment_method_types[0]": "card",
+    "subscription_data[metadata][plan]": input.plan,
+    "subscription_data[metadata][email]": input.email,
   };
-  if (pix) {
-    body["payment_method_types[1]"] = "pix";
-    body["payment_method_options[pix][expires_after_seconds]"] = "86400";
-  } else {
-    body["subscription_data[metadata][plan]"] = input.plan;
-    body["subscription_data[metadata][email]"] = input.email;
-  }
   if (input.name) body["metadata[name]"] = input.name;
-  if (priceId && !pix) {
+  if (priceId) {
     body["line_items[0][price]"] = priceId;
   } else {
     body["line_items[0][price_data][currency]"] = "brl";
     body["line_items[0][price_data][unit_amount]"] = String(details.unitAmount);
     body["line_items[0][price_data][product_data][name]"] = details.stripeName;
     body["line_items[0][price_data][product_data][description]"] = details.description;
-    if (!pix) body["line_items[0][price_data][recurring][interval]"] = details.interval;
+    body["line_items[0][price_data][recurring][interval]"] = details.interval;
   }
   const session = await stripeForm("/checkout/sessions", body);
   if (!session.url) throw new Error("O Stripe não devolveu a página de pagamento.");

@@ -77,7 +77,7 @@ export default function CheckoutModal({
         <h2 id="checkout-title">{livePay ? `Assinar ${details.name}.` : `Ative o ${details.name}.`}</h2>
         <p className="checkout-lead">
           {livePay
-            ? "Você vai para a página segura do Stripe. Cartão, Pix e boleto seguem as opções da sua conta. O Refúgio não vê o número do cartão."
+            ? "Você vai para a página segura do Stripe. O pagamento é no cartão. O Refúgio não vê o número."
             : "Ainda estamos em prévia: a assinatura fica neste aparelho, sem cobrança. No site publicado, com a chave do Stripe, este botão passa a cobrar de verdade."}
         </p>
         <div className="checkout-summary">
