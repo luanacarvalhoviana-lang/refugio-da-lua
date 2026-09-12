@@ -3214,11 +3214,11 @@ html.protect-on .diary-card::after {
   width: 100%;
   height: auto;
   aspect-ratio: 1;
-  object-fit: cover;
-  object-position: center 28%;
+  object-fit: contain;
+  object-position: center;
   border-radius: 28px;
-  background: #f4efe4;
-  box-shadow: var(--shadow-soft);
+  background: transparent;
+  box-shadow: none;
   display: block;
 }
 .pact-card .moon-mascot { margin: 0 auto 10px; align-items: center; }

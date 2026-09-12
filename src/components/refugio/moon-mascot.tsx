@@ -1,12 +1,14 @@
 import { lunaSceneLines, type LunaScene } from "@/lib/refugio/luna";
 
-export type LunaMood = "hug" | "hi" | "listen" | "write";
+export type LunaMood = "hug" | "hi" | "listen" | "write" | "rest" | "care";
 
 const src: Record<LunaMood, string> = {
-  hug: "/mascot/luna.jpg",
-  hi: "/mascot/luna-hi.jpg",
-  listen: "/mascot/luna-listen.jpg",
-  write: "/mascot/luna-write.jpg",
+  hug: "/mascot/luna-happy.png",
+  hi: "/mascot/luna-waving.png",
+  listen: "/mascot/luna-heart.png",
+  write: "/mascot/luna-read.png",
+  rest: "/mascot/luna-sleeping.png",
+  care: "/mascot/luna-yawn.png",
 };
 
 export function MoonMascot({
@@ -33,7 +35,17 @@ export function LunaCompanion({
   line?: string;
 }) {
   const mood: LunaMood =
-    scene === "write" ? "write" : scene === "mural" || scene === "letter" ? "listen" : scene === "landing" ? "hi" : "hug";
+    scene === "write"
+      ? "write"
+      : scene === "mural" || scene === "letter"
+        ? "listen"
+        : scene === "landing"
+          ? "hi"
+          : scene === "care"
+            ? "care"
+            : scene === "rest" || scene === "garden"
+              ? "rest"
+              : "hug";
   return (
     <aside className={`luna-companion scene-${scene}`}>
       <MoonMascot mood={mood} size={size} />
