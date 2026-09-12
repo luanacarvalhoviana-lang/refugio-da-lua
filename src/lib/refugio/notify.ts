@@ -9,7 +9,7 @@ export async function askNoticePermission() {
 export function showLiveNotice(title: string, body: string) {
   if (typeof window === "undefined" || !("Notification" in window)) return;
   if (Notification.permission !== "granted") return;
-  const icon = "/icons/icon-192.png";
+  const icon = "/icons/brand-v3-192.png";
   const options: NotificationOptions = { body, icon, badge: icon, tag: "refugio-lua", lang: "pt-BR" };
   if (navigator.serviceWorker?.controller) {
     void navigator.serviceWorker.ready

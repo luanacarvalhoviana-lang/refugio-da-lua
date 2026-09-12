@@ -21,12 +21,11 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "icon", type: "image/png", href: "/favicon.png" },
-      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/icon-192.png" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/brand-v3-192.png" },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
-      { rel: "preload", href: "/icons/logo-splash.png", as: "image", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/icons/brand-v3-180.png" },
+      { rel: "preload", href: "/icons/brand-v3-512.png", as: "image", type: "image/png" },
     ],
   }),
   component: () => (
