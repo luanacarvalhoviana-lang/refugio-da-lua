@@ -83,6 +83,11 @@ export function LivingTree({
           Colher os frutos
         </button>
       ) : null}
+      {planted ? (
+        <span className="lt-motes" aria-hidden="true">
+          {Array.from({ length: 16 }, (_, i) => <i key={i} />)}
+        </span>
+      ) : null}
       <span className="lt-mist" />
       <span className="plant-dust" />
     </div>
