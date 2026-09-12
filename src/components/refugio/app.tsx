@@ -126,7 +126,7 @@ function Logo({ compact = true }) {
 }
 function BrandMark() {
 	const theme = useRefugioStore((s) => s.theme);
-	const src = theme === "night" ? "/icons/logo-night-sm.webp" : "/icons/logo-day-sm.webp";
+	const src = theme === "night" ? "/icons/logo-night-sm.png" : "/icons/logo-day-sm.png";
 	return /* @__PURE__ */ jsx("img", {
 		className: "brand-hero-mark",
 		src,

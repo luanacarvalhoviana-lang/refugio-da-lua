@@ -25,7 +25,6 @@
   --ease-out: cubic-bezier(.23,1,.32,1);
   font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   color: var(--ink);
-  background: var(--sand);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -34,11 +33,19 @@
 }
 html {
   scroll-behavior: smooth;
+  background: #0c3442;
+}
+html[data-theme="day"] {
+  background: var(--sand);
+}
+html[data-theme="night"] {
+  background: #0b2430;
+  color-scheme: dark;
 }
 body {
   margin: 0;
   min-width: 320px;
-  background: var(--sand);
+  background: inherit;
 }
 button, input, textarea, select {
   font: inherit;
@@ -143,7 +150,7 @@ p {
 .brand-hero-mark {
   width: min(220px, 58vw);
   height: min(220px, 58vw);
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 50%;
   display: block;
   margin: 6px 0 18px;

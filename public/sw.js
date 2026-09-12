@@ -1,5 +1,5 @@
-const CACHE = "refugio-lua-v24";
-const PRECACHE = ["/", "/inicio", "/instalar", "/icons/icon-192.png", "/icons/logo-splash.webp", "/icons/logo-splash.png"];
+const CACHE = "refugio-lua-v25";
+const PRECACHE = ["/", "/inicio", "/instalar", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/logo-splash.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

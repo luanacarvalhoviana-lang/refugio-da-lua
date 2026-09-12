@@ -43,9 +43,7 @@ export function WelcomeSplash() {
         setVisible(false);
       }}
     >
-      <picture>
-        <source srcSet="/icons/logo-splash.webp" type="image/webp" />
-        <img
+      <img
           src="/icons/logo-splash.png"
           alt=""
           width={196}
@@ -54,7 +52,6 @@ export function WelcomeSplash() {
           fetchPriority="high"
           className="welcome-splash-logo"
         />
-      </picture>
       <p className="welcome-splash-hello">Bem-vindo</p>
       <span className="welcome-splash-name">Refúgio da Lua</span>
     </div>
