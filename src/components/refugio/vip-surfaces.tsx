@@ -61,6 +61,9 @@ export function IslandTree({
   const remaining = choices.filter((tree) => tree.key !== speciesKey && !grownKeys.includes(tree.key));
   const grown = grownKeys.map((key) => islandTreeByKey(key)).filter(Boolean);
 
+  const harvestTree = useRefugioStore((s) => s.harvestTree);
+  const harvestedKeys = useRefugioStore((s) => s.harvestedKeys);
+  const picked = Boolean(species && harvestedKeys.includes(species.key));
   const picker = canPickNext && remaining.length > 0 && (
     <div className="island-choice-grid">
       {remaining.map((tree) => (
@@ -104,7 +107,7 @@ export function IslandTree({
       )}
       <section className={`garden-plant-card stage-${stage} ${lush ? "tree-lush" : ""}`}>
         <div className="garden-plant-art">
-          <LivingTree kind={species.key} stage={stage} extraFlowers={plan === "monthly"} goldenFruit={plan === "annual" && lush} />
+          <LivingTree kind={species.key} stage={stage} extraFlowers={plan === "monthly"} goldenFruit={(plan === "annual" || lush) && !picked} picked={picked} onPick={lush && !picked ? () => harvestTree(species.key) : undefined} />
           {lush && <span className="fireflies" aria-hidden="true" />}
         </div>
         <div className="garden-plant-meta">
@@ -152,6 +155,8 @@ export function AmazonGrove({
   onSeePlans: () => void;
   onChoose?: (key: AmazonTreeKey) => void;
 }) {
+  const harvestTree = useRefugioStore((s) => s.harvestTree);
+  const harvestedKeys = useRefugioStore((s) => s.harvestedKeys);
   const chooseAmazon = useRefugioStore((s) => s.chooseAmazonTree);
   const growing = growingAmazonSeed(seeds, energiesReceived);
   const canPick = unlocked && canPlantNextAmazon(seeds, energiesReceived);
@@ -196,18 +201,26 @@ export function AmazonGrove({
             const energy = seed ? energyForSeed(seed, energiesReceived) : 0;
             const meta = stageMeta(energy);
             const active = growing?.speciesKey === tree.key;
+            const picked = harvestedKeys.includes(tree.key);
+            const ripe = meta.stage === "mature" && !picked;
             return (
-              <article key={tree.key} className={`grove-card owned ${active ? "growing" : "ready"}`}>
-                <AmazonTreeArt species={tree.key} stage={meta.stage} golden={meta.stage === "mature"} />
+              <article key={tree.key} className={`grove-card owned ${active ? "growing" : "ready"} ${picked ? "picked" : ""}`}>
+                <AmazonTreeArt species={tree.key} stage={meta.stage} golden={meta.stage === "mature" && !picked} />
                 <div className="grove-copy">
                   <strong>{tree.name}</strong>
-                  <small>{meta.label} · {energy} energias</small>
+                  <small>{picked ? "Frutos no cesto" : `${meta.label} · ${energy} energias`}</small>
                   <div className="grove-bar" aria-hidden="true"><span style={{ width: `${Math.round(meta.progress * 100)}%` }} /></div>
-                  <span className="grove-next">
-                    {meta.remaining > 0
-                      ? `${meta.remaining} energias até ${meta.nextLabel.toLowerCase()}`
-                      : "Copa plena · a floresta agradece"}
-                  </span>
+                  {ripe ? (
+                    <button type="button" className="button button-secondary" onClick={() => harvestTree(tree.key)}>Colher os frutos</button>
+                  ) : (
+                    <span className="grove-next">
+                      {picked
+                        ? "Colheita feita. A árvore segue no bosque."
+                        : meta.remaining > 0
+                          ? `${meta.remaining} energias até ${meta.nextLabel.toLowerCase()}`
+                          : "Copa plena · a floresta agradece"}
+                    </span>
+                  )}
                 </div>
               </article>
             );

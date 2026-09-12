@@ -47,28 +47,38 @@ export function LivingTree({
   extraFlowers = false,
   goldenFruit = false,
   compact = false,
+  picked = false,
+  onPick,
 }: {
   kind: LivingKind;
   stage?: GrowthStage;
   extraFlowers?: boolean;
   goldenFruit?: boolean;
   compact?: boolean;
+  picked?: boolean;
+  onPick?: () => void;
 }) {
   const src =
     stage === "young" || stage === "mature" ? painted[kind] : stageArt[stage];
+  const showFruit = (goldenFruit || Boolean(onPick)) && (stage === "young" || stage === "mature") && !picked;
 
   return (
-    <div className={`living-tree painted stage-${stage} ${compact ? "is-compact" : ""} ${goldenFruit ? "is-gold" : ""} ${extraFlowers ? "is-bloom" : ""}`} aria-hidden="true">
+    <div className={`living-tree painted stage-${stage} ${compact ? "is-compact" : ""} ${goldenFruit ? "is-gold" : ""} ${extraFlowers ? "is-bloom" : ""} ${picked ? "is-picked" : ""}`} aria-hidden={onPick ? undefined : "true"}>
       <img className="lt-paint" src={src} alt="" />
       {extraFlowers && (stage === "young" || stage === "mature") ? <span className="lt-bloom" /> : null}
-      {goldenFruit && (stage === "young" || stage === "mature") ? (
-        <span className="lt-fruits">
+      {showFruit ? (
+        <span className={`lt-fruits ${onPick ? "is-pickable" : ""}`}>
           <i />
           <i />
           <i />
           <i />
           <i />
         </span>
+      ) : null}
+      {onPick && !picked && (stage === "mature") ? (
+        <button type="button" className="lt-pick" onClick={onPick}>
+          Colher os frutos
+        </button>
       ) : null}
       <span className="lt-mist" />
       <span className="plant-dust" />

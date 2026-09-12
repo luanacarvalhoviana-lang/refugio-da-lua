@@ -22,6 +22,7 @@ export function listPresenceSeals(input: {
   energiesReceived: number;
   userName: string;
   letters: Letter[];
+  fruitBasket?: number;
 }): PresenceSeal[] {
   const care = islandCareScore({
     dewDropsReceived: input.dewDropsReceived,
@@ -35,6 +36,7 @@ export function listPresenceSeals(input: {
     { icon: "🤍", title: "Mão estendida", detail: "Enviou sua primeira energia", earned: input.energiesSent > 0 },
     { icon: "🕊️", title: "Primeiro conselho", detail: "Acolheu alguém com palavras suas", earned: input.adviceSent > 0 },
     { icon: "💧", title: "Ouvinte calmo", detail: "Um conselho seu recebeu orvalho", earned: input.dewDropsReceived >= 2 },
+    { icon: "🧺", title: "Primeira colheita", detail: "Colheu o fruto de uma árvore plena", earned: (input.fruitBasket || 0) > 0 },
     { icon: "🌙", title: "Noite tranquila", detail: "Voltou por 7 dias", earned: input.days >= 7 },
     { icon: "🌳", title: "Sábio do jardim", detail: "Árvore frondosa e presença constante", earned: care >= 26 },
     {

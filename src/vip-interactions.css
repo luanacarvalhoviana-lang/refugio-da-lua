@@ -2603,6 +2603,30 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
 .lt-fruits i:nth-child(3) { left: 68%; top: 42%; }
 .lt-fruits i:nth-child(4) { left: 38%; top: 58%; width: 8px; height: 8px; }
 .lt-fruits i:nth-child(5) { left: 58%; top: 8%; }
+.lt-fruits.is-pickable i {
+  animation: fruit-glow 1.8s ease-in-out infinite;
+}
+@keyframes fruit-glow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.18); opacity: .85; }
+}
+.lt-pick {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  z-index: 3;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12px;
+  background: #f6d77a;
+  color: #174b59;
+  box-shadow: 0 8px 20px rgba(23, 75, 89, .18);
+  cursor: pointer;
+}
+.living-tree.is-picked .lt-fruits { display: none; }
+.fruit-basket h2 { margin: 6px 0 8px; }
 .living-tree.is-gold { filter: drop-shadow(0 0 14px rgba(246, 215, 122, .35)); }
 .lt-bloom {
   position: absolute;

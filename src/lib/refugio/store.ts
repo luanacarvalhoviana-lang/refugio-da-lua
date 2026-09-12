@@ -117,6 +117,8 @@ export function sessionSlice(state: RefugioState): Partial<RefugioState> {
     notices: state.notices,
     humusCount: state.humusCount,
     pendingDew: state.pendingDew,
+    harvestedKeys: state.harvestedKeys,
+    fruitBasket: state.fruitBasket,
     letters: withoutDemoLetters(state.letters),
     cloudStamp: state.cloudStamp ?? 0,
   };
@@ -169,6 +171,8 @@ const FRESH_PROFILE: Partial<RefugioState> = {
   notices: [],
   humusCount: 0,
   pendingDew: [],
+  harvestedKeys: [],
+  fruitBasket: 0,
   letters: demoLetters,
 };
 
@@ -211,6 +215,8 @@ type RefugioState = {
   notices: GardenNotice[];
   humusCount: number;
   pendingDew: Letter[];
+  harvestedKeys: string[];
+  fruitBasket: number;
   cloudStamp: number;
   confirmAge: () => void;
   acceptPact: () => void;
@@ -223,6 +229,7 @@ type RefugioState = {
   cancelPlan: () => void;
   chooseIslandTree: (key: IslandTreeKey) => void;
   chooseAmazonTree: (key: AmazonTreeKey) => void;
+  harvestTree: (key: string) => boolean;
   ensureAmazonGrove: () => void;
   sendEnergy: (letterId: string, kind?: string) => { grewSeed: boolean };
   markRead: (letterId: string) => void;
@@ -290,6 +297,8 @@ export const useRefugioStore = create<RefugioState>()(
       islandTreeKey: null,
       islandBornCare: 0,
       grownIslandKeys: [],
+      harvestedKeys: [],
+      fruitBasket: 0,
       thankedAdviceIds: [],
       adviceDay: todayKey(),
       adviceToday: 0,
@@ -383,6 +392,20 @@ export const useRefugioStore = create<RefugioState>()(
           return;
         }
         if (!state.islandTreeKey) set({ islandTreeKey: key, islandBornCare: careNow });
+      },
+      harvestTree: (key) => {
+        const state = get();
+        if ((state.harvestedKeys || []).includes(key)) return false;
+        set({
+          harvestedKeys: [...(state.harvestedKeys || []), key],
+          fruitBasket: (state.fruitBasket || 0) + 1,
+        });
+        get().pushNotice({
+          kind: "garden",
+          title: "Fruto colhido",
+          text: "Foi para o cesto. A Luna guarda sem ranking.",
+        });
+        return true;
       },
       chooseAmazonTree: (key) => {
         const state = get();
@@ -662,6 +685,8 @@ export const useRefugioStore = create<RefugioState>()(
         islandTreeKey: state.islandTreeKey,
         islandBornCare: state.islandBornCare,
         grownIslandKeys: state.grownIslandKeys,
+        harvestedKeys: state.harvestedKeys,
+        fruitBasket: state.fruitBasket,
         thankedAdviceIds: state.thankedAdviceIds,
         adviceDay: state.adviceDay,
         adviceToday: state.adviceToday,

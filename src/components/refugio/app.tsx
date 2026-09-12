@@ -2264,12 +2264,13 @@ function Garden({ anonymous, onAction, onSync, entitlements = emptyEntitlements 
   const lettersPublished = useRefugioStore((state) => state.lettersPublished);
   const pactOk = useRefugioStore((state) => state.pactOk);
   const letters = useRefugioStore((state) => state.letters);
+  const fruitBasket = useRefugioStore((state) => state.fruitBasket);
   useEffect(() => {
     if (entitlements.amazonGrove) ensureAmazonGrove();
   }, [entitlements.amazonGrove, ensureAmazonGrove]);
   const glyph = avatars.find((item) => item.key === avatarKey)?.glyph ?? "🌿";
   const sealsList = listPresenceSeals({
-    pactOk, energiesSent, adviceSent, dewDropsReceived, lettersPublished, days, amazonSeeds, plan, energiesReceived, userName, letters,
+    pactOk, energiesSent, adviceSent, dewDropsReceived, lettersPublished, days, amazonSeeds, plan, energiesReceived, userName, letters, fruitBasket,
   });
   const visibleSeals = sealsList.filter((item) => !item.annual || plan === "annual");
   const earnedCount = visibleSeals.filter((item) => item.earned).length;
@@ -2332,6 +2333,11 @@ function Garden({ anonymous, onAction, onSync, entitlements = emptyEntitlements 
           ))}
         </section>
       )}
+      <section className="humus-bed fruit-basket">
+        <span className="eyebrow">cesto</span>
+        <h2>{fruitBasket === 0 ? "O cesto ainda espera." : `${fruitBasket} fruto${fruitBasket === 1 ? "" : "s"} colhido${fruitBasket === 1 ? "" : "s"}.`}</h2>
+        <p>{fruitBasket === 0 ? "Quando a árvore ficar plena, os frutos piscam. É só colher — sem ranking, sem venda." : "A Luna guarda no cesto. A árvore segue de pé no jardim."}</p>
+      </section>
       <section className="humus-bed">
         <span className="eyebrow"><Sprout size={14} /> húmus do jardim</span>
         <h2>{humusCount === 0 ? "Ainda não há húmus." : `${humusCount} carta${humusCount === 1 ? "" : "s"} viraram terra.`}</h2>
