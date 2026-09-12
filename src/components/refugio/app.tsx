@@ -3260,6 +3260,12 @@ function Contact({ onBack }) {
               ? "A mensagem chegou até nós. Se você deixou um e-mail, respondemos por ele. Crise agora: 188."
               : "Use este espaço para relatar uma carta, um erro no site ou falar com a gente. Não é o CVV. Se estiver em risco, ligue 188."
           }),
+          !sent && /* @__PURE__ */ jsxs("p", {
+            children: ["E-mail da casa: ", /* @__PURE__ */ jsx("a", {
+              href: "mailto:contato.refugiodalua@gmail.com",
+              children: "contato.refugiodalua@gmail.com"
+            })]
+          }),
           !sent && /* @__PURE__ */ jsxs("form", {
             onSubmit: (e) => {
               e.preventDefault();

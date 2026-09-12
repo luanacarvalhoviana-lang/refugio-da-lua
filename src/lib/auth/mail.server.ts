@@ -1,6 +1,6 @@
 const FROM = () => process.env.RESEND_FROM?.trim() || "Refúgio da Lua <beth.t@example.com>";
 const CONTACT_INBOX = () =>
-  process.env.CONTACT_EMAIL?.trim() || "luanacarvalhoviana@gmail.com";
+  process.env.CONTACT_EMAIL?.trim() || "contato.refugiodalua@gmail.com";
 
 async function resendEmail(input: { to: string; subject: string; html: string; replyTo?: string }) {
   const key = process.env.RESEND_API_KEY?.trim();
