@@ -2303,6 +2303,7 @@ function Garden({ anonymous, onAction, onSync, entitlements = emptyEntitlements 
           <button className="button-quiet" onClick={() => onAction("/perfil")}>Editar identidade</button>
         )}
       </header>
+      <GardenStage />
       {plan === "annual" ? (
         <AmazonGrove unlocked seeds={amazonSeeds} energiesReceived={energiesReceived} onSeePlans={() => onAction("/planos")} onChoose={chooseAmazonTree} />
       ) : (

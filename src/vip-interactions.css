@@ -2759,12 +2759,26 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
 .garden-stage {
   position: relative;
   overflow: hidden;
-  min-height: 380px;
+  min-height: 0;
   margin: 8px 0 22px;
   border-radius: 28px;
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, #cfe4ee 0%, #e7f0ea 42%, #c9d6b8 100%);
+  background: #132433;
   box-shadow: var(--shadow-soft);
+}
+.garden-stage-3d img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.shop-pack-art {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
 }
 .garden-stage.is-night {
   background: linear-gradient(180deg, #132433 0%, #1d3a48 48%, #2a4a3a 100%);
