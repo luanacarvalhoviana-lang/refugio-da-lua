@@ -2457,7 +2457,17 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
   opacity: .45;
 }
 .garden-plant-art .living-tree {
-  height: 380px;
+  height: auto;
+  min-height: 240px;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+}
+.living-tree.stage-sprout .lt-paint,
+.living-tree.stage-seed .lt-paint {
+  height: 280px;
+  object-fit: contain;
+  background: transparent;
 }
 .island-choice .living-tree {
   height: 176px;
@@ -2549,7 +2559,8 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
 }
 @media (max-width: 800px) {
   .garden-plant-art .living-tree {
-    height: 280px;
+    height: auto;
+    min-height: 220px;
   }
 }
 

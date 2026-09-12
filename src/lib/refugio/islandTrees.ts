@@ -110,13 +110,13 @@ export function canPlantNextIsland(input: {
 
 export const islandStageArt: Partial<Record<GrowthStage, string>> = {
   seed: "/trees/seed.jpg",
-  sprout: "/trees/sprout-clear.png",
+  sprout: "/trees/sprout-folha.png",
   sapling: "/trees/sapling.jpg",
 };
 
 export function islandArtSrc(species: IslandTreeSpecies | null, stage: GrowthStage) {
   if (stage === "seed" || stage === "sprout" || stage === "sapling") {
-    return islandStageArt[stage] ?? "/trees/sprout-clear.png";
+    return islandStageArt[stage] ?? "/trees/sprout-folha.png";
   }
   return species?.image ?? "/trees/ipe.jpg";
 }
