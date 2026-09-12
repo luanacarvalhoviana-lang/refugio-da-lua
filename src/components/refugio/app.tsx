@@ -39,7 +39,6 @@ import { askNoticePermission } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
-import { HouseShop } from "@/components/refugio/garden-shop";
 
 var logo = "/icons/logo.png";
 var cards = [
@@ -2317,7 +2316,6 @@ function Garden({ anonymous, onAction, onSync, entitlements = emptyEntitlements 
           onChoose={chooseIslandTree}
         />
       )}
-      <HouseShop />
       {plan === "annual" ? <PeacePlayer onNeedPlan={() => onAction("/planos")} /> : null}
       {pendingDew.length > 0 && (
         <section className="humus-bed dew-pending">

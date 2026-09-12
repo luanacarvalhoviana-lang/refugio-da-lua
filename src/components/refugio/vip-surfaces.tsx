@@ -20,7 +20,6 @@ import {
   islandTreeByKey,
   type IslandTreeKey,
 } from "@/lib/refugio/islandTrees";
-import { GardenDecor } from "@/components/refugio/garden-decor";
 import { LivingTree, type LivingKind } from "@/components/refugio/living-tree";
 import type { SessionPlan } from "@/lib/refugio/store";
 import { useRefugioStore } from "@/lib/refugio/store";
@@ -64,7 +63,6 @@ export function IslandTree({
 
   const harvestTree = useRefugioStore((s) => s.harvestTree);
   const harvestedKeys = useRefugioStore((s) => s.harvestedKeys) || [];
-  const ownedPacks = useRefugioStore((s) => s.ownedPacks) || [];
   const picked = Boolean(species && harvestedKeys.includes(species.key));
   const picker = canPickNext && remaining.length > 0 && (
     <div className="island-choice-grid">
@@ -81,10 +79,6 @@ export function IslandTree({
   if (!species) {
     return (
       <section className="island-picker">
-        <div className="garden-plant-art sprout-well">
-          <LivingTree kind="ipe" stage="sprout" />
-          <GardenDecor stage="sprout" />
-        </div>
         <div className="grove-intro">
           <span className="eyebrow"><Sprout size={14} /> sua árvore</span>
           <div>
@@ -112,9 +106,8 @@ export function IslandTree({
         </div>
       )}
       <section className={`garden-plant-card stage-${stage} ${lush ? "tree-lush" : ""}`}>
-        <div className={`garden-plant-art ${ownedPacks?.includes("noite") ? "is-night-well" : ""}`}>
+        <div className="garden-plant-art">
           <LivingTree kind={species.key} stage={stage} extraFlowers={plan === "monthly"} goldenFruit={(plan === "annual" || lush) && !picked} picked={picked} onPick={lush && !picked ? () => harvestTree(species.key) : undefined} />
-          <GardenDecor stage={stage} />
           {lush && <span className="fireflies" aria-hidden="true" />}
         </div>
         <div className="garden-plant-meta">
@@ -188,17 +181,6 @@ export function AmazonGrove({
           </p>
         </div>
       </div>
-      {growing ? (
-        <div className="garden-plant-art sprout-well">
-          <LivingTree kind={growing.speciesKey as LivingKind} stage={stageMeta(energyForSeed(growing, energiesReceived)).stage} />
-          <GardenDecor stage={stageMeta(energyForSeed(growing, energiesReceived)).stage} />
-        </div>
-      ) : !planted.length ? (
-        <div className="garden-plant-art sprout-well">
-          <LivingTree kind="samauma" stage="sprout" />
-          <GardenDecor stage="sprout" />
-        </div>
-      ) : null}
       {canPick && remaining.length > 0 && (
         <div className="island-choice-grid amazon-pick">
           {remaining.map((tree) => (
