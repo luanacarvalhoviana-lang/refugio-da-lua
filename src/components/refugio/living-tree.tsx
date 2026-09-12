@@ -84,9 +84,17 @@ export function LivingTree({
         </button>
       ) : null}
       {planted ? (
-        <span className="lt-motes" aria-hidden="true">
-          {Array.from({ length: 16 }, (_, i) => <i key={i} />)}
-        </span>
+        <>
+          <span className="lt-motes" aria-hidden="true">
+            {Array.from({ length: 18 }, (_, i) => <i key={i} />)}
+          </span>
+          <span className="lt-specks" aria-hidden="true">
+            {Array.from({ length: 8 }, (_, i) => <i key={i} />)}
+          </span>
+          <span className="lt-dew" aria-hidden="true">
+            <i /><i /><i />
+          </span>
+        </>
       ) : null}
       <span className="lt-mist" />
       <span className="plant-dust" />
