@@ -39,7 +39,7 @@ import { askNoticePermission } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
-import { GardenStage, HouseShop } from "@/components/refugio/garden-shop";
+import { HouseShop } from "@/components/refugio/garden-shop";
 
 var logo = "/icons/logo.png";
 var cards = [
@@ -2303,7 +2303,6 @@ function Garden({ anonymous, onAction, onSync, entitlements = emptyEntitlements 
           <button className="button-quiet" onClick={() => onAction("/perfil")}>Editar identidade</button>
         )}
       </header>
-      <GardenStage />
       {plan === "annual" ? (
         <AmazonGrove unlocked seeds={amazonSeeds} energiesReceived={energiesReceived} onSeePlans={() => onAction("/planos")} onChoose={chooseAmazonTree} />
       ) : (
