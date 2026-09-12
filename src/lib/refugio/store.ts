@@ -224,7 +224,7 @@ type RefugioState = {
   chooseIslandTree: (key: IslandTreeKey) => void;
   chooseAmazonTree: (key: AmazonTreeKey) => void;
   ensureAmazonGrove: () => void;
-  sendEnergy: (letterId: string) => { grewSeed: boolean };
+  sendEnergy: (letterId: string, kind?: string) => { grewSeed: boolean };
   markRead: (letterId: string) => void;
   publishLetter: (input: {
     body: string;
@@ -397,7 +397,7 @@ export const useRefugioStore = create<RefugioState>()(
         const next = normalizeGrove(state.amazonSeeds, state.energiesReceived);
         if (next.length !== state.amazonSeeds.length) set({ amazonSeeds: next });
       },
-      sendEnergy: (letterId) => {
+      sendEnergy: (letterId, kind) => {
         const state = get();
         let grewSeed = false;
         set({
@@ -406,7 +406,9 @@ export const useRefugioStore = create<RefugioState>()(
             if (letter.id !== letterId) return letter;
             const own = letter.author === state.userName;
             if (own) grewSeed = true;
-            return { ...letter, energy: letter.energy + 1 };
+            const kinds = { ...(letter.energyKinds || {}) };
+            if (kind) kinds[kind] = (kinds[kind] || 0) + 1;
+            return { ...letter, energy: letter.energy + 1, energyKinds: kinds };
           }),
           energiesReceived: grewSeed ? state.energiesReceived + 1 : state.energiesReceived,
         });

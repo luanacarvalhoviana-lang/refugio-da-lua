@@ -28,6 +28,7 @@ export type Letter = {
   paperKey?: string;
   sealKey?: string;
   advice?: LetterAdvice[];
+  energyKinds?: Record<string, number>;
   afterMural?: "humus" | "diary";
   postedAt?: string;
 };

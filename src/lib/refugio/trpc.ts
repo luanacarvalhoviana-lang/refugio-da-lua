@@ -122,8 +122,10 @@ export const trpc = {
     sendEnergy: {
       useMutation: (handlers?: Handlers<{ grewSeed: boolean }, { letterId: string; label?: string }>) =>
         useMutation((vars) => {
-          const result = useRefugioStore.getState().sendEnergy(vars.letterId);
-          void energyMuralLetter({ data: { letterId: vars.letterId } }).catch(() => undefined);
+          const result = useRefugioStore.getState().sendEnergy(vars.letterId, vars.label);
+          if (vars.label) {
+            void energyMuralLetter({ data: { letterId: vars.letterId, kind: vars.label } }).catch(() => undefined);
+          }
           return result;
         }, handlers),
     },

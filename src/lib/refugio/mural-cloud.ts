@@ -32,6 +32,7 @@ type MuralRow = {
   seal_key: string | null;
   after_mural: string | null;
   advice: LetterAdvice[] | string;
+  energy_kinds?: Record<string, number> | string;
   posted_at: string;
 };
 
@@ -63,6 +64,12 @@ function rowToLetter(row: MuralRow): Letter {
     afterMural: row.after_mural === "diary" || row.after_mural === "humus" ? row.after_mural : undefined,
     postedAt: posted,
     advice,
+    energyKinds:
+      row.energy_kinds && typeof row.energy_kinds === "object"
+        ? row.energy_kinds
+        : typeof row.energy_kinds === "string"
+          ? (JSON.parse(row.energy_kinds) as Record<string, number>)
+          : {},
   };
 }
 
@@ -105,7 +112,7 @@ export const listMuralLetters = createServerFn({ method: "POST" }).handler(async
   const rows = await sql.query<MuralRow>(
     `select id, author_id, author_name, initials, title, body, excerpt, topic, color, energy,
             gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural, advice,
-            posted_at::text as posted_at
+            energy_kinds, posted_at::text as posted_at
      from mural_letters
      where hidden = false
      order by posted_at desc
@@ -179,14 +186,22 @@ export const publishMuralLetter = createServerFn({ method: "POST" })
   });
 
 export const energyMuralLetter = createServerFn({ method: "POST" })
-  .validator(z.object({ letterId: z.string().min(3).max(80) }))
+  .validator(z.object({ letterId: z.string().min(3).max(80), kind: z.string().min(2).max(20) }))
   .handler(async ({ data }) => {
     const { getSessionUser, UnauthorizedError } = await import("@/lib/auth/verify.server");
+    const { energyKinds } = await import("@/lib/refugio/energies");
     const user = await getSessionUser();
     if (!user) throw new UnauthorizedError();
+    if (!energyKinds.some((item) => item.key === data.kind)) throw new Error("Escolha uma energia.");
     const { getSql } = await import("@/lib/db");
     const sql = await getSql();
-    await sql.query(`update mural_letters set energy = energy + 1 where id = $1 and hidden = false`, [data.letterId]);
+    await sql.query(
+      `update mural_letters
+       set energy = energy + 1,
+           energy_kinds = coalesce(energy_kinds, '{}'::jsonb) || jsonb_build_object($2, coalesce((energy_kinds->>$2)::int, 0) + 1)
+       where id = $1 and hidden = false`,
+      [data.letterId, data.kind],
+    );
     return { ok: true as const };
   });
 

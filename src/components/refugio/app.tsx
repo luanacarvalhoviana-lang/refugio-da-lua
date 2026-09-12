@@ -39,7 +39,7 @@ import { askNoticePermission } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
-import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
+import { energyKinds, energyLabel } from "@/lib/refugio/energies";
 
 var logo = "/icons/logo.png";
 var cards = [
@@ -111,13 +111,6 @@ var cards = [
 	}
 ];
 var topics = muralTopics;
-var energies = [
-	"Abração",
-	"Força",
-	"Esperança",
-	"Paz",
-	"Você não está sozinho"
-];
 function Logo({ compact = true }) {
 	return /* @__PURE__ */ jsxs(Link, {
 		href: "/inicio",
@@ -1675,7 +1668,7 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 					favorite: favorites.includes(card.id),
 					onFavorite: () => onFavorite(card.id),
 					onOpen: () => onCard(card.id),
-					onEnergy: () => emitEnergy(card.id)
+					onEnergy: () => onCard(card.id)
 				}, card.id))
 			}),
 			anonymous && /* @__PURE__ */ jsx("p", {
@@ -1742,7 +1735,7 @@ function CardPreview({ card, favorite, onFavorite, onOpen, onEnergy }) {
 				onClick: onEnergy,
 				children: [
 					/* @__PURE__ */ jsx(Heart, { size: 15 }),
-					" Enviar uma energia ",
+					" Deixar uma energia ",
 					/* @__PURE__ */ jsx("span", { children: card.energy })
 				]
 			}), /* @__PURE__ */ jsxs("span", {
@@ -1830,6 +1823,11 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
               <h1>{data.title}</h1>
               {paragraphs.map((part) => <p key={part.slice(0, 24)} className="detail-copy">{part}</p>)}
               <div className="detail-sign">escrita no Refúgio <span>·</span> {data.energy} energias recebidas</div>
+              {data.energyKinds && Object.keys(data.energyKinds).length > 0 && (
+                <p className="filter-hint">
+                  {Object.entries(data.energyKinds).map(([key, n]) => `${energyLabel(key)} × ${n}`).join(" · ")}
+                </p>
+              )}
               {isOwn && receivedAdvice.length > 0 && (
                 <div className="received-advice">
                   <span className="eyebrow"><Heart size={14} /> conselhos que chegaram</span>
@@ -1881,9 +1879,9 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
             <>
               <span className="eyebrow"><Heart size={14}/> como você quer chegar?</span>
               <h2>Deixe uma energia.</h2>
-              <p>Escolha uma palavra para acompanhar esta carta. A pessoa recebe seu cuidado, sem ranking.</p>
-              <div className="energy-list">{energies.map((item) => <button key={item} className={energy === item ? "selected" : ""} onClick={() => setEnergy(item)}>{energy === item && <Check size={15}/>} {item}</button>)}</div>
-              <Button disabled={!energy || sent || !data || sendEnergy.isPending} className="button button-primary full-button" onClick={() => sendEnergy.mutate({ letterId, label: energy })}>{sent ? "Energia enviada" : "Enviar energia"} <Sparkles size={16}/></Button>
+              <p>Escolha o tipo de energia. Sem isso, ela não parte. A pessoa recebe o cuidado, sem ranking.</p>
+              <div className="energy-list">{energyKinds.map((item) => <button key={item.key} className={energy === item.key ? "selected" : ""} onClick={() => setEnergy(item.key)}>{energy === item.key && <Check size={15}/>} {item.label}</button>)}</div>
+              <Button disabled={!energy || sent || !data || sendEnergy.isPending} className="button button-primary full-button" onClick={() => sendEnergy.mutate({ letterId, label: energy })}>{sent ? "Energia enviada" : "Enviar esta energia"} <Sparkles size={16}/></Button>
               <div className="advice-divider"><span>ou escreva como guardião</span></div>
               <p className="filter-hint">
                 Quem acolhe também responde pelo que diz. Sem diagnóstico, sem ordem, sem texto de IA.
