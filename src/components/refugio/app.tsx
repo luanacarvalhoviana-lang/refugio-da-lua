@@ -568,14 +568,14 @@ function Landing({ onEnter, onExplore }) {
 									" em meio ao ",
 									/* @__PURE__ */ jsx("em", { className: "blue", children: "caos" }),
 									"."
-								] }),
-								/* @__PURE__ */ jsx(MoonMascot, { mood: "hi", size: 108 })
+								] })
 							]
 						}),
 						/* @__PURE__ */ jsx("p", {
 							className: "hero-lead",
 							children: "Escreva, respire e encontre companhia em noites difíceis — sem ranking, sem julgamento."
 						}),
+						/* @__PURE__ */ jsx(LunaCompanion, { scene: "landing", size: 88 }),
 						/* @__PURE__ */ jsxs("div", {
 							className: "hero-actions",
 							children: [/* @__PURE__ */ jsx(Link, {

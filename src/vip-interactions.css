@@ -1360,7 +1360,7 @@
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center;
   border-radius: 18px;
 }
 .night-letter-card {

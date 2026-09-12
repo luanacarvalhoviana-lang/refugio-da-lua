@@ -11,6 +11,17 @@ const src: Record<LunaMood, string> = {
   care: "/mascot/luna-yawn.png",
 };
 
+const sceneMood: Record<LunaScene, LunaMood> = {
+  landing: "hi",
+  pacto: "hug",
+  mural: "listen",
+  letter: "listen",
+  write: "write",
+  garden: "rest",
+  care: "listen",
+  rest: "care",
+};
+
 export function MoonMascot({
   mood = "hug",
   size = 112,
@@ -34,21 +45,9 @@ export function LunaCompanion({
   size?: number;
   line?: string;
 }) {
-  const mood: LunaMood =
-    scene === "write"
-      ? "write"
-      : scene === "mural" || scene === "letter"
-        ? "listen"
-        : scene === "landing"
-          ? "hi"
-          : scene === "care"
-            ? "care"
-            : scene === "rest" || scene === "garden"
-              ? "rest"
-              : "hug";
   return (
     <aside className={`luna-companion scene-${scene}`}>
-      <MoonMascot mood={mood} size={size} />
+      <MoonMascot mood={sceneMood[scene]} size={size} />
       <p>{line || lunaSceneLines[scene]}</p>
     </aside>
   );

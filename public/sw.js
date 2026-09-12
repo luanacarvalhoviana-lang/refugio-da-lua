@@ -1,4 +1,4 @@
-const CACHE = "refugio-lua-v10";
+const CACHE = "refugio-lua-v11";
 const PRECACHE = ["/", "/inicio", "/instalar", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/logo.png"];
 
 self.addEventListener("install", (event) => {
