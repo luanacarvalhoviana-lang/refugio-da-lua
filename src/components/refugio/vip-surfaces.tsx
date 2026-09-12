@@ -21,6 +21,7 @@ import {
   type IslandTreeKey,
 } from "@/lib/refugio/islandTrees";
 import { GardenDecor } from "@/components/refugio/garden-decor";
+import { LivingTree, type LivingKind } from "@/components/refugio/living-tree";
 import type { SessionPlan } from "@/lib/refugio/store";
 import { useRefugioStore } from "@/lib/refugio/store";
 
@@ -62,8 +63,8 @@ export function IslandTree({
   const grown = grownKeys.map((key) => islandTreeByKey(key)).filter(Boolean);
 
   const harvestTree = useRefugioStore((s) => s.harvestTree);
-  const harvestedKeys = useRefugioStore((s) => s.harvestedKeys);
-  const ownedPacks = useRefugioStore((s) => s.ownedPacks);
+  const harvestedKeys = useRefugioStore((s) => s.harvestedKeys) || [];
+  const ownedPacks = useRefugioStore((s) => s.ownedPacks) || [];
   const picked = Boolean(species && harvestedKeys.includes(species.key));
   const picker = canPickNext && remaining.length > 0 && (
     <div className="island-choice-grid">
@@ -161,9 +162,7 @@ export function AmazonGrove({
   onSeePlans: () => void;
   onChoose?: (key: AmazonTreeKey) => void;
 }) {
-  const harvestTree = useRefugioStore((s) => s.harvestTree);
-  const harvestedKeys = useRefugioStore((s) => s.harvestedKeys);
-  const chooseAmazon = useRefugioStore((s) => s.chooseAmazonTree);
+  const harvestedKeys = useRefugioStore((s) => s.harvestedKeys) || [];
   const growing = growingAmazonSeed(seeds, energiesReceived);
   const canPick = unlocked && canPlantNextAmazon(seeds, energiesReceived);
   const remaining = amazonTrees.filter((tree) => !seeds.some((seed) => seed.speciesKey === tree.key));
