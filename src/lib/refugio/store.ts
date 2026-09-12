@@ -119,11 +119,6 @@ export function sessionSlice(state: RefugioState): Partial<RefugioState> {
     pendingDew: state.pendingDew,
     harvestedKeys: state.harvestedKeys,
     fruitBasket: state.fruitBasket,
-    ownedPacks: state.ownedPacks,
-    hiddenDecor: state.hiddenDecor,
-    flowerColors: state.flowerColors,
-    moonShape: state.moonShape,
-    rainOn: state.rainOn,
     letters: withoutDemoLetters(state.letters),
     cloudStamp: state.cloudStamp ?? 0,
   };
@@ -178,11 +173,6 @@ const FRESH_PROFILE: Partial<RefugioState> = {
   pendingDew: [],
   harvestedKeys: [],
   fruitBasket: 0,
-  ownedPacks: [],
-  hiddenDecor: [],
-  flowerColors: {},
-  moonShape: "crescent",
-  rainOn: true,
   letters: demoLetters,
 };
 
@@ -227,11 +217,6 @@ type RefugioState = {
   pendingDew: Letter[];
   harvestedKeys: string[];
   fruitBasket: number;
-  ownedPacks: string[];
-  hiddenDecor: string[];
-  flowerColors: Record<string, string>;
-  moonShape: "crescent" | "full";
-  rainOn: boolean;
   cloudStamp: number;
   confirmAge: () => void;
   acceptPact: () => void;
@@ -245,11 +230,6 @@ type RefugioState = {
   chooseIslandTree: (key: IslandTreeKey) => void;
   chooseAmazonTree: (key: AmazonTreeKey) => void;
   harvestTree: (key: string) => boolean;
-  togglePack: (id: string) => void;
-  setFlowerColor: (id: string, color: string) => void;
-  setMoonShape: (shape: "crescent" | "full") => void;
-  setRainOn: (on: boolean) => void;
-  toggleDecor: (id: string) => void;
   ensureAmazonGrove: () => void;
   sendEnergy: (letterId: string, kind?: string) => { grewSeed: boolean };
   markRead: (letterId: string) => void;
@@ -319,11 +299,6 @@ export const useRefugioStore = create<RefugioState>()(
       grownIslandKeys: [],
       harvestedKeys: [],
       fruitBasket: 0,
-      ownedPacks: [],
-      hiddenDecor: [],
-      flowerColors: {},
-      moonShape: "crescent" as const,
-      rainOn: true,
       thankedAdviceIds: [],
       adviceDay: todayKey(),
       adviceToday: 0,
@@ -432,22 +407,6 @@ export const useRefugioStore = create<RefugioState>()(
         });
         return true;
       },
-      togglePack: (id) =>
-        set((state) => ({
-          ownedPacks: state.ownedPacks.includes(id)
-            ? state.ownedPacks.filter((item) => item !== id)
-            : [...state.ownedPacks, id],
-        })),
-      setFlowerColor: (id, color) =>
-        set((state) => ({ flowerColors: { ...state.flowerColors, [id]: color } })),
-      setMoonShape: (shape) => set({ moonShape: shape }),
-      setRainOn: (on) => set({ rainOn: on }),
-      toggleDecor: (id) =>
-        set((state) => ({
-          hiddenDecor: state.hiddenDecor.includes(id)
-            ? state.hiddenDecor.filter((item) => item !== id)
-            : [...state.hiddenDecor, id],
-        })),
       chooseAmazonTree: (key) => {
         const state = get();
         if (state.plan !== "annual") return;
@@ -728,11 +687,6 @@ export const useRefugioStore = create<RefugioState>()(
         grownIslandKeys: state.grownIslandKeys,
         harvestedKeys: state.harvestedKeys,
         fruitBasket: state.fruitBasket,
-        ownedPacks: state.ownedPacks,
-        hiddenDecor: state.hiddenDecor,
-        flowerColors: state.flowerColors,
-        moonShape: state.moonShape,
-        rainOn: state.rainOn,
         thankedAdviceIds: state.thankedAdviceIds,
         adviceDay: state.adviceDay,
         adviceToday: state.adviceToday,
