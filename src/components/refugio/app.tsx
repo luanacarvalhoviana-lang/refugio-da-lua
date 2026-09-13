@@ -3264,8 +3264,8 @@ function Contact({ onBack }) {
           }),
           !sent && /* @__PURE__ */ jsxs("p", {
             children: ["E-mail da casa: ", /* @__PURE__ */ jsx("a", {
-              href: "mailto:contato.refugiodalua@gmail.com",
-              children: "contato.refugiodalua@gmail.com"
+              href: "mailto:contato@refugiodalua.com.br",
+              children: "contato@refugiodalua.com.br"
             })]
           }),
           !sent && /* @__PURE__ */ jsxs("form", {
