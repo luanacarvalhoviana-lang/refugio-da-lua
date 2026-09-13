@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Crown,
   Heart,
+  Mail,
   MapPin,
   Moon,
   Phone,
@@ -163,6 +164,22 @@ export function CarePage({ onNavigate }: { onNavigate: (path: string) => void })
             acima existem para isso.
           </p>
         </div>
+      </section>
+
+      <section className="care-block">
+        <span className="eyebrow"><Mail size={14} /> fale com a casa</span>
+        <h2>Relatar algo ou escrever para nós.</h2>
+        <p>
+          Carta inadequada, erro no site ou uma dúvida: a gente lê. Não é o 188 — se a vida estiver
+          em risco, ligue agora.
+        </p>
+        <p>
+          E-mail:{" "}
+          <a href="mailto:contato@refugiodalua.com.br">contato@refugiodalua.com.br</a>
+        </p>
+        <Button className="button button-primary" onClick={() => onNavigate("/contato")}>
+          Abrir contato <ArrowRight size={16} />
+        </Button>
       </section>
     </div>
   );

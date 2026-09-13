@@ -2352,6 +2352,29 @@ html[data-theme="night"] .luna-companion p { color: #e7efe8; }
   align-items: flex-start;
   background: #edf6f1;
 }
+.care-limits h2,
+.care-limits p {
+  color: #1b3a32;
+}
+html[data-theme="night"] .care-limits {
+  background: #1a3338;
+  border-color: #3d5c62;
+}
+html[data-theme="night"] .care-limits h2,
+html[data-theme="night"] .care-limits p,
+html[data-theme="night"] .care-limits svg {
+  color: #e8f3ee;
+}
+html[data-theme="night"] .care-block {
+  background: #163038;
+  border-color: #3d5c62;
+}
+html[data-theme="night"] .care-block h2,
+html[data-theme="night"] .care-block p,
+html[data-theme="night"] .care-list,
+html[data-theme="night"] .luna-vows li {
+  color: #e4eee8;
+}
 .care-breath {
   text-align: center;
   background: linear-gradient(180deg, #eef6ef, #f7f3ea);
