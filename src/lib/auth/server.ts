@@ -91,13 +91,25 @@ export const authConfigured =
 // it derives the origin per-request from the (proxied) host, validated against the
 // preview allowlist, which makes the OAuth `redirect_uri` the concrete preview URL
 // the broker's preview client accepts.
-const explicitBaseURL =
+const injectedBaseURL =
   env("BETTER_AUTH_URL") ??
   (env("VERCEL_PROJECT_PRODUCTION_URL")
     ? `https://${env("VERCEL_PROJECT_PRODUCTION_URL")}`
     : env("VERCEL_URL")
       ? `https://${env("VERCEL_URL")}`
       : undefined);
+const CANONICAL_SITE_URL = "https://www.refugiodalua.com.br";
+const SITE_ORIGINS: string[] = [
+  "https://refugiodalua.com.br",
+  "https://www.refugiodalua.com.br",
+  "https://refugio-da-lua.vercel.app",
+];
+// On Vercel, keep auth on the public .com.br domain even if the injected URL
+// is still the default *.vercel.app host.
+const explicitBaseURL =
+  env("VERCEL") && (!injectedBaseURL || injectedBaseURL.includes("vercel.app"))
+    ? CANONICAL_SITE_URL
+    : injectedBaseURL;
 // Explicit `string[]` (not a readonly tuple) — Better Auth's DynamicBaseURLConfig
 // requires a mutable `allowedHosts: string[]`.
 const previewAllowedHosts: string[] = [...PREVIEW_ALLOWED_HOSTS];
@@ -124,7 +136,7 @@ const baseURL = explicitBaseURL ?? {
 const trustedOrigins: string[] = explicitBaseURL
   ? [
       explicitBaseURL,
-      "https://refugio-da-lua.vercel.app",
+      ...SITE_ORIGINS,
       ...LOCAL_DEV_ORIGINS,
     ]
   : [
@@ -133,7 +145,7 @@ const trustedOrigins: string[] = explicitBaseURL
       // Full-origin wildcards (matched against Origin)
       ...previewAllowedHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
       ...LOCAL_DEV_ORIGINS,
-      "https://refugio-da-lua.vercel.app",
+      ...SITE_ORIGINS,
     ];
 
 const databaseUrl =
