@@ -121,6 +121,8 @@ export function sessionSlice(state: RefugioState): Partial<RefugioState> {
     fruitBasket: state.fruitBasket,
     letters: withoutDemoLetters(state.letters),
     cloudStamp: state.cloudStamp ?? 0,
+    pactOk: Boolean(state.pactOk),
+    ageOk: Boolean(state.ageOk),
   };
 }
 
@@ -142,6 +144,8 @@ export function gardenWeight(state: Partial<RefugioState>) {
 const FRESH_PROFILE: Partial<RefugioState> = {
   userName: "Girassol sereno",
   nickChosen: false,
+  pactOk: false,
+  ageOk: false,
   plan: "free",
   avatarKey: "leaf",
   frameKey: "none",
@@ -312,7 +316,11 @@ export const useRefugioStore = create<RefugioState>()(
       pendingDew: [],
       cloudStamp: 0,
       confirmAge: () => set({ ageOk: true }),
-      acceptPact: () => set({ pactOk: true, ageOk: true }),
+      acceptPact: () => {
+        set({ pactOk: true, ageOk: true });
+        const next = get();
+        if (next.email) writeVault(next.email, sessionSlice({ ...next, pactOk: true, ageOk: true }));
+      },
       setUserName: (userName) =>
         set({
           userName: userName.trim() || get().userName,
@@ -326,15 +334,17 @@ export const useRefugioStore = create<RefugioState>()(
         const nickPatch = nick && isValidNickname(nick, nextEmail) ? { userName: nick, nickChosen: true } : {};
         if (nextEmail && prevEmail && nextEmail !== prevEmail) {
           writeVault(prevEmail, sessionSlice(state));
+        }
+        if (nextEmail && nextEmail !== prevEmail) {
           const saved = readVault(nextEmail);
           set({
             ...(saved ?? FRESH_PROFILE),
             loggedIn: true,
             isAnonymous: false,
             email: nextEmail,
-            ageOk: state.ageOk,
-            pactOk: state.pactOk,
             theme: state.theme,
+            ageOk: Boolean(saved?.pactOk || saved?.ageOk),
+            pactOk: Boolean(saved?.pactOk),
             ...(saved ? {} : nickPatch),
           });
           return;
@@ -357,8 +367,8 @@ export const useRefugioStore = create<RefugioState>()(
           loggedIn: false,
           isAnonymous: false,
           email: "",
-          ageOk: state.ageOk,
-          pactOk: state.pactOk,
+          ageOk: false,
+          pactOk: false,
           theme: state.theme,
           cloudStamp: 0,
         });

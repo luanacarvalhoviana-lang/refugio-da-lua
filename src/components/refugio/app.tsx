@@ -194,10 +194,7 @@ function App() {
 	};
 	const storePactOk = useRefugioStore((s) => s.pactOk);
 	const acceptPact = useRefugioStore((s) => s.acceptPact);
-	const [pactOk, setPactOk] = useState(() => typeof window !== "undefined" && window.localStorage.getItem("refugio-pact-ok") === "1");
-	useEffect(() => {
-		if (window.localStorage.getItem("refugio-pact-ok") === "1" || storePactOk) setPactOk(true);
-	}, [storePactOk]);
+	const pactOk = storePactOk;
 	useEffect(() => {
 		if (auth.pending) return;
 		const open = new Set([
@@ -206,19 +203,24 @@ function App() {
 			"/conta", "/login", "/conta/recuperar-senha", "/conta/redefinir-senha",
 		]);
 		const allowed = open.has(location) || location.startsWith("/carta/");
+		const signedIn = Boolean(auth.user || loggedIn);
+		if (signedIn && !pactOk && location !== "/onboarding/pacto") {
+			navigate("/onboarding/pacto");
+			return;
+		}
 		if (!pactOk) {
 			if (!allowed) navigate("/onboarding/pacto");
 			return;
 		}
-		if (!(auth.user || loggedIn)) {
+		if (!signedIn) {
 			if (!allowed) navigate("/conta");
 			return;
 		}
-		if (location === "/" || location === "/inicio") {
+		if (location === "/" || location === "/inicio" || location === "/login") {
 			navigate(nickChosen ? "/mural" : "/onboarding/perfil");
 			return;
 		}
-		if (!nickChosen && location !== "/onboarding/perfil" && location !== "/conta") {
+		if (!nickChosen && location !== "/onboarding/perfil" && location !== "/conta" && location !== "/onboarding/pacto") {
 			navigate("/onboarding/perfil");
 		}
 	}, [auth.pending, auth.user, loggedIn, location, nickChosen, pactOk, navigate]);
@@ -233,10 +235,8 @@ function App() {
 		window.setTimeout(() => setToast(""), 3200);
 	};
 	const markPact = () => {
-		window.localStorage.setItem("refugio-pact-ok", "1");
 		window.localStorage.setItem("refugio-age-ok", "18");
 		acceptPact();
-		setPactOk(true);
 	};
 	const enterAs = (anonymous = false) => {
 		if (anonymous) {
