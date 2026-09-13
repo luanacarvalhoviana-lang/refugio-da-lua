@@ -5,7 +5,7 @@ export const sendContactNote = createServerFn({ method: "POST" })
   .validator(
     z.object({
       name: z.string().max(80).optional(),
-      email: z.string().max(120).optional(),
+      email: z.string().trim().email("Informe um e-mail válido para resposta.").max(120),
       topic: z.enum(["relato", "tecnico", "outro"]),
       body: z.string().min(8).max(4000),
     }),

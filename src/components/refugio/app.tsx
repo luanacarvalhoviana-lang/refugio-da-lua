@@ -3259,7 +3259,7 @@ function Contact({ onBack }) {
           /* @__PURE__ */ jsx("h1", { children: sent ? "Recebemos." : "Fale com o Refúgio." }),
           /* @__PURE__ */ jsx("p", {
             children: sent
-              ? "A mensagem chegou até nós. Se você deixou um e-mail, respondemos por ele. Crise agora: 188."
+              ? "A mensagem chegou até nós. Respondemos no e-mail que você deixou. Crise agora: 188."
               : "Use este espaço para relatar uma carta, um erro no site ou falar com a gente. Não é o CVV. Se estiver em risco, ligue 188."
           }),
           !sent && /* @__PURE__ */ jsxs("p", {
@@ -3272,13 +3272,18 @@ function Contact({ onBack }) {
             onSubmit: (e) => {
               e.preventDefault();
               setError("");
+              const reply = email.trim();
+              if (!reply.includes("@")) {
+                setError("Precisamos de um e-mail para te responder.");
+                return;
+              }
               if (body.trim().length < 8) {
                 setError("Escreva um pouco mais, para entendermos.");
                 return;
               }
               setPending(true);
               void sendContactNote({
-                data: { name, email, topic, body: body.trim() }
+                data: { name, email: reply, topic, body: body.trim() }
               }).then(() => setSent(true)).catch((err) => {
                 setError(err instanceof Error ? err.message : "Não foi possível enviar.");
               }).finally(() => setPending(false));
@@ -3302,10 +3307,12 @@ function Contact({ onBack }) {
                 onChange: (e) => setName(e.target.value),
                 placeholder: "Pseudônimo"
               }),
-              /* @__PURE__ */ jsx("label", { htmlFor: "contact-email", children: "E-mail para resposta (opcional)" }),
+              /* @__PURE__ */ jsx("label", { htmlFor: "contact-email", children: "E-mail para a gente responder" }),
               /* @__PURE__ */ jsx("input", {
                 id: "contact-email",
                 type: "email",
+                required: true,
+                autoComplete: "email",
                 value: email,
                 onChange: (e) => setEmail(e.target.value),
                 placeholder: "voce@email.com"
