@@ -35,6 +35,7 @@ import { Route as TermosRouteImport } from './routes/termos'
 import { Route as ApiBackupRouteImport } from './routes/api/backup'
 import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
+import { Route as ContaRedefinirSenhaRouteImport } from './routes/conta.redefinir-senha'
 import { Route as EscreverConfirmacaoRouteImport } from './routes/escrever.confirmacao'
 import { Route as OnboardingPactoRouteImport } from './routes/onboarding.pacto'
 import { Route as OnboardingPerfilRouteImport } from './routes/onboarding.perfil'
@@ -171,6 +172,11 @@ const ContaRecuperarSenhaRoute = ContaRecuperarSenhaRouteImport.update({
   path: '/recuperar-senha',
   getParentRoute: () => ContaRoute,
 } as any)
+const ContaRedefinirSenhaRoute = ContaRedefinirSenhaRouteImport.update({
+  id: '/redefinir-senha',
+  path: '/redefinir-senha',
+  getParentRoute: () => ContaRoute,
+} as any)
 const EscreverConfirmacaoRoute = EscreverConfirmacaoRouteImport.update({
   id: '/confirmacao',
   path: '/confirmacao',
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
+  '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
@@ -257,6 +264,7 @@ export interface FileRoutesByTo {
   '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
+  '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
+  '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
+    | '/conta/redefinir-senha'
     | '/escrever/confirmacao'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
@@ -359,6 +369,7 @@ export interface FileRouteTypes {
     | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
+    | '/conta/redefinir-senha'
     | '/escrever/confirmacao'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
@@ -392,6 +403,7 @@ export interface FileRouteTypes {
     | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
+    | '/conta/redefinir-senha'
     | '/escrever/confirmacao'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
@@ -615,6 +627,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContaRecuperarSenhaRouteImport
       parentRoute: typeof ContaRoute
     }
+    '/conta/redefinir-senha': {
+      id: '/conta/redefinir-senha'
+      path: '/redefinir-senha'
+      fullPath: '/conta/redefinir-senha'
+      preLoaderRoute: typeof ContaRedefinirSenhaRouteImport
+      parentRoute: typeof ContaRoute
+    }
     '/escrever/confirmacao': {
       id: '/escrever/confirmacao'
       path: '/confirmacao'
@@ -655,10 +674,12 @@ declare module '@tanstack/react-router' {
 
 interface ContaRouteChildren {
   ContaRecuperarSenhaRoute: typeof ContaRecuperarSenhaRoute
+  ContaRedefinirSenhaRoute: typeof ContaRedefinirSenhaRoute
 }
 
 const ContaRouteChildren: ContaRouteChildren = {
   ContaRecuperarSenhaRoute: ContaRecuperarSenhaRoute,
+  ContaRedefinirSenhaRoute: ContaRedefinirSenhaRoute,
 }
 
 const ContaRouteWithChildren = ContaRoute._addFileChildren(ContaRouteChildren)
