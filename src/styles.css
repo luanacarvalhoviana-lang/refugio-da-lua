@@ -829,10 +829,11 @@ p {
 }
 .secure-note {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
   color: var(--muted);
   font-size: 11px;
+  line-height: 1.45;
   margin: 15px 0 10px;
 }
 .auth-optional {

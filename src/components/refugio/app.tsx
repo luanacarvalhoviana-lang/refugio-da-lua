@@ -951,7 +951,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 							}),
 							/* @__PURE__ */ jsxs("div", {
 								className: "secure-note",
-								children: [/* @__PURE__ */ jsx(ShieldCheck, { size: 15 }), " Sua senha é protegida e nunca aparece no seu perfil."]
+								children: [/* @__PURE__ */ jsx(ShieldCheck, { size: 15 }), " O Google só confirma seu nome e e-mail. Não abrimos Gmail, fotos, contatos nem arquivos. Com outro e-mail, a caixa de entrada também continua só sua."]
 							}),
 							/* @__PURE__ */ jsxs(Button, {
 								type: "submit",
