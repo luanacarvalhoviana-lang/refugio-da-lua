@@ -681,7 +681,7 @@ function Landing({ onEnter, onExplore }) {
 								children: [
 									/* @__PURE__ */ jsx(Moon, { size: 18 }),
 									/* @__PURE__ */ jsx("strong", { children: "Sobre o Refúgio" }),
-									/* @__PURE__ */ jsx("span", { children: "O que somos, o que não somos e como o cuidado acontece aqui." })
+									/* @__PURE__ */ jsx("span", { children: "O que somos, quem criou e como o cuidado acontece aqui." })
 								]
 							}),
 							/* @__PURE__ */ jsxs(Link, {
