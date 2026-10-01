@@ -926,11 +926,14 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 								]
 							}),
 							tab === "register" && /* @__PURE__ */ jsxs("label", {
-								className: "check-row",
+								className: "check-row advice-own",
 								children: [/* @__PURE__ */ jsx("input", {
 									type: "checkbox",
 									name: "isAdult",
 									required: true
+								}), /* @__PURE__ */ jsx("span", {
+									className: "fake-check",
+									children: /* @__PURE__ */ jsx(Check, { size: 14 })
 								}), /* @__PURE__ */ jsxs("span", { children: [
 									"Aceito os ",
 									/* @__PURE__ */ jsx("a", {
@@ -1866,8 +1869,15 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
   const planNow = useRefugioStore((s) => s.plan);
   const openAdvice = trpc.letters.openAdvice.useMutation();
   const review = reviewLetterText(message, "advice");
+  const [energyError, setEnergyError] = useState("");
   const sendEnergy = trpc.letters.sendEnergy.useMutation({
-    onSuccess: (result) => { setSent(true); onEnergy(Boolean(result?.grewSeed)); },
+    onSuccess: (result) => {
+      setSent(true);
+      setEnergyError("");
+      setFetched((current) => current ? { ...current, energy: (current.energy || 0) + 1 } : current);
+      onEnergy(Boolean(result?.grewSeed));
+    },
+    onError: (err) => setEnergyError(err.message),
   });
   const thankAdvice = trpc.letters.thankAdvice.useMutation({
     onSuccess: (result) => { if (result) onDew(); },
@@ -2028,7 +2038,8 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
               <h2>Deixe uma energia.</h2>
               <p>Escolha o tipo de energia. Sem isso, ela não parte. A pessoa recebe o cuidado, sem ranking.</p>
               <div className="energy-list">{energyKinds.map((item) => <button key={item.key} className={energy === item.key ? "selected" : ""} onClick={() => setEnergy(item.key)}>{energy === item.key && <Check size={15}/>} {item.label}</button>)}</div>
-              <Button disabled={!energy || sent || !data || sendEnergy.isPending} className="button button-primary full-button" onClick={() => sendEnergy.mutate({ letterId, label: energy })}>{sent ? "Energia enviada" : "Enviar esta energia"} <Sparkles size={16}/></Button>
+              <Button disabled={!energy || sent || !data || sendEnergy.isPending} className="button button-primary full-button" onClick={() => { setEnergyError(""); sendEnergy.mutate({ letterId, label: energy }); }}>{sendEnergy.isPending ? "Enviando..." : sent ? "Energia enviada" : "Enviar esta energia"} <Sparkles size={16}/></Button>
+              {energyError && <p className="advice-error" role="alert">{energyError}</p>}
               <div className="advice-divider" id="aconselhar"><span>Aconselhar</span></div>
               <h2>Escreva um cuidado para esta carta.</h2>
               <p className="filter-hint">
@@ -2311,11 +2322,14 @@ function Write({ draft, setDraft, anonymous, onCancel, onPublish, onSave, onAskL
 							]
 						}),
 						/* @__PURE__ */ jsxs("label", {
-							className: "check-row",
+							className: `check-row advice-own ${ownWords ? "checked" : ""}`,
 							children: [/* @__PURE__ */ jsx("input", {
 								type: "checkbox",
 								checked: ownWords,
 								onChange: (e) => setOwnWords(e.target.checked)
+							}), /* @__PURE__ */ jsx("span", {
+								className: "fake-check",
+								children: /* @__PURE__ */ jsx(Check, { size: 14 })
 							}), /* @__PURE__ */ jsx("span", { children: "Este desabafo é meu. Não estou colando uma história inventada por inteligência artificial." })]
 						}),
 						privacy === "mural" && /* @__PURE__ */ jsx("p", {
@@ -2325,7 +2339,7 @@ function Write({ draft, setDraft, anonymous, onCancel, onPublish, onSave, onAskL
 								: `Restam ${letterStatus.remaining} carta${letterStatus.remaining === 1 ? "" : "s"} no mural nesta semana.`
 						}),
 						error && /* @__PURE__ */ jsx("p", {
-							className: "checkout-error",
+							className: "advice-error",
 							role: "alert",
 							children: error
 						}),

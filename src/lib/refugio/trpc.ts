@@ -1,4 +1,4 @@
-import { useRefugioStore, currentSubscription } from "@/lib/refugio/store";
+import { useState } from "react";
 import { loadLocalDiary, loadLocalMemories } from "@/lib/refugio/localGarden";
 import { findAccount, removeAccount, resetPassword, upsertAccount, verifyAccount } from "@/lib/refugio/accounts";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
@@ -11,19 +11,30 @@ type Handlers<TData, TVars> = {
 };
 
 function useMutation<TVars, TData>(
-  run: (vars: TVars) => TData,
+  run: (vars: TVars) => TData | Promise<TData>,
   handlers?: Handlers<TData, TVars>,
 ) {
+  const [isPending, setPending] = useState(false);
   return {
     mutate: (vars: TVars) => {
+      setPending(true);
       try {
         const data = run(vars);
-        handlers?.onSuccess?.(data, vars);
+        if (data && typeof (data as Promise<TData>).then === "function") {
+          void (data as Promise<TData>)
+            .then((value) => handlers?.onSuccess?.(value, vars))
+            .catch((error) => handlers?.onError?.(error instanceof Error ? error : new Error("Algo deu errado.")))
+            .finally(() => setPending(false));
+          return;
+        }
+        handlers?.onSuccess?.(data as TData, vars);
+        setPending(false);
       } catch (error) {
         handlers?.onError?.(error instanceof Error ? error : new Error("Algo deu errado."));
+        setPending(false);
       }
     },
-    isPending: false,
+    isPending,
     error: null as Error | null,
     reset: () => undefined,
   };
@@ -121,12 +132,10 @@ export const trpc = {
     },
     sendEnergy: {
       useMutation: (handlers?: Handlers<{ grewSeed: boolean }, { letterId: string; label?: string }>) =>
-        useMutation((vars) => {
-          const result = useRefugioStore.getState().sendEnergy(vars.letterId, vars.label);
-          if (vars.label) {
-            void energyMuralLetter({ data: { letterId: vars.letterId, kind: vars.label } }).catch(() => undefined);
-          }
-          return result;
+        useMutation(async (vars) => {
+          const result = await energyMuralLetter({ data: { letterId: vars.letterId, kind: vars.label || "" } });
+          if (!result?.ok) throw new Error(result?.message || "Não foi possível enviar a energia.");
+          return useRefugioStore.getState().sendEnergy(vars.letterId, vars.label);
         }, handlers),
     },
     advise: {
@@ -175,28 +184,38 @@ export const trpc = {
           }
         >,
       ) =>
-        useMutation((vars) => {
+        useMutation(async (vars) => {
           const letter = useRefugioStore.getState().publishLetter(vars);
-          void publishMuralLetter({
-            data: {
-              id: letter.id,
-              title: letter.title,
-              author: letter.author,
-              initials: letter.initials,
-              topic: letter.topic,
-              excerpt: letter.excerpt,
-              body: letter.body,
-              color: letter.color,
-              gender: letter.gender || undefined,
-              ageGroup: letter.ageGroup || undefined,
-              emotion: letter.emotion || undefined,
-              hour: letter.hour,
-              priority: letter.priority,
-              paperKey: letter.paperKey,
-              sealKey: letter.sealKey,
-              afterMural: letter.afterMural,
-            },
-          }).catch(() => undefined);
+          try {
+            const result = await publishMuralLetter({
+              data: {
+                id: letter.id,
+                title: letter.title,
+                author: letter.author,
+                initials: letter.initials,
+                topic: letter.topic,
+                excerpt: letter.excerpt,
+                body: letter.body,
+                color: letter.color,
+                gender: letter.gender || undefined,
+                ageGroup: letter.ageGroup || undefined,
+                emotion: letter.emotion || undefined,
+                hour: letter.hour,
+                priority: letter.priority,
+                paperKey: letter.paperKey,
+                sealKey: letter.sealKey,
+                afterMural: letter.afterMural,
+              },
+            });
+            if (!result?.ok) throw new Error(result?.message || "Não foi possível publicar agora.");
+          } catch (error) {
+            useRefugioStore.setState((state) => ({
+              letters: state.letters.filter((item) => item.id !== letter.id),
+              lettersPublished: Math.max(0, state.lettersPublished - 1),
+              lettersThisWeek: Math.max(0, state.lettersThisWeek - 1),
+            }));
+            throw error instanceof Error ? error : new Error("Não foi possível publicar agora.");
+          }
         }, handlers),
     },
     retire: {

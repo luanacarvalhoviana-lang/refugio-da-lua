@@ -178,66 +178,68 @@ const letterInput = z.object({
 export const publishMuralLetter = createServerFn({ method: "POST" })
   .validator(letterInput)
   .handler(async ({ data }) => {
-    const { getSessionUser, UnauthorizedError } = await import("@/lib/auth/verify.server");
-    const { reviewLetterText, canPublish } = await import("@/lib/refugio/letterReview");
-    const user = await getSessionUser();
-    if (!user) throw new UnauthorizedError();
-    const review = reviewLetterText(data.body, "letter");
-    if (!canPublish(review)) throw new Error(review.summary);
-    const { getSql } = await import("@/lib/db");
-    const sql = await getSql();
-    const week = await sql.query<{ n: string | number }>(
-      `select count(*)::int as n from mural_letters
-       where author_id = $1 and posted_at > now() - interval '7 days' and hidden = false`,
-      [user.id],
-    );
-    if (Number(week[0]?.n) >= 7) throw new Error("O mural desta semana já está cheio.");
-    await sql.query(
-      `insert into mural_letters
-        (id, author_id, author_name, initials, title, body, excerpt, topic, color, gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural)
-       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
-       on conflict (id) do nothing`,
-      [
-        data.id,
-        user.id,
-        data.author,
-        data.initials,
-        data.title,
-        data.body,
-        data.excerpt,
-        data.topic,
-        data.color || "lavender",
-        data.gender || null,
-        data.ageGroup || null,
-        data.emotion || null,
-        data.hour ?? null,
-        data.priority ?? 0,
-        data.paperKey || null,
-        data.sealKey || null,
-        data.afterMural || null,
-      ],
-    );
-    return { ok: true as const };
+    try {
+      const { getSessionUser } = await import("@/lib/auth/verify.server");
+      const { reviewLetterText, canPublish } = await import("@/lib/refugio/letterReview");
+      const user = await Promise.race([
+        getSessionUser(),
+        new Promise<null>((resolve) => setTimeout(() => resolve(null), 6000)),
+      ]);
+      if (!user) return { ok: false as const, message: "Entre de novo para a carta ficar no mural." };
+      const review = reviewLetterText(data.body, "letter");
+      if (!canPublish(review)) return { ok: false as const, message: review.summary };
+      const { getSql } = await import("@/lib/db");
+      const sql = await getSql();
+      const week = await sql.query<{ n: string | number }>(
+        `select count(*)::int as n from mural_letters
+         where author_id = $1 and posted_at > now() - interval '7 days' and hidden = false`,
+        [user.id],
+      );
+      if (Number(week[0]?.n) >= 7) return { ok: false as const, message: "O mural desta semana já está cheio." };
+      await sql.query(
+        `insert into mural_letters
+          (id, author_id, author_name, initials, title, body, excerpt, topic, color, gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+         on conflict (id) do nothing`,
+        [
+          data.id, user.id, data.author, data.initials, data.title, data.body, data.excerpt, data.topic,
+          data.color || "lavender", data.gender || null, data.ageGroup || null, data.emotion || null,
+          data.hour ?? null, data.priority ?? 0, data.paperKey || null, data.sealKey || null, data.afterMural || null,
+        ],
+      );
+      return { ok: true as const, message: "Carta publicada." };
+    } catch {
+      return { ok: false as const, message: "Não consegui publicar agora. Tente de novo." };
+    }
   });
 
 export const energyMuralLetter = createServerFn({ method: "POST" })
   .validator(z.object({ letterId: z.string().min(3).max(80), kind: z.string().min(2).max(20) }))
   .handler(async ({ data }) => {
-    const { getSessionUser, UnauthorizedError } = await import("@/lib/auth/verify.server");
-    const { energyKinds } = await import("@/lib/refugio/energies");
-    const user = await getSessionUser();
-    if (!user) throw new UnauthorizedError();
-    if (!energyKinds.some((item) => item.key === data.kind)) throw new Error("Escolha uma energia.");
-    const { getSql } = await import("@/lib/db");
-    const sql = await getSql();
-    await sql.query(
-      `update mural_letters
-       set energy = energy + 1,
-           energy_kinds = coalesce(energy_kinds, '{}'::jsonb) || jsonb_build_object($2, coalesce((energy_kinds->>$2)::int, 0) + 1)
-       where id = $1 and hidden = false`,
-      [data.letterId, data.kind],
-    );
-    return { ok: true as const };
+    try {
+      const { getSessionUser } = await import("@/lib/auth/verify.server");
+      const { energyKinds } = await import("@/lib/refugio/energies");
+      const user = await Promise.race([
+        getSessionUser(),
+        new Promise<null>((resolve) => setTimeout(() => resolve(null), 6000)),
+      ]);
+      if (!user) return { ok: false as const, message: "Entre de novo para a energia ficar na carta." };
+      if (!energyKinds.some((item) => item.key === data.kind)) return { ok: false as const, message: "Escolha uma energia." };
+      const { getSql } = await import("@/lib/db");
+      const sql = await getSql();
+      const rows = await sql.query<{ id: string }>(
+        `update mural_letters
+         set energy = energy + 1,
+             energy_kinds = coalesce(energy_kinds, '{}'::jsonb) || jsonb_build_object($2, coalesce((energy_kinds->>$2)::int, 0) + 1)
+         where id = $1 and hidden = false
+         returning id`,
+        [data.letterId, data.kind],
+      );
+      if (!rows.length) return { ok: false as const, message: "Não achei esta carta no mural." };
+      return { ok: true as const, message: "Energia enviada." };
+    } catch {
+      return { ok: false as const, message: "Não consegui enviar a energia agora." };
+    }
   });
 
 export const adviseMuralLetter = createServerFn({ method: "POST" })

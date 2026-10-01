@@ -1024,6 +1024,7 @@ html[data-theme="night"] .advice-own .fake-check {
   color: transparent;
   background: #fff;
 }
+.check-row input:checked + .fake-check,
 .check-row.checked .fake-check {
   background: var(--petrol);
   color: white;
@@ -1668,6 +1669,23 @@ html[data-theme="night"] .advice-sent {
 html[data-theme="night"] .advice-error {
   background: #3a2428;
   color: #ffd7d2;
+}
+html[data-theme="night"] .form-label,
+html[data-theme="night"] .filter-hint,
+html[data-theme="night"] .identity-line,
+html[data-theme="night"] .mural-count,
+html[data-theme="night"] label {
+  color: #d7e4e1;
+}
+html[data-theme="night"] input,
+html[data-theme="night"] textarea,
+html[data-theme="night"] select {
+  color: #e7efe8;
+  background: #121820;
+  border-color: #3d4c56;
+}
+html[data-theme="night"] .check-row {
+  color: #e7efe8;
 }
 .advice-divider {
   display: flex;
