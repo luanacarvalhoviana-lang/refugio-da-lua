@@ -254,21 +254,32 @@ export const adviseMuralLetter = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const { getSessionUser, UnauthorizedError } = await import("@/lib/auth/verify.server");
-    const { reviewLetterText, canPublish } = await import("@/lib/refugio/letterReview");
-    const user = await getSessionUser();
-    if (!user) throw new UnauthorizedError();
-    const review = reviewLetterText(data.advice.body, "advice");
-    if (!canPublish(review)) throw new Error(review.summary);
-    const { getSql } = await import("@/lib/db");
-    const sql = await getSql();
-    await sql.query(
-      `update mural_letters
-       set advice = coalesce(advice, '[]'::jsonb) || $2::jsonb
-       where id = $1 and hidden = false`,
-      [data.letterId, JSON.stringify([data.advice])],
-    );
-    return { ok: true as const };
+    try {
+      const { getSessionUser } = await import("@/lib/auth/verify.server");
+      const { reviewLetterText, canPublish } = await import("@/lib/refugio/letterReview");
+      const user = await Promise.race([
+        getSessionUser(),
+        new Promise<null>((resolve) => {
+          setTimeout(() => resolve(null), 6000);
+        }),
+      ]);
+      if (!user) return { ok: false as const, message: "Entre de novo para o conselho ficar salvo na carta." };
+      const review = reviewLetterText(data.advice.body, "advice");
+      if (!canPublish(review)) return { ok: false as const, message: review.summary };
+      const { getSql } = await import("@/lib/db");
+      const sql = await getSql();
+      const rows = await sql.query<{ id: string }>(
+        `update mural_letters
+         set advice = coalesce(advice, '[]'::jsonb) || $2::jsonb
+         where id = $1 and hidden = false
+         returning id`,
+        [data.letterId, JSON.stringify([data.advice])],
+      );
+      if (!rows.length) return { ok: false as const, message: "Não achei esta carta no mural." };
+      return { ok: true as const, message: "Conselho enviado." };
+    } catch {
+      return { ok: false as const, message: "Não consegui guardar o conselho agora. Tente de novo." };
+    }
   });
 
 export const hideMuralLetter = createServerFn({ method: "POST" })

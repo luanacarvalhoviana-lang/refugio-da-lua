@@ -1880,7 +1880,7 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
     onError: (err) => setAdviceError(err.message),
   });
   void adviceTick;
-  const submitAdvice = () => {
+  const submitAdvice = async () => {
     setAdviceError("");
     const entered = signedIn || useRefugioStore.getState().loggedIn;
     if (!entered) {
@@ -1906,32 +1906,35 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
       ...(fontKey ? { fontKey } : {}),
     };
     setSendingAdvice(true);
-    const save = adviseMuralLetter({ data: { letterId, advice } });
-    const timed = new Promise((_, reject) => {
-      window.setTimeout(() => reject(new Error("A carta demorou a responder. Tente de novo.")), 12000);
-    });
-    void Promise.race([save, timed])
-      .then(() => {
+    try {
+      const result = await Promise.race([
+        adviseMuralLetter({ data: { letterId, advice } }),
+        new Promise((_, reject) => {
+          window.setTimeout(() => reject(new Error("A carta demorou a responder. Tente de novo.")), 8000);
+        }),
+      ]);
+      if (result && result.ok === false) {
+        setAdviceError(result.message || "Não foi possível enviar agora.");
+        return;
+      }
+      try {
         useRefugioStore.getState().addAdvice({ letterId, body, envelopeKey, fontKey });
-        setFetched((current) => {
-          const base = current || localLetter.data;
-          if (!base) return current;
-          return { ...base, advice: [...(base.advice || []), advice] };
-        });
-        setMessage("");
-        setOwnAdvice(false);
-        setAdviceSent(true);
-        onAdvice(null);
-      })
-      .catch((err) => {
-        const text = err instanceof Error ? err.message : "";
-        if (/unauthor|401|sess/i.test(text)) {
-          setAdviceError("Sua entrada expirou. Saia e entre de novo, aí o conselho grava.");
-        } else {
-          setAdviceError(text || "Não foi possível enviar agora. Tente de novo.");
-        }
-      })
-      .finally(() => setSendingAdvice(false));
+      } catch { /* o conselho já ficou na carta */ }
+      setFetched((current) => {
+        const base = current || localLetter.data;
+        if (!base) return current;
+        return { ...base, advice: [...(base.advice || []), advice] };
+      });
+      setMessage("");
+      setOwnAdvice(false);
+      setAdviceSent(true);
+      onAdvice(null);
+    } catch (err) {
+      const text = err instanceof Error ? err.message : "";
+      setAdviceError(text || "Não foi possível enviar agora. Tente de novo.");
+    } finally {
+      setSendingAdvice(false);
+    }
   };
   const data = localLetter.data || fetched;
   const opening = looking && !data;
@@ -2040,8 +2043,9 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
               <p className="filter-hint">O envelope chega lacrado. Só quem escreveu a carta escolhe abrir. Linho, luar e caligrafia são VIP.</p>
               {message.trim() && review.flags.length > 0 && <div className={"review-box " + review.level}><span className="review-kicker">leitura automática</span><strong>{review.summary}</strong>{review.careNeeded && <p className="review-care">CVV 188 · 24h · gratuito.</p>}</div>}
               <label className="check-row"><input type="checkbox" checked={ownAdvice} onChange={(e) => setOwnAdvice(e.target.checked)} /><span>Este conselho é meu. Não colei texto de IA. Não estou diagnosticando ninguém.</span></label>
+              {sendingAdvice && <p className="advice-sent">Enviando o conselho...</p>}
               {adviceSent && <p className="advice-sent">Conselho enviado. Ele fica lacrado para quem escreveu a carta.</p>}
-              {adviceError && <p className="checkout-error" role="alert">{adviceError}</p>}
+              {adviceError && <p className="advice-error" role="alert">{adviceError}</p>}
               <Button disabled={!message.trim() || sendingAdvice || !letterId} className="button button-secondary full-button" onClick={submitAdvice}>{sendingAdvice ? "Enviando..." : adviceSent ? "Enviar outro conselho" : "Enviar conselho com cuidado"} <ArrowRight size={16}/></Button>
             </>
           )}
