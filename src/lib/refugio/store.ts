@@ -337,14 +337,21 @@ export const useRefugioStore = create<RefugioState>()(
         }
         if (nextEmail && nextEmail !== prevEmail) {
           const saved = readVault(nextEmail);
+          const kept = saved ?? {
+            ...FRESH_PROFILE,
+            userName: state.userName,
+            nickChosen: state.nickChosen,
+            pactOk: state.pactOk,
+            ageOk: state.ageOk,
+          };
           set({
-            ...(saved ?? FRESH_PROFILE),
+            ...kept,
             loggedIn: true,
             isAnonymous: false,
             email: nextEmail,
             theme: state.theme,
-            ageOk: Boolean(saved?.pactOk || saved?.ageOk),
-            pactOk: Boolean(saved?.pactOk),
+            ageOk: Boolean(saved?.ageOk || saved?.pactOk || state.ageOk || state.pactOk),
+            pactOk: Boolean(saved?.pactOk || state.pactOk),
             ...(saved ? {} : nickPatch),
           });
           return;

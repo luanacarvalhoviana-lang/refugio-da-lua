@@ -251,9 +251,10 @@ function App() {
 			setOnboarded(true);
 		}
 		const session = useRefugioStore.getState();
-		if (!anonymous && !pactOk) go("/onboarding/pacto");
-		else if (!anonymous && !session.nickChosen && !isValidNickname(session.userName, session.email)) go("/onboarding/perfil");
-		else go(pactOk ? "/mural" : "/onboarding/pacto");
+		if (anonymous) return;
+		if (!session.pactOk) go("/onboarding/pacto");
+		else if (!session.nickChosen || !isValidNickname(session.userName, session.email)) go("/onboarding/perfil");
+		else go("/mural");
 	};
 	if (!pactOk && !(/* @__PURE__ */ new Set([
 		"/",
@@ -781,7 +782,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 	const [pending, setPending] = useState(false);
 	const googleIn = () => {
 		setError("");
-		void signInGoogle({ callbackURL: "/inicio", errorCallbackURL: "/conta" }).catch((err) => {
+		void signInGoogle({ callbackURL: "/mural", errorCallbackURL: "/conta" }).catch((err) => {
 			setError(err instanceof Error ? err.message : "Não foi possível entrar com o Google.");
 		});
 	};
@@ -849,7 +850,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 							const form = e.currentTarget;
 							const email = String(form.elements.namedItem("email")?.value || "").trim();
 							const password = String(form.elements.namedItem("password")?.value || "");
-							const name = String(form.elements.namedItem("name")?.value || "").trim() || "Girassol sereno";
+							const name = tab === "register" ? String(form.elements.namedItem("name")?.value || "").trim() : "";
 							const isAdult = tab === "register" ? Boolean(form.elements.namedItem("isAdult")?.checked) : true;
 							if (!email || !email.includes("@")) {
 								setError("Escreva um e-mail para entrar.");
@@ -868,7 +869,7 @@ function Auth({ onLogin, onAnonymous, onBack }) {
 								? signUpEmail({ name, email, password })
 								: signInEmail(email, password);
 							void run.then(() => {
-								useRefugioStore.getState().login({ email, name });
+								useRefugioStore.getState().login(name ? { email, name } : { email });
 								onLogin();
 							}).catch((err) => {
 								setError(err instanceof Error ? err.message : "Não foi possível entrar com e-mail.");
