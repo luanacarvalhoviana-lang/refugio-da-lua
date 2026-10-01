@@ -2945,6 +2945,34 @@ html[data-theme="night"] .lt-ground {
 .env-wax { background: linear-gradient(180deg, #f3e2b8, #d4b36a); color: #4a3514; }
 .env-nightwax { background: linear-gradient(180deg, #2a4452, #17384a); color: #f6f0e4; }
 .env-nightwax .envelope-seal { background: #f6d77a; color: #17384a; }
+html[data-theme="night"] .env-kraft,
+html[data-theme="night"] .env-kraft strong,
+html[data-theme="night"] .env-kraft p,
+html[data-theme="night"] .env-kraft small,
+html[data-theme="night"] .env-linen,
+html[data-theme="night"] .env-linen strong,
+html[data-theme="night"] .env-linen p,
+html[data-theme="night"] .env-linen small,
+html[data-theme="night"] .env-moonlight,
+html[data-theme="night"] .env-moonlight strong,
+html[data-theme="night"] .env-moonlight p,
+html[data-theme="night"] .env-moonlight small,
+html[data-theme="night"] .env-garden,
+html[data-theme="night"] .env-garden strong,
+html[data-theme="night"] .env-garden p,
+html[data-theme="night"] .env-garden small,
+html[data-theme="night"] .env-wax,
+html[data-theme="night"] .env-wax strong,
+html[data-theme="night"] .env-wax p,
+html[data-theme="night"] .env-wax small {
+  color: #3a2a16;
+}
+html[data-theme="night"] .env-nightwax,
+html[data-theme="night"] .env-nightwax strong,
+html[data-theme="night"] .env-nightwax p,
+html[data-theme="night"] .env-nightwax small {
+  color: #f6f0e4;
+}
 .opened-letter { animation: letter-open .45s var(--ease-out); }
 .font-lora { font-family: "Lora", Georgia, serif; }
 .font-cormorant { font-family: "Cormorant Garamond", Georgia, serif; font-size: 1.12em; }
