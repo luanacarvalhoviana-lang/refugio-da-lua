@@ -1861,6 +1861,7 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
   const [ownAdvice, setOwnAdvice] = useState(false);
   const [adviceError, setAdviceError] = useState("");
   const [sendingAdvice, setSendingAdvice] = useState(false);
+  const [openedAdvice, setOpenedAdvice] = useState<string[]>([]);
   const [adviceSent, setAdviceSent] = useState(false);
   const envelopeKey = useRefugioStore((s) => s.envelopeKey);
   const fontKey = useRefugioStore((s) => s.fontKey);
@@ -1985,9 +1986,9 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
                   {Object.entries(data.energyKinds).map(([key, n]) => `${energyLabel(key)} × ${n}`).join(" · ")}
                 </p>
               )}
-              {isOwn && receivedAdvice.length > 0 && (
+              {receivedAdvice.length > 0 && (
                 <div className="received-advice">
-                  <span className="eyebrow"><Heart size={14} /> conselhos que chegaram</span>
+                  <span className="eyebrow"><Heart size={14} /> {receivedAdvice.length} {receivedAdvice.length === 1 ? "conselho nesta carta" : "conselhos nesta carta"}</span>
                   {receivedAdvice.map((item) => {
                     const thanked = thankedAdviceIds.includes(item.id);
                     return (
@@ -1997,10 +1998,11 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
                         body={item.body}
                         envelopeKey={item.envelopeKey}
                         fontKey={item.fontKey}
-                        opened={item.opened}
+                        opened={item.opened || openedAdvice.includes(item.id)}
                         thanked={thanked}
                         thanking={thankAdvice.isPending}
-                        onOpen={() => openAdvice.mutate({ adviceId: item.id })}
+                        showThanks={isOwn}
+                        onOpen={() => setOpenedAdvice((ids) => ids.includes(item.id) ? ids : [...ids, item.id])}
                         onThank={() => thankAdvice.mutate({ adviceId: item.id })}
                       />
                     );
@@ -2051,7 +2053,7 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
               <StylePicker items={envelopes} plan={planNow} value={envelopeKey} onChange={setEnvelope} />
               <span className="form-label">Letra</span>
               <StylePicker items={letterFonts} plan={planNow} value={fontKey} onChange={setLetterFont} />
-              <p className="filter-hint">O envelope chega lacrado. Só quem escreveu a carta escolhe abrir. Linho, luar e caligrafia são VIP.</p>
+              <p className="filter-hint">O conselho fica num envelope nesta carta. Qualquer pessoa pode tocar e ler. Só quem escreveu a carta agradece com orvalho.</p>
               {message.trim() && review.flags.length > 0 && <div className={"review-box " + review.level}><span className="review-kicker">leitura automática</span><strong>{review.summary}</strong>{review.careNeeded && <p className="review-care">CVV 188 · 24h · gratuito.</p>}</div>}
               <label className={`check-row advice-own ${ownAdvice ? "checked" : ""}`}>
                 <input type="checkbox" checked={ownAdvice} onChange={(e) => setOwnAdvice(e.target.checked)} />
@@ -2059,7 +2061,7 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
                 <span>Este conselho é meu. Não colei texto de IA. Não estou diagnosticando ninguém.</span>
               </label>
               {sendingAdvice && <p className="advice-sent">Enviando o conselho...</p>}
-              {adviceSent && <p className="advice-sent">Conselho enviado. Ele fica lacrado para quem escreveu a carta.</p>}
+              {adviceSent && <p className="advice-sent">Conselho enviado. Ele está num envelope nesta carta.</p>}
               {adviceError && <p className="advice-error" role="alert">{adviceError}</p>}
               <Button disabled={!message.trim() || sendingAdvice || !letterId} className="button button-secondary full-button" onClick={submitAdvice}>{sendingAdvice ? "Enviando..." : adviceSent ? "Enviar outro conselho" : "Enviar conselho com cuidado"} <ArrowRight size={16}/></Button>
             </>

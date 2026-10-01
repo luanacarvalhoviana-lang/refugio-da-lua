@@ -472,6 +472,7 @@ export function EnvelopeAdvice({
   thanking,
   onOpen,
   onThank,
+  showThanks = true,
 }: {
   author: string;
   body: string;
@@ -482,6 +483,7 @@ export function EnvelopeAdvice({
   thanking?: boolean;
   onOpen: () => void;
   onThank: () => void;
+  showThanks?: boolean;
 }) {
   if (!opened) {
     return (
@@ -497,9 +499,11 @@ export function EnvelopeAdvice({
     <div className={`dew-card opened-letter font-${fontKey} env-${envelopeKey}`}>
       <strong>{author}</strong>
       <p>{body}</p>
-      <button className="button button-secondary" disabled={thanked || thanking} onClick={onThank} type="button">
-        {thanked ? "Orvalho enviado" : "Este conselho me fez bem"}
-      </button>
+      {showThanks && (
+        <button className="button button-secondary" disabled={thanked || thanking} onClick={onThank} type="button">
+          {thanked ? "Orvalho enviado" : "Este conselho me fez bem"}
+        </button>
+      )}
     </div>
   );
 }
