@@ -1,4 +1,4 @@
-import { dropPushSubscription, pushPublicKey, savePushSubscription } from "@/lib/refugio/push.server";
+import { dropPushSubscription, pushPublicKey, savePushSubscription } from "@/lib/refugio/push-cloud";
 
 export async function askNoticePermission() {
   if (typeof window === "undefined" || !("Notification" in window)) return false;
