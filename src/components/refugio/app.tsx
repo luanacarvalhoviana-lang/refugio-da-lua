@@ -36,7 +36,7 @@ import { useAuth, startLogin } from "@/lib/refugio/use-auth";
 import { useGardenSync } from "@/lib/refugio/garden-sync";
 import { useLiveNotices } from "@/lib/refugio/live-notices";
 import { useMuralLetters } from "@/lib/refugio/use-mural";
-import { askNoticePermission } from "@/lib/refugio/notify";
+import { disablePushNotices, enablePushNotices } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { getMuralLetter, adviseMuralLetter } from "@/lib/refugio/mural-cloud";
 import { energyKinds, energyLabel } from "@/lib/refugio/energies";
@@ -3600,10 +3600,22 @@ function SettingsPage({ onBack, onLogout }) {
 	const [confirming, setConfirming] = useState(false);
 	const [phrase, setPhrase] = useState("");
 	const [error, setError] = useState("");
+	const [pushHint, setPushHint] = useState("");
+	const [pushOn, setPushOn] = useState(false);
 	const theme = useRefugioStore((s) => s.theme);
 	const setTheme = useRefugioStore((s) => s.setTheme);
-	const liveNotices = useRefugioStore((s) => s.liveNotices);
 	const setLiveNotices = useRefugioStore((s) => s.setLiveNotices);
+	useEffect(() => {
+		if (!("serviceWorker" in navigator)) return;
+		navigator.serviceWorker.ready
+			.then(async (reg) => {
+				const sub = await reg.pushManager?.getSubscription();
+				const on = Boolean(sub);
+				setPushOn(on);
+				setLiveNotices(on);
+			})
+			.catch(() => undefined);
+	}, [setLiveNotices]);
 	const plan = useRefugioStore((s) => s.plan);
 	const vipProtect = plan === "monthly" || plan === "annual";
 	const deleteAccount = trpc.auth.deleteAccount.useMutation({
@@ -3634,21 +3646,23 @@ function SettingsPage({ onBack, onLogout }) {
 					}),
 					/* @__PURE__ */ jsx(SettingRow, {
 						icon: /* @__PURE__ */ jsx(Bell, { size: 18 }),
-						title: "Avisos na tela",
-						description: liveNotices
-							? "Quando algo acontece no seu jardim, o celular pode avisar mesmo com o app ao fundo."
-							: "Ligue para receber um aviso na tela (carta, conselho, orvalho).",
-						action: liveNotices ? "Ligados" : "Ligar",
+						title: "Avisos no celular",
+						description: pushOn
+							? "Quando sua carta receber energia ou conselho, o celular avisa mesmo com o app fechado."
+							: "Ligue para o celular avisar quando alguém cuidar da sua carta.",
+						action: pushOn ? "Ligados" : "Ligar",
 						onClick: () => {
-							if (liveNotices) {
+							if (pushOn) {
+								setPushOn(false);
 								setLiveNotices(false);
+								setPushHint("Avisos desligados neste aparelho.");
+								void disablePushNotices();
 								return;
 							}
-							void askNoticePermission().then((ok) => {
-								setLiveNotices(true);
-								if (!ok) {
-									/* still keep in-app bell */
-								}
+							void enablePushNotices().then((result) => {
+								setPushOn(result.ok);
+								setLiveNotices(result.ok);
+								setPushHint(result.message);
 							});
 						}
 					}),
@@ -3696,6 +3710,7 @@ function SettingsPage({ onBack, onLogout }) {
 					})
 				]
 			}),
+			pushHint && /* @__PURE__ */ jsx("p", { className: "filter-hint", children: pushHint }),
 			/* @__PURE__ */ jsxs("div", {
 				className: "diary-card",
 				children: [

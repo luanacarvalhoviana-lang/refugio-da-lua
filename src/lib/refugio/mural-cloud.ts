@@ -231,20 +231,36 @@ async function tellAuthor(
   kind: "energy" | "advice",
   energyLabel?: string,
 ) {
+  let authorId = "";
   try {
     const letters = await sql.query<{ author_id: string }>(
       `select author_id from mural_letters where id = $1`,
       [letterId],
     );
-    const authorId = Array.isArray(letters) ? letters[0]?.author_id : "";
-    if (!authorId || authorId === "seed" || authorId === senderId) return;
+    authorId = Array.isArray(letters) ? letters[0]?.author_id || "" : "";
+  } catch {
+    return;
+  }
+  if (!authorId || authorId === "seed" || authorId === senderId) return;
+  try {
     const people = await sql.query<{ email: string }>(`select email from "user" where id = $1`, [authorId]);
     const to = Array.isArray(people) ? people[0]?.email : "";
-    if (!to || !to.includes("@")) return;
-    const { sendLetterActivityEmail } = await import("@/lib/auth/mail.server");
-    await sendLetterActivityEmail({ to, kind, letterId, energyLabel });
+    if (to && to.includes("@")) {
+      const { sendLetterActivityEmail } = await import("@/lib/auth/mail.server");
+      await sendLetterActivityEmail({ to, kind, letterId, energyLabel });
+    }
   } catch {
-    /* o cuidado já ficou na carta; o e-mail não pode desfazer isso */
+    /* o e-mail pode falhar; o aviso do celular ainda tenta */
+  }
+  try {
+    const { sendPushToUser } = await import("@/lib/refugio/push.server");
+    await sendPushToUser(authorId, {
+      title: "Refúgio da Lua",
+      body: kind === "advice" ? "Alguém deixou um conselho na sua carta." : "Alguém deixou uma energia na sua carta.",
+      url: `/carta/${letterId}`,
+    });
+  } catch {
+    /* o cuidado já ficou na carta */
   }
 }
 

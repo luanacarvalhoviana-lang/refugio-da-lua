@@ -1,4 +1,4 @@
-const CACHE = "refugio-lua-v26";
+const CACHE = "refugio-lua-v27";
 const PRECACHE = ["/", "/inicio", "/instalar", "/icons/brand-v3-192.png", "/icons/brand-v3-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -46,17 +46,36 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
+self.addEventListener("push", (event) => {
+  let payload = { title: "Refúgio da Lua", body: "Tem um cuidado novo na sua carta.", url: "/mural" };
+  try {
+    if (event.data) payload = { ...payload, ...event.data.json() };
+  } catch {
+    /* keep the plain notice */
+  }
+  event.waitUntil(
+    self.registration.showNotification(payload.title, {
+      body: payload.body,
+      icon: "/icons/brand-v5-192.png",
+      badge: "/icons/brand-v5-192.png",
+      lang: "pt-BR",
+      data: { url: payload.url || "/mural" },
+    }),
+  );
+});
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  const url = event.notification.data?.url || "/notificacoes";
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windows) => {
       for (const client of windows) {
         if ("focus" in client) {
-          client.navigate("/notificacoes");
+          client.navigate(url);
           return client.focus();
         }
       }
-      if (self.clients.openWindow) return self.clients.openWindow("/notificacoes");
+      if (self.clients.openWindow) return self.clients.openWindow(url);
     }),
   );
 });
