@@ -81,28 +81,35 @@ function rowToLetter(row: MuralRow): Letter {
 }
 
 async function seedIfEmpty(sql: { query: Function }) {
+  const ids = demoLetters.map((letter) => letter.id);
+  try {
+    await sql.query(
+      `update mural_letters set hidden = true where author_id = 'seed' and not (id = any($1::text[]))`,
+      [ids],
+    );
+  } catch {
+    /* esconder as amostras velhas não pode derrubar o mural */
+  }
   for (const letter of demoLetters) {
-    const minutes = String(12 + demoLetters.indexOf(letter) * 20);
-    const found = await sql.query<{ id: string }>(`select id from mural_letters where id = $1`, [letter.id]);
-    if (found.length) {
-      await sql.query(
-        `update mural_letters
-         set hidden = false,
-             posted_at = case
-               when hidden = true or posted_at < now() - interval '30 days'
-               then now() - ($2 || ' minutes')::interval
-               else posted_at
-             end
-         where id = $1 and author_id = 'seed'`,
-        [letter.id, minutes],
-      );
-      continue;
-    }
+    const minutes = String(18 + demoLetters.indexOf(letter) * 40);
     await sql.query(
       `insert into mural_letters
         (id, author_id, author_name, initials, title, body, excerpt, topic, color, energy, gender, age_group, emotion, hour, priority, advice, posted_at, hidden)
        values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb, now() - ($17 || ' minutes')::interval, false)
-       on conflict (id) do nothing`,
+       on conflict (id) do update set
+         author_name = excluded.author_name,
+         initials = excluded.initials,
+         title = excluded.title,
+         body = excluded.body,
+         excerpt = excluded.excerpt,
+         topic = excluded.topic,
+         color = excluded.color,
+         gender = excluded.gender,
+         age_group = excluded.age_group,
+         emotion = excluded.emotion,
+         hour = excluded.hour,
+         hidden = false
+       where mural_letters.author_id = 'seed'`,
       [
         letter.id,
         "seed",

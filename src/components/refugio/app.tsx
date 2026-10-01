@@ -25,7 +25,7 @@ import { muralTopics, writeTopics } from "@/lib/refugio/topics";
 import { reviewLetterText, canPublish } from "@/lib/refugio/letterReview";
 import { pickNightLetters, moonPhaseLabel } from "@/lib/refugio/nightLetter";
 import { dewPhase } from "@/lib/refugio/dew";
-import { demoLetterIds } from "@/lib/refugio/letters";
+import { demoLetterIds, demoLetters } from "@/lib/refugio/letters";
 import { lunaGardenLine } from "@/lib/refugio/luna";
 import { AboutPage, PrivacyPage, TermsPage } from "@/components/refugio/public-info";
 import { ThemeToggle } from "@/components/refugio/theme-toggle";
@@ -44,74 +44,7 @@ import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPas
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
 
 var logo = "/icons/logo.png";
-var cards = [
-	{
-		id: "carta-1",
-		title: "Hoje eu consegui respirar um pouco melhor",
-		author: "Maré Serena",
-		initials: "MS",
-		topic: "Pequenas vitórias",
-		time: "há 12 min",
-		excerpt: "Não foi um dia perfeito, mas encontrei uma janela de calma entre uma coisa e outra. Estou aprendendo a reconhecer esses pequenos espaços.",
-		color: "lavender",
-		energy: 18
-	},
-	{
-		id: "carta-2",
-		title: "Quando o corpo pede uma pausa",
-		author: "Nuvem Baixa",
-		initials: "NB",
-		topic: "Burnout",
-		time: "há 28 min",
-		excerpt: "Escrevo daqui, do sofá, tentando não transformar descanso em culpa. Talvez hoje o cuidado seja justamente não produzir nada.",
-		color: "blue",
-		energy: 31
-	},
-	{
-		id: "carta-3",
-		title: "Queria aprender a ficar sem me diminuir",
-		author: "Jardim Aberto",
-		initials: "JA",
-		topic: "Relacionamentos",
-		time: "há 1 h",
-		excerpt: "Estou tentando entender que pedir espaço não é abandonar ninguém. Que caber em mim também é uma forma de amor.",
-		color: "peach",
-		energy: 12
-	},
-	{
-		id: "carta-4",
-		title: "Guardei o chá e abri a janela",
-		author: "Girassol sereno",
-		initials: "GS",
-		topic: "Autocuidado",
-		time: "há 2 h",
-		excerpt: "Deixei o dia ser só isso por um minuto. O chá, a janela, o corpo ainda aqui.",
-		color: "lavender",
-		energy: 9
-	},
-	{
-		id: "carta-5",
-		title: "A casa ficou grande demais depois",
-		author: "Lua Quente",
-		initials: "LQ",
-		topic: "Luto",
-		time: "há 4 h",
-		excerpt: "Ainda falo no plural, por costume. Estou aprendendo o singular com cuidado.",
-		color: "blue",
-		energy: 44
-	},
-	{
-		id: "carta-6",
-		title: "O trabalho cabe, eu que não estou cabendo",
-		author: "Porta Entreaberta",
-		initials: "PE",
-		topic: "Trabalho",
-		time: "ontem",
-		excerpt: "Entrego tudo no prazo e mesmo assim sinto que estou atrasada da minha própria vida.",
-		color: "peach",
-		energy: 21
-	}
-];
+var cards = demoLetters;
 var topics = muralTopics;
 function Logo({ compact = true }) {
 	const theme = useRefugioStore((s) => s.theme);
