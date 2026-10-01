@@ -117,7 +117,7 @@ function Logo({ compact = true }) {
 		className: `brand ${compact ? "brand-compact" : ""}`,
 		"aria-label": "Voltar ao início",
 		children: [/* @__PURE__ */ jsx("img", {
-			src: "/icons/brand-v4-192.png",
+			src: "/icons/brand-mark-192.png",
 			alt: ""
 		}), /* @__PURE__ */ jsx("span", {
 			children: /* @__PURE__ */ jsx("strong", { children: "Refúgio" })

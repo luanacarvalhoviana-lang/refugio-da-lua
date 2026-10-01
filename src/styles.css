@@ -114,7 +114,7 @@ p {
 .brand img {
   width: 42px;
   height: 42px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 50%;
   background: transparent;
   box-shadow: none;
@@ -138,10 +138,10 @@ p {
   margin-left: 0;
 }
 .brand-compact img {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
 }
 .brand-compact span {
   font-size: 16px;
@@ -3253,10 +3253,10 @@ html.protect-on .diary-card::after {
   cursor: pointer;
 }
 .welcome-splash-logo {
-  width: min(196px, 48vw);
-  height: min(196px, 48vw);
+  width: min(220px, 56vw);
+  height: min(220px, 56vw);
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
   background: transparent;
   margin-bottom: 14px;
   animation: welcome-together 0.45s ease both;

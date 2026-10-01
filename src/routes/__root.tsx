@@ -24,11 +24,11 @@ export const Route = createRootRoute({
     links: [
       { rel: "canonical", href: "https://www.refugiodalua.com.br/" },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
-      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/brand-v4-192.png" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/brand-v5-192.png" },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/icons/brand-v4-180.png" },
-      { rel: "preload", href: "/icons/brand-v4-512.png", as: "image", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/icons/brand-v5-180.png" },
+      { rel: "preload", href: "/icons/brand-v5-512.png", as: "image", type: "image/png" },
     ],
   }),
   component: () => (

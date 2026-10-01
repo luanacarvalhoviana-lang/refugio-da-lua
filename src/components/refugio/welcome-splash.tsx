@@ -44,7 +44,7 @@ export function WelcomeSplash() {
       }}
     >
       <img
-          src="/icons/brand-v4-512.png"
+          src="/icons/brand-v5-512.png"
           alt=""
           width={196}
           height={196}
