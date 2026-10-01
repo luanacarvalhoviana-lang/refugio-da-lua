@@ -139,6 +139,23 @@ export const listMuralLetters = createServerFn({ method: "POST" }).handler(async
   return rows.map(rowToLetter);
 });
 
+export const getMuralLetter = createServerFn({ method: "POST" })
+  .validator(z.object({ letterId: z.string().min(3).max(80) }))
+  .handler(async ({ data }) => {
+    const { getSql } = await import("@/lib/db");
+    const sql = await getSql();
+    const rows = await sql.query<MuralRow>(
+      `select id, author_id, author_name, initials, title, body, excerpt, topic, color, energy,
+              gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural, advice,
+              energy_kinds, posted_at::text as posted_at
+       from mural_letters
+       where id = $1 and hidden = false
+       limit 1`,
+      [data.letterId],
+    );
+    return rows[0] ? rowToLetter(rows[0]) : null;
+  });
+
 const letterInput = z.object({
   id: z.string().min(4).max(80),
   title: z.string().max(120),

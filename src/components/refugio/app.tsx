@@ -37,6 +37,7 @@ import { useLiveNotices } from "@/lib/refugio/live-notices";
 import { useMuralLetters } from "@/lib/refugio/use-mural";
 import { askNoticePermission } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
+import { getMuralLetter } from "@/lib/refugio/mural-cloud";
 import { energyKinds, energyLabel } from "@/lib/refugio/energies";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
@@ -1776,7 +1777,28 @@ function CardPreview({ card, favorite, onFavorite, onOpen, onEnergy }) {
 function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
   const [, params] = useRoute("/carta/:id");
   const letterId = params?.id || "";
-  const letter = trpc.letters.get.useQuery({ letterId }, { enabled: Boolean(letterId), retry: false });
+  const localLetter = trpc.letters.get.useQuery({ letterId }, { enabled: Boolean(letterId), retry: false });
+  const [fetched, setFetched] = useState(null);
+  const [looking, setLooking] = useState(false);
+  useEffect(() => {
+    if (!letterId || localLetter.data) return;
+    let alive = true;
+    setFetched(null);
+    setLooking(true);
+    getMuralLetter({ data: { letterId } })
+      .then((row) => {
+        if (alive) setFetched(row);
+      })
+      .catch(() => {
+        if (alive) setFetched(null);
+      })
+      .finally(() => {
+        if (alive) setLooking(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [letterId, localLetter.data]);
   const userName = useRefugioStore((s) => s.userName);
   const thankedAdviceIds = useRefugioStore((s) => s.thankedAdviceIds);
   const adviceTick = useRefugioStore((s) => s.adviceToday);
@@ -1831,7 +1853,8 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
     setOwnAdvice(false);
     onAdvice(granted);
   };
-  const data = letter.data;
+  const data = localLetter.data || fetched;
+  const opening = looking && !data;
   const paragraphs = (data?.body || "").split(/\n+/).filter(Boolean);
   const isOwn = Boolean(data && data.author === userName);
   const receivedAdvice = data?.advice ?? [];
@@ -1842,7 +1865,7 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
       <LunaCompanion scene={liveStatus.atRest ? "rest" : "letter"} size={72} />
       <div className="detail-layout">
         <article className="detail-letter">
-          {letter.isLoading ? <p>Abrindo a carta...</p> : !data ? <p>Esta carta não está mais no mural.</p> : (
+          {opening ? <p>Abrindo a carta...</p> : !data ? <p>Esta carta não está mais no mural.</p> : (
             <>
               <div className="letter-meta">
                 <span className="avatar avatar-lavender">{data.initials}</span>

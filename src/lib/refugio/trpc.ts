@@ -135,9 +135,14 @@ export const trpc = {
           const result = useRefugioStore.getState().addAdvice(vars);
           const letter = useRefugioStore.getState().letters.find((item) => item.id === vars.letterId);
           const last = letter?.advice?.[letter.advice.length - 1];
-          if (last) {
-            void adviseMuralLetter({ data: { letterId: vars.letterId, advice: last } }).catch(() => undefined);
-          }
+          const advice = last ?? {
+            id: `adv-${Date.now()}`,
+            author: useRefugioStore.getState().userName || "Guardião sereno",
+            body: vars.body,
+            envelopeKey: vars.envelopeKey,
+            fontKey: vars.fontKey,
+          };
+          void adviseMuralLetter({ data: { letterId: vars.letterId, advice } }).catch(() => undefined);
           return result;
         }, handlers),
     },
