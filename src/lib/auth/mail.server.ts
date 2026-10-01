@@ -33,6 +33,33 @@ async function resendEmail(input: {
   }
 }
 
+export async function sendLetterActivityEmail(input: {
+  to: string;
+  kind: "energy" | "advice";
+  letterId: string;
+  energyLabel?: string;
+}) {
+  const origin = (process.env.SITE_URL || "https://www.refugiodalua.com.br").replace(/\/$/, "");
+  const url = `${origin}/carta/${encodeURIComponent(input.letterId)}`;
+  const subject =
+    input.kind === "advice"
+      ? "Sua carta recebeu um conselho — Refúgio da Lua"
+      : "Sua carta recebeu uma energia — Refúgio da Lua";
+  const line =
+    input.kind === "advice"
+      ? "Alguém deixou um conselho na sua carta. Ele está num envelope, para você abrir quando quiser."
+      : `Alguém deixou uma energia${input.energyLabel ? ` de ${esc(input.energyLabel)}` : ""} na sua carta.`;
+  await resendEmail({
+    to: input.to,
+    subject,
+    html: `<p>Olá.</p>
+<p>${line}</p>
+<p>O texto fica só no Refúgio, não neste e-mail.</p>
+<p><a href="${esc(url)}">Abrir a carta</a></p>
+<p>Luna e o Refúgio</p>`,
+  });
+}
+
 export async function sendPasswordResetEmail(input: { to: string; url: string }) {
   await resendEmail({
     to: input.to,

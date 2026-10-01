@@ -224,6 +224,30 @@ export const publishMuralLetter = createServerFn({ method: "POST" })
     }
   });
 
+async function tellAuthor(
+  sql: { query: Function },
+  letterId: string,
+  senderId: string,
+  kind: "energy" | "advice",
+  energyLabel?: string,
+) {
+  try {
+    const letters = await sql.query<{ author_id: string }>(
+      `select author_id from mural_letters where id = $1`,
+      [letterId],
+    );
+    const authorId = Array.isArray(letters) ? letters[0]?.author_id : "";
+    if (!authorId || authorId === "seed" || authorId === senderId) return;
+    const people = await sql.query<{ email: string }>(`select email from "user" where id = $1`, [authorId]);
+    const to = Array.isArray(people) ? people[0]?.email : "";
+    if (!to || !to.includes("@")) return;
+    const { sendLetterActivityEmail } = await import("@/lib/auth/mail.server");
+    await sendLetterActivityEmail({ to, kind, letterId, energyLabel });
+  } catch {
+    /* o cuidado já ficou na carta; o e-mail não pode desfazer isso */
+  }
+}
+
 export const energyMuralLetter = createServerFn({ method: "POST" })
   .validator(z.object({ letterId: z.string().min(3).max(80), kind: z.string().min(2).max(20) }))
   .handler(async ({ data }) => {
@@ -241,6 +265,7 @@ export const energyMuralLetter = createServerFn({ method: "POST" })
       }
       if (!user) return { ok: false as const, message: "Entre de novo para a energia ficar na carta." };
       if (!energyKinds.some((item) => item.key === data.kind)) return { ok: false as const, message: "Escolha uma energia." };
+      const { energyLabel } = await import("@/lib/refugio/energies");
       const { getSql } = await import("@/lib/db");
       const sql = await getSql();
       try {
@@ -268,6 +293,7 @@ export const energyMuralLetter = createServerFn({ method: "POST" })
       } catch {
         /* a contagem já ficou; o tipo da energia pode esperar */
       }
+      await tellAuthor(sql, data.letterId, user.id, "energy", energyLabel(data.kind));
       return { ok: true as const, message: "Energia enviada." };
     } catch {
       return { ok: false as const, message: "Não consegui enviar a energia agora." };
@@ -316,6 +342,7 @@ export const adviseMuralLetter = createServerFn({ method: "POST" })
       );
       const saved = Array.isArray(rows) ? rows : [];
       if (!saved.length) return { ok: false as const, message: "Não achei esta carta no mural." };
+      await tellAuthor(sql, data.letterId, user.id, "advice");
       return { ok: true as const, message: "Conselho enviado." };
     } catch {
       return { ok: false as const, message: "Não consegui guardar o conselho agora. Tente de novo." };
