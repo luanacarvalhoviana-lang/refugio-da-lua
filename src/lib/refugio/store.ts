@@ -254,8 +254,8 @@ type RefugioState = {
   retireLetter: (letterId: string, destiny: "humus" | "diary") => { destiny: "humus" | "diary" };
   evaporateDue: () => void;
   resolveDew: (letterId: string, destiny: "humus" | "diary") => void;
-  adviceStatus: () => { atRest: boolean; used: number; limit: number | null; message: string };
-  letterStatus: () => { atRest: boolean; used: number; limit: number; message: string };
+  adviceStatus: () => { atRest: boolean; used: number; limit: number | null; remaining: number | null; message: string };
+  letterStatus: () => { atRest: boolean; used: number; limit: number; remaining: number; message: string };
   setPin: (pin: string) => void;
   unlock: (pin: string) => boolean;
   setAvatar: (key: string) => void;
@@ -629,14 +629,15 @@ export const useRefugioStore = create<RefugioState>()(
         const used = state.adviceDay === day ? state.adviceToday : 0;
         const limit = dailyAdviceLimit(state.plan);
         const atRest = limit !== null && used >= limit;
-        return { atRest, used, limit, message: REST_MESSAGE };
+        const remaining = limit === null ? null : Math.max(0, limit - used);
+        return { atRest, used, limit, remaining, message: REST_MESSAGE };
       },
       letterStatus: () => {
         const state = get();
         const week = weekKey();
         const used = state.letterWeek === week ? state.lettersThisWeek : 0;
         const limit = weeklyLetterLimit(state.plan);
-        return { atRest: used >= limit, used, limit, message: REST_MESSAGE };
+        return { atRest: used >= limit, used, limit, remaining: Math.max(0, limit - used), message: REST_MESSAGE };
       },
       setPin: (pin) => set({ pin, pinEnabled: true, unlocked: true }),
       unlock: (pin) => {

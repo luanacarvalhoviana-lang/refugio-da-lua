@@ -2044,7 +2044,7 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
               <h2>Escreva um cuidado para esta carta.</h2>
               <p className="filter-hint">
                 Quem acolhe também responde pelo que diz. Sem diagnóstico, sem ordem, sem texto de IA.
-                {liveStatus.remaining !== null ? ` Restam ${liveStatus.remaining} conselho${liveStatus.remaining === 1 ? "" : "s"} hoje.` : " Neste plano a escuta não tem teto."}
+                {typeof liveStatus.remaining === "number" ? ` Restam ${liveStatus.remaining} conselho${liveStatus.remaining === 1 ? "" : "s"} hoje.` : " Neste plano a escuta não tem teto."}
               </p>
               <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Uma frase sua de apoio..." rows={4} className={`font-${fontKey}`}/>
               <span className="form-label">Envelope</span>

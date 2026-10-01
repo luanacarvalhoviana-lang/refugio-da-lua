@@ -219,23 +219,40 @@ export const energyMuralLetter = createServerFn({ method: "POST" })
     try {
       const { getSessionUser } = await import("@/lib/auth/verify.server");
       const { energyKinds } = await import("@/lib/refugio/energies");
-      const user = await Promise.race([
-        getSessionUser(),
-        new Promise<null>((resolve) => setTimeout(() => resolve(null), 6000)),
-      ]);
+      let user: { id: string } | null = null;
+      try {
+        user = await Promise.race([
+          getSessionUser(),
+          new Promise<null>((resolve) => setTimeout(() => resolve(null), 6000)),
+        ]);
+      } catch {
+        user = null;
+      }
       if (!user) return { ok: false as const, message: "Entre de novo para a energia ficar na carta." };
       if (!energyKinds.some((item) => item.key === data.kind)) return { ok: false as const, message: "Escolha uma energia." };
       const { getSql } = await import("@/lib/db");
       const sql = await getSql();
+      await sql.query(`alter table mural_letters add column if not exists energy_kinds jsonb not null default '{}'::jsonb`);
       const rows = await sql.query<{ id: string }>(
         `update mural_letters
-         set energy = energy + 1,
-             energy_kinds = coalesce(energy_kinds, '{}'::jsonb) || jsonb_build_object($2, coalesce((energy_kinds->>$2)::int, 0) + 1)
+         set energy = coalesce(energy, 0) + 1
          where id = $1 and hidden = false
          returning id`,
-        [data.letterId, data.kind],
+        [data.letterId],
       );
-      if (!rows.length) return { ok: false as const, message: "Não achei esta carta no mural." };
+      const saved = Array.isArray(rows) ? rows : [];
+      if (!saved.length) return { ok: false as const, message: "Não achei esta carta no mural." };
+      try {
+        await sql.query(
+          `update mural_letters
+           set energy_kinds = coalesce(energy_kinds, '{}'::jsonb)
+             || jsonb_build_object($2::text, coalesce((energy_kinds->>$2)::int, 0) + 1)
+           where id = $1`,
+          [data.letterId, data.kind],
+        );
+      } catch {
+        /* a contagem já ficou; o tipo da energia pode esperar */
+      }
       return { ok: true as const, message: "Energia enviada." };
     } catch {
       return { ok: false as const, message: "Não consegui enviar a energia agora." };
