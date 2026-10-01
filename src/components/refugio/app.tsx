@@ -1523,7 +1523,7 @@ function AppShell({ userName, anonymous, notifications, onNotifications, onNavig
 											if (installPrompt) installApp();
 											else onNavigate("/instalar");
 										},
-										children: [/* @__PURE__ */ jsx(Plus, { size: 16 }), " Instalar app"]
+										children: [/* @__PURE__ */ jsx(Plus, { size: 16 }), " Baixar o app"]
 									}),
 									/* @__PURE__ */ jsxs("button", {
 										onClick: onLogout,
@@ -1575,7 +1575,7 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 	const [hour, setHour] = useState("");
 	const remoteLetters = useMuralLetters();
 	const sendEnergy = trpc.letters.sendEnergy.useMutation();
-	const source = (remoteLetters.data && remoteLetters.data.length ? remoteLetters.data : cards).filter((card) => dewPhase(card) !== "due");
+	const source = remoteLetters.data && remoteLetters.data.length ? remoteLetters.data : cards;
 	const hourRange = hourBuckets.find((bucket) => bucket.key === hour);
 	const filtered = source.filter((c) => {
 		const hay = `${c.title} ${c.excerpt} ${c.topic}`.toLowerCase();
@@ -1626,6 +1626,11 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 			/* @__PURE__ */ jsxs("p", {
 				className: "dew-note",
 				children: ["Cartas sem cuidado evaporam em quatorze dias. As que receberam energia ou conselho duram trinta dias. Depois viram húmus ou diário — o jardim de ninguém se visita."]
+			}),
+			/* @__PURE__ */ jsx(Link, {
+				href: "/instalar",
+				className: "button button-secondary",
+				children: "Baixar o app"
 			}),
 			/* @__PURE__ */ jsxs("div", {
 				className: "section-heading",
