@@ -140,6 +140,8 @@ p {
 .brand-compact img {
   width: 34px;
   height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .brand-compact span {
   font-size: 16px;
@@ -3254,7 +3256,7 @@ html.protect-on .diary-card::after {
   width: min(196px, 48vw);
   height: min(196px, 48vw);
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
   background: transparent;
   margin-bottom: 14px;
   animation: welcome-together 0.45s ease both;
