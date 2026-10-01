@@ -112,12 +112,14 @@ var cards = [
 ];
 var topics = muralTopics;
 function Logo({ compact = true }) {
+	const theme = useRefugioStore((s) => s.theme);
+	const src = theme === "night" ? "/icons/logo-night-sm.png" : "/icons/brand-mark-192.png";
 	return /* @__PURE__ */ jsxs(Link, {
 		href: "/inicio",
 		className: `brand ${compact ? "brand-compact" : ""}`,
 		"aria-label": "Voltar ao início",
 		children: [/* @__PURE__ */ jsx("img", {
-			src: "/icons/brand-mark-192.png",
+			src,
 			alt: ""
 		}), /* @__PURE__ */ jsx("span", {
 			children: /* @__PURE__ */ jsx("strong", { children: "Refúgio" })

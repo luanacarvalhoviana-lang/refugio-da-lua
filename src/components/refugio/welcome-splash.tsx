@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRefugioStore } from "@/lib/refugio/store";
 
 const KEY = "refugio-welcome-v4";
 
@@ -13,6 +14,7 @@ function alreadyCovered() {
 }
 
 export function WelcomeSplash() {
+  const theme = useRefugioStore((s) => s.theme);
   const [visible, setVisible] = useState(() => (typeof window === "undefined" ? false : !alreadyCovered()));
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export function WelcomeSplash() {
       }}
     >
       <img
-          src="/icons/brand-v5-512.png"
+          src={theme === "night" ? "/icons/logo-night-sm.png" : "/icons/brand-v5-512.png"}
           alt=""
           width={196}
           height={196}

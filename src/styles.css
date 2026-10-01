@@ -114,7 +114,7 @@ p {
 .brand img {
   width: 42px;
   height: 42px;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 50%;
   background: transparent;
   box-shadow: none;
@@ -141,7 +141,7 @@ p {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
 }
 .brand-compact span {
   font-size: 16px;
@@ -152,7 +152,7 @@ p {
 .brand-hero-mark {
   width: min(220px, 58vw);
   height: min(220px, 58vw);
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 50%;
   display: block;
   margin: 6px 0 18px;
@@ -3256,8 +3256,7 @@ html.protect-on .diary-card::after {
   width: min(220px, 56vw);
   height: min(220px, 56vw);
   border-radius: 50%;
-  object-fit: contain;
-  background: transparent;
+  object-fit: cover;
   margin-bottom: 14px;
   animation: welcome-together 0.45s ease both;
 }
