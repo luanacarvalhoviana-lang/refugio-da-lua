@@ -257,17 +257,7 @@ async function tellAuthor(
       await sendLetterActivityEmail({ to, kind, letterId, energyLabel });
     }
   } catch {
-    /* o e-mail pode falhar; o aviso do celular ainda tenta */
-  }
-  try {
-    const { sendPushToUser } = await import("@/lib/refugio/push-cloud");
-    await sendPushToUser(authorId, {
-      title: "Refúgio da Lua",
-      body: kind === "advice" ? "Alguém deixou um conselho na sua carta." : "Alguém deixou uma energia na sua carta.",
-      url: `/carta/${letterId}`,
-    });
-  } catch {
-    /* o cuidado já ficou na carta */
+    /* o cuidado já ficou na carta; o e-mail não pode desfazer isso */
   }
 }
 
