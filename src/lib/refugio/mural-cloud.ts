@@ -2,6 +2,23 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { demoLetters, type Letter, type LetterAdvice } from "@/lib/refugio/letters";
 
+function asAdvice(value: unknown): LetterAdvice[] {
+  try {
+    const parsed = Array.isArray(value) ? value : typeof value === "string" ? JSON.parse(value) : [];
+    return Array.isArray(parsed) ? parsed.filter((item) => item && typeof item === "object" && typeof item.body === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function asKinds(value: unknown): Record<string, number> {
+  try {
+    const parsed = value && typeof value === "object" ? value : typeof value === "string" ? JSON.parse(value) : {};
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? (parsed as Record<string, number>) : {};
+  } catch {
+    return {};
+  }
+}
 function relativeTime(iso: string) {
   const then = new Date(iso).getTime();
   const s = Math.max(0, Math.floor((Date.now() - then) / 1000));
@@ -38,11 +55,6 @@ type MuralRow = {
 
 function rowToLetter(row: MuralRow): Letter {
   const posted = typeof row.posted_at === "string" ? row.posted_at : new Date(row.posted_at).toISOString();
-  const advice = Array.isArray(row.advice)
-    ? row.advice
-    : typeof row.advice === "string"
-      ? (JSON.parse(row.advice) as LetterAdvice[])
-      : [];
   return {
     id: row.id,
     title: row.title,
@@ -63,13 +75,8 @@ function rowToLetter(row: MuralRow): Letter {
     sealKey: row.seal_key || undefined,
     afterMural: row.after_mural === "diary" || row.after_mural === "humus" ? row.after_mural : undefined,
     postedAt: posted,
-    advice,
-    energyKinds:
-      row.energy_kinds && typeof row.energy_kinds === "object"
-        ? row.energy_kinds
-        : typeof row.energy_kinds === "string"
-          ? (JSON.parse(row.energy_kinds) as Record<string, number>)
-          : {},
+    advice: asAdvice(row.advice),
+    energyKinds: asKinds(row.energy_kinds),
   };
 }
 
@@ -119,6 +126,15 @@ async function seedIfEmpty(sql: { query: Function }) {
   }
 }
 
+async function queryLetters(sql: { query: Function }, whereSql: string, params: unknown[]) {
+  const cols = `id, author_id, author_name, initials, title, body, excerpt, topic, color, energy,
+    gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural, advice`;
+  try {
+    return await sql.query(`select ${cols}, energy_kinds, posted_at::text as posted_at ${whereSql}`, params);
+  } catch {
+    return await sql.query(`select ${cols}, posted_at::text as posted_at ${whereSql}`, params);
+  }
+}
 export const listMuralLetters = createServerFn({ method: "POST" }).handler(async () => {
   const { getSql } = await import("@/lib/db");
   const sql = await getSql();
@@ -127,16 +143,13 @@ export const listMuralLetters = createServerFn({ method: "POST" }).handler(async
   } catch {
     /* a seed problem must not hide letters that are already saved */
   }
-  const rows = await sql.query<MuralRow>(
-    `select id, author_id, author_name, initials, title, body, excerpt, topic, color, energy,
-            gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural, advice,
-            energy_kinds, posted_at::text as posted_at
-     from mural_letters
-     where hidden = false
-     order by posted_at desc
-     limit 80`,
-  );
-  return rows.map(rowToLetter);
+  let rows: MuralRow[] = [];
+  try {
+    rows = await queryLetters(sql, `from mural_letters where hidden = false order by posted_at desc limit 80`, []);
+  } catch {
+    rows = [];
+  }
+  return (Array.isArray(rows) ? rows : []).map(rowToLetter);
 });
 
 export const getMuralLetter = createServerFn({ method: "POST" })
@@ -144,16 +157,14 @@ export const getMuralLetter = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { getSql } = await import("@/lib/db");
     const sql = await getSql();
-    const rows = await sql.query<MuralRow>(
-      `select id, author_id, author_name, initials, title, body, excerpt, topic, color, energy,
-              gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural, advice,
-              energy_kinds, posted_at::text as posted_at
-       from mural_letters
-       where id = $1 and hidden = false
-       limit 1`,
-      [data.letterId],
-    );
-    return rows[0] ? rowToLetter(rows[0]) : null;
+    let rows: MuralRow[] = [];
+    try {
+      rows = await queryLetters(sql, `from mural_letters where id = $1 and hidden = false limit 1`, [data.letterId]);
+    } catch {
+      rows = [];
+    }
+    const list = Array.isArray(rows) ? rows : [];
+    return list[0] ? rowToLetter(list[0]) : null;
   });
 
 const letterInput = z.object({
@@ -232,7 +243,11 @@ export const energyMuralLetter = createServerFn({ method: "POST" })
       if (!energyKinds.some((item) => item.key === data.kind)) return { ok: false as const, message: "Escolha uma energia." };
       const { getSql } = await import("@/lib/db");
       const sql = await getSql();
-      await sql.query(`alter table mural_letters add column if not exists energy_kinds jsonb not null default '{}'::jsonb`);
+      try {
+        await sql.query(`alter table mural_letters add column if not exists energy_kinds jsonb not null default '{}'::jsonb`);
+      } catch {
+        /* sem permissão para alterar a tabela; a contagem ainda pode ir */
+      }
       const rows = await sql.query<{ id: string }>(
         `update mural_letters
          set energy = coalesce(energy, 0) + 1
@@ -289,12 +304,18 @@ export const adviseMuralLetter = createServerFn({ method: "POST" })
       const sql = await getSql();
       const rows = await sql.query<{ id: string }>(
         `update mural_letters
-         set advice = coalesce(advice, '[]'::jsonb) || $2::jsonb
+         set advice = (
+           case
+             when jsonb_typeof(coalesce(advice, '[]'::jsonb)) = 'array' then coalesce(advice, '[]'::jsonb)
+             else '[]'::jsonb
+           end
+         ) || jsonb_build_array($2::jsonb)
          where id = $1 and hidden = false
          returning id`,
-        [data.letterId, JSON.stringify([data.advice])],
+        [data.letterId, JSON.stringify(data.advice)],
       );
-      if (!rows.length) return { ok: false as const, message: "Não achei esta carta no mural." };
+      const saved = Array.isArray(rows) ? rows : [];
+      if (!saved.length) return { ok: false as const, message: "Não achei esta carta no mural." };
       return { ok: true as const, message: "Conselho enviado." };
     } catch {
       return { ok: false as const, message: "Não consegui guardar o conselho agora. Tente de novo." };
