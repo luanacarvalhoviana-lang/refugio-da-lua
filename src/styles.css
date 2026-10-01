@@ -1449,8 +1449,15 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   border-top: 1px solid var(--line);
   padding: 12px 20px;
+}
+.letter-action-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
 }
 .letter-actions button {
   border: 0;

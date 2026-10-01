@@ -1376,14 +1376,18 @@ function PublicMural({ onEnter, onCard }) {
 					/* @__PURE__ */ jsx(PageIntro, {
 						eyebrow: "mural aberto",
 						title: "Cartas que já chegaram.",
-						description: "Você pode ler sem criar conta. O jardim de ninguém se abre — o encontro é a carta."
+						description: "Você pode ler sem criar conta. Em cada carta dá para deixar uma energia ou aconselhar. Para o cuidado ficar salvo, entre."
 					}),
 					/* @__PURE__ */ jsx("div", {
 						className: "cards-grid public-cards",
 						children: shown.slice(0, 12).map((card) => /* @__PURE__ */ jsx(CardPreview, {
 							card,
 							onOpen: () => onCard(card.id),
-							onEnergy: onEnter
+							onEnergy: () => onCard(card.id),
+							onAdvice: () => {
+								try { sessionStorage.setItem("refugio-abrir", "aconselhar"); } catch { /* ignore */ }
+								onCard(card.id);
+							}
 						}, card.id))
 					}),
 					/* @__PURE__ */ jsx("p", {
@@ -1697,7 +1701,11 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 					favorite: favorites.includes(card.id),
 					onFavorite: () => onFavorite(card.id),
 					onOpen: () => onCard(card.id),
-					onEnergy: () => onCard(card.id)
+					onEnergy: () => onCard(card.id),
+					onAdvice: () => {
+						try { sessionStorage.setItem("refugio-abrir", "aconselhar"); } catch { /* ignore */ }
+						onCard(card.id);
+					}
 				}, card.id))
 			}),
 			anonymous && /* @__PURE__ */ jsx("p", {
@@ -1707,7 +1715,8 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 		]
 	});
 }
-function CardPreview({ card, favorite, onFavorite, onOpen, onEnergy }) {
+function CardPreview({ card, favorite, onFavorite, onOpen, onEnergy, onAdvice }) {
+	const replies = card.advice?.length || 0;
 	return /* @__PURE__ */ jsxs("article", {
 		className: `letter-card ${favorite ? "is-favorite" : ""} ${dewPhase(card) === "mist" ? "is-dew" : ""} ${card.paperKey ? `paper-${card.paperKey}` : ""} ${card.sealKey && card.sealKey !== "none" ? "has-seal" : ""}`,
 		children: [/* @__PURE__ */ jsxs("div", {
@@ -1760,13 +1769,23 @@ function CardPreview({ card, favorite, onFavorite, onOpen, onEnergy }) {
 			]
 		}), /* @__PURE__ */ jsxs("div", {
 			className: "letter-actions",
-			children: [/* @__PURE__ */ jsxs("button", {
-				onClick: onEnergy,
-				children: [
-					/* @__PURE__ */ jsx(Heart, { size: 15 }),
-					" Deixar uma energia ",
-					/* @__PURE__ */ jsx("span", { children: card.energy })
-				]
+			children: [/* @__PURE__ */ jsxs("div", {
+				className: "letter-action-row",
+				children: [/* @__PURE__ */ jsxs("button", {
+					onClick: onEnergy,
+					children: [
+						/* @__PURE__ */ jsx(Heart, { size: 15 }),
+						" Deixar uma energia ",
+						/* @__PURE__ */ jsx("span", { children: card.energy })
+					]
+				}), /* @__PURE__ */ jsxs("button", {
+					onClick: onAdvice || onOpen,
+					children: [
+						/* @__PURE__ */ jsx(PencilLine, { size: 15 }),
+						" Aconselhar ",
+						/* @__PURE__ */ jsx("span", { children: replies })
+					]
+				})]
 			}), /* @__PURE__ */ jsxs("span", {
 				className: "private-tag",
 				children: [/* @__PURE__ */ jsx(LockKeyhole, { size: 12 }), " sem ranking"]
@@ -1837,6 +1856,7 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
   void adviceTick;
   const submitAdvice = () => {
     setAdviceError("");
+    if (!loggedIn) { setAdviceError("Entre para o conselho ficar salvo na carta."); return; }
     if (!canPublish(review)) { setAdviceError(review.summary); return; }
     if (!ownAdvice) { setAdviceError("Marque que este conselho é seu e que você fala com cuidado."); return; }
     if (useRefugioStore.getState().adviceStatus().atRest) {
@@ -1855,6 +1875,20 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
   };
   const data = localLetter.data || fetched;
   const opening = looking && !data;
+  const loggedIn = useRefugioStore((s) => s.loggedIn);
+  useEffect(() => {
+    if (!data) return;
+    let want = false;
+    try {
+      want = sessionStorage.getItem("refugio-abrir") === "aconselhar";
+      if (want) sessionStorage.removeItem("refugio-abrir");
+    } catch { /* ignore */ }
+    if (!want) return;
+    const box = document.getElementById("aconselhar");
+    box?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const area = box?.querySelector("textarea");
+    if (area instanceof HTMLTextAreaElement) area.focus();
+  }, [data]);
   const paragraphs = (data?.body || "").split(/\n+/).filter(Boolean);
   const isOwn = Boolean(data && data.author === userName);
   const receivedAdvice = data?.advice ?? [];
@@ -1933,7 +1967,8 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
               <p>Escolha o tipo de energia. Sem isso, ela não parte. A pessoa recebe o cuidado, sem ranking.</p>
               <div className="energy-list">{energyKinds.map((item) => <button key={item.key} className={energy === item.key ? "selected" : ""} onClick={() => setEnergy(item.key)}>{energy === item.key && <Check size={15}/>} {item.label}</button>)}</div>
               <Button disabled={!energy || sent || !data || sendEnergy.isPending} className="button button-primary full-button" onClick={() => sendEnergy.mutate({ letterId, label: energy })}>{sent ? "Energia enviada" : "Enviar esta energia"} <Sparkles size={16}/></Button>
-              <div className="advice-divider"><span>ou escreva como guardião</span></div>
+              <div className="advice-divider" id="aconselhar"><span>Aconselhar</span></div>
+              <h2>Escreva um cuidado para esta carta.</h2>
               <p className="filter-hint">
                 Quem acolhe também responde pelo que diz. Sem diagnóstico, sem ordem, sem texto de IA.
                 {liveStatus.remaining !== null ? ` Restam ${liveStatus.remaining} conselho${liveStatus.remaining === 1 ? "" : "s"} hoje.` : " Neste plano a escuta não tem teto."}
