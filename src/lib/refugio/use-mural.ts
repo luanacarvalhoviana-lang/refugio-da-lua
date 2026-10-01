@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Letter } from "@/lib/refugio/letters";
+import { demoLetterIds } from "@/lib/refugio/letters";
 import { listMuralLetters } from "@/lib/refugio/mural-cloud";
 import { useRefugioStore } from "@/lib/refugio/store";
 
@@ -7,6 +8,7 @@ function mergeLetters(remote: Letter[], local: Letter[], myName: string) {
   const byId = new Map<string, Letter>();
   for (const letter of remote) byId.set(letter.id, letter);
   for (const letter of local) {
+    if (demoLetterIds.has(letter.id)) continue;
     if (letter.author !== myName) continue;
     const existing = byId.get(letter.id);
     if (!existing) byId.set(letter.id, letter);

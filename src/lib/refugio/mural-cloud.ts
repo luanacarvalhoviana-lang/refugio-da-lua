@@ -122,7 +122,11 @@ async function seedIfEmpty(sql: { query: Function }) {
 export const listMuralLetters = createServerFn({ method: "POST" }).handler(async () => {
   const { getSql } = await import("@/lib/db");
   const sql = await getSql();
-  await seedIfEmpty(sql);
+  try {
+    await seedIfEmpty(sql);
+  } catch {
+    /* a seed problem must not hide letters that are already saved */
+  }
   const rows = await sql.query<MuralRow>(
     `select id, author_id, author_name, initials, title, body, excerpt, topic, color, energy,
             gender, age_group, emotion, hour, priority, paper_key, seal_key, after_mural, advice,
