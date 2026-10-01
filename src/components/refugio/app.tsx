@@ -2042,7 +2042,11 @@ function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRet
               <StylePicker items={letterFonts} plan={planNow} value={fontKey} onChange={setLetterFont} />
               <p className="filter-hint">O envelope chega lacrado. Só quem escreveu a carta escolhe abrir. Linho, luar e caligrafia são VIP.</p>
               {message.trim() && review.flags.length > 0 && <div className={"review-box " + review.level}><span className="review-kicker">leitura automática</span><strong>{review.summary}</strong>{review.careNeeded && <p className="review-care">CVV 188 · 24h · gratuito.</p>}</div>}
-              <label className="check-row"><input type="checkbox" checked={ownAdvice} onChange={(e) => setOwnAdvice(e.target.checked)} /><span>Este conselho é meu. Não colei texto de IA. Não estou diagnosticando ninguém.</span></label>
+              <label className={`check-row advice-own ${ownAdvice ? "checked" : ""}`}>
+                <input type="checkbox" checked={ownAdvice} onChange={(e) => setOwnAdvice(e.target.checked)} />
+                <span className="fake-check" aria-hidden="true"><Check size={14} /></span>
+                <span>Este conselho é meu. Não colei texto de IA. Não estou diagnosticando ninguém.</span>
+              </label>
               {sendingAdvice && <p className="advice-sent">Enviando o conselho...</p>}
               {adviceSent && <p className="advice-sent">Conselho enviado. Ele fica lacrado para quem escreveu a carta.</p>}
               {adviceError && <p className="advice-error" role="alert">{adviceError}</p>}

@@ -983,13 +983,31 @@ p {
 }
 .check-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   text-align: left;
   margin: 26px 0 22px;
   color: var(--ink-soft);
   font-size: 13px;
   cursor: pointer;
+  position: relative;
+}
+.advice-own {
+  margin: 14px 0 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+}
+html[data-theme="night"] .advice-own {
+  background: #102028;
+  color: #e7efe8;
+  border-color: #8aa;
+}
+html[data-theme="night"] .advice-own .fake-check {
+  border-color: #d7e2df;
+  background: #0c1820;
 }
 .check-row input {
   position: absolute;
@@ -998,11 +1016,13 @@ p {
 .fake-check {
   width: 22px;
   height: 22px;
+  flex: 0 0 22px;
   border: 1px solid var(--line);
   border-radius: 6px;
   display: grid;
   place-items: center;
   color: transparent;
+  background: #fff;
 }
 .check-row.checked .fake-check {
   background: var(--petrol);
