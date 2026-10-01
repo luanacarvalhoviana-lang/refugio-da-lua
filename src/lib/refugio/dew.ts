@@ -1,8 +1,8 @@
 import type { Letter } from "@/lib/refugio/letters";
 
 const HOUR = 60 * 60 * 1000;
-export const DEW_UNCARED_MS = 48 * HOUR;
-export const DEW_CARED_MS = 7 * 24 * HOUR;
+export const DEW_UNCARED_MS = 14 * 24 * HOUR;
+export const DEW_CARED_MS = 30 * 24 * HOUR;
 const MIST_MS = 12 * HOUR;
 
 export function letterWasCared(letter: Letter) {

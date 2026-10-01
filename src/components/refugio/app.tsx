@@ -1164,7 +1164,7 @@ function Pact({ onContinue }) {
 						/* @__PURE__ */ jsxs("div", {
 							className: "pact-list",
 							children: [
-								/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(Check, { size: 17 }), /* @__PURE__ */ jsx("span", { children: "Cartas evaporam como orvalho. Sem cuidado, em dois dias. Com energia ou conselho, em uma semana." })] }),
+								/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(Check, { size: 17 }), /* @__PURE__ */ jsx("span", { children: "Cartas evaporam como orvalho. Sem cuidado, em quatorze dias. Com energia ou conselho, em trinta dias." })] }),
 								/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(Check, { size: 17 }), /* @__PURE__ */ jsx("span", { children: "Quem escreveu escolhe o depois: húmus no próprio jardim ou diário só seu." })] }),
 								/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(Check, { size: 17 }), /* @__PURE__ */ jsx("span", { children: "A Luna olha a planta. Nunca cita o que você escreveu." })] })
 							]
@@ -1625,7 +1625,7 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 			}),
 			/* @__PURE__ */ jsxs("p", {
 				className: "dew-note",
-				children: ["Cartas sem cuidado evaporam em dois dias. As que receberam energia ou conselho duram uma semana. Depois viram húmus ou diário — o jardim de ninguém se visita."]
+				children: ["Cartas sem cuidado evaporam em quatorze dias. As que receberam energia ou conselho duram trinta dias. Depois viram húmus ou diário — o jardim de ninguém se visita."]
 			}),
 			/* @__PURE__ */ jsxs("div", {
 				className: "section-heading",

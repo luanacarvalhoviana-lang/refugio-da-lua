@@ -74,13 +74,27 @@ function rowToLetter(row: MuralRow): Letter {
 }
 
 async function seedIfEmpty(sql: { query: Function }) {
-  const count = await sql.query<{ n: string | number }>(`select count(*)::int as n from mural_letters`);
-  if (Number(count[0]?.n) > 0) return;
   for (const letter of demoLetters) {
+    const minutes = String(12 + demoLetters.indexOf(letter) * 20);
+    const found = await sql.query<{ id: string }>(`select id from mural_letters where id = $1`, [letter.id]);
+    if (found.length) {
+      await sql.query(
+        `update mural_letters
+         set hidden = false,
+             posted_at = case
+               when hidden = true or posted_at < now() - interval '30 days'
+               then now() - ($2 || ' minutes')::interval
+               else posted_at
+             end
+         where id = $1 and author_id = 'seed'`,
+        [letter.id, minutes],
+      );
+      continue;
+    }
     await sql.query(
       `insert into mural_letters
-        (id, author_id, author_name, initials, title, body, excerpt, topic, color, energy, gender, age_group, emotion, hour, priority, advice, posted_at)
-       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb, now() - ($17 || ' minutes')::interval)
+        (id, author_id, author_name, initials, title, body, excerpt, topic, color, energy, gender, age_group, emotion, hour, priority, advice, posted_at, hidden)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb, now() - ($17 || ' minutes')::interval, false)
        on conflict (id) do nothing`,
       [
         letter.id,
@@ -99,7 +113,7 @@ async function seedIfEmpty(sql: { query: Function }) {
         letter.hour ?? null,
         letter.priority ?? 0,
         JSON.stringify(letter.advice || []),
-        String(12 + demoLetters.indexOf(letter) * 20),
+        minutes,
       ],
     );
   }
