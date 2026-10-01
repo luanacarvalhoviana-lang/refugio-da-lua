@@ -25,6 +25,7 @@ import { muralTopics, writeTopics } from "@/lib/refugio/topics";
 import { reviewLetterText, canPublish } from "@/lib/refugio/letterReview";
 import { pickNightLetters, moonPhaseLabel } from "@/lib/refugio/nightLetter";
 import { dewPhase } from "@/lib/refugio/dew";
+import { demoLetterIds } from "@/lib/refugio/letters";
 import { lunaGardenLine } from "@/lib/refugio/luna";
 import { AboutPage, PrivacyPage, TermsPage } from "@/components/refugio/public-info";
 import { ThemeToggle } from "@/components/refugio/theme-toggle";
@@ -1575,7 +1576,7 @@ function PageIntro({ eyebrow, title, description, action }) {
 	});
 }
 function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, onEnergy, onViewAll, entitlements = emptyEntitlements }) {
-	const [activeTopic, setActiveTopic] = useState("Carta da noite");
+	const [activeTopic, setActiveTopic] = useState("Todas");
 	const [search, setSearch] = useState("");
 	const [gender, setGender] = useState("");
 	const [age, setAge] = useState("");
@@ -1586,8 +1587,8 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 	const source = remoteLetters.data && remoteLetters.data.length ? remoteLetters.data : cards;
 	const hourRange = hourBuckets.find((bucket) => bucket.key === hour);
 	const filtered = source.filter((c) => {
-		const hay = `${c.title} ${c.excerpt} ${c.topic}`.toLowerCase();
-		if (activeTopic !== "Carta da noite" && c.topic !== activeTopic) return false;
+		const hay = `${c.title} ${c.excerpt} ${c.topic} ${c.author}`.toLowerCase();
+		if (activeTopic !== "Carta da noite" && activeTopic !== "Todas" && c.topic !== activeTopic) return false;
 		if (search && !hay.includes(search.toLowerCase())) return false;
 		if (gender && c.gender !== gender) return false;
 		if (age && c.ageGroup !== age) return false;
@@ -1601,6 +1602,10 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 	const night = pickNightLetters(source);
 	const ritual = activeTopic === "Carta da noite" && !search && !gender && !age && !emotion && !hour;
 	const shown = ritual ? night : filtered;
+	const ordered = ritual
+		? shown
+		: [...shown].sort((a, b) => Number(demoLetterIds.has(a.id)) - Number(demoLetterIds.has(b.id)));
+	const rest = ritual ? source.filter((card) => !shown.some((item) => item.id === card.id)) : [];
 	const phase = moonPhaseLabel();
 	const emitEnergy = (id) => {
 		sendEnergy.mutate({ letterId: id });
@@ -1627,8 +1632,8 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 						className: "eyebrow",
 						children: [/* @__PURE__ */ jsx(Moon, { size: 14 }), " carta da noite · ", phase]
 					}),
-					/* @__PURE__ */ jsx("h2", { children: ritual ? "Três cartas. Só isso." : "O mural inteiro está aqui, se você quiser." }),
-					/* @__PURE__ */ jsx("p", { children: ritual ? "A lua não entrega o infinitamente. Lê uma. Deixa uma energia, se couber. O resto espera amanhã." : "Você saiu do rito. Pode voltar à Carta da noite quando quiser." })
+					/* @__PURE__ */ jsx("h2", { children: ritual ? "Três cartas. Só isso." : "Todas as cartas estão aqui." }),
+					/* @__PURE__ */ jsx("p", { children: ritual ? "A lua escolheu três para esta noite. As outras continuam logo abaixo." : "A Carta da noite, se você quiser, escolhe só três. O mural inteiro fica neste botão Todas." })
 				] })]
 			}),
 			/* @__PURE__ */ jsxs("p", {
@@ -1686,7 +1691,7 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 			/* @__PURE__ */ jsx("div", {
 				className: "topic-scroll",
 				role: "tablist",
-				children: topics.map((topic) => /* @__PURE__ */ jsx("button", {
+				children: ["Todas", ...topics].map((topic) => /* @__PURE__ */ jsx("button", {
 					role: "tab",
 					"aria-selected": activeTopic === topic,
 					className: activeTopic === topic ? "active" : "",
@@ -1696,7 +1701,28 @@ function Mural({ userName, anonymous, favorites, onFavorite, onWrite, onCard, on
 			}),
 			/* @__PURE__ */ jsx("div", {
 				className: "cards-grid",
-				children: shown.map((card) => /* @__PURE__ */ jsx(CardPreview, {
+				children: ordered.map((card) => /* @__PURE__ */ jsx(CardPreview, {
+					card,
+					favorite: favorites.includes(card.id),
+					onFavorite: () => onFavorite(card.id),
+					onOpen: () => onCard(card.id),
+					onEnergy: () => onCard(card.id),
+					onAdvice: () => {
+						try { sessionStorage.setItem("refugio-abrir", "aconselhar"); } catch { /* ignore */ }
+						onCard(card.id);
+					}
+				}, card.id))
+			}),
+			rest.length > 0 && /* @__PURE__ */ jsxs("div", {
+				className: "section-heading",
+				children: [/* @__PURE__ */ jsx("span", {
+					className: "section-label",
+					children: "O RESTO DO MURAL"
+				}), /* @__PURE__ */ jsx("h2", { children: "Estas também estão aqui." })]
+			}),
+			rest.length > 0 && /* @__PURE__ */ jsx("div", {
+				className: "cards-grid",
+				children: rest.map((card) => /* @__PURE__ */ jsx(CardPreview, {
 					card,
 					favorite: favorites.includes(card.id),
 					onFavorite: () => onFavorite(card.id),
