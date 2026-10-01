@@ -38,7 +38,7 @@ import { useLiveNotices } from "@/lib/refugio/live-notices";
 import { useMuralLetters } from "@/lib/refugio/use-mural";
 import { askNoticePermission } from "@/lib/refugio/notify";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
-import { getMuralLetter } from "@/lib/refugio/mural-cloud";
+import { getMuralLetter, adviseMuralLetter } from "@/lib/refugio/mural-cloud";
 import { energyKinds, energyLabel } from "@/lib/refugio/energies";
 import { authEnabled, signIn, signInGoogle, signInEmail, signUpEmail, requestPasswordReset, confirmPasswordReset } from "@/lib/auth/client";
 import { registerRefugioPwa, useInstallPrompt } from "@/lib/refugio/pwa";
@@ -411,6 +411,7 @@ function App() {
 					/* @__PURE__ */ jsx(Route, {
 						path: "/carta/:id",
 						children: /* @__PURE__ */ jsx(CardDetail, {
+							signedIn,
 							onBack: () => go("/mural"),
 							onEnergy: (grew) => showToast(grew ? "Uma energia chegou no seu Bosque. A semente agradece." : "Energia enviada · alguém recebeu seu cuidado"),
 							onDew: () => showToast("Uma gota de orvalho caiu no jardim de quem te ouviu."),
@@ -1819,7 +1820,7 @@ function CardPreview({ card, favorite, onFavorite, onOpen, onEnergy, onAdvice })
 		})]
 	});
 }
-function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
+function CardDetail({ signedIn = false, onBack, onEnergy, onAdvice, onDew, onRetire }) {
   const [, params] = useRoute("/carta/:id");
   const letterId = params?.id || "";
   const localLetter = trpc.letters.get.useQuery({ letterId }, { enabled: Boolean(letterId), retry: false });
@@ -1856,6 +1857,8 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
   const [sent, setSent] = useState(false);
   const [ownAdvice, setOwnAdvice] = useState(false);
   const [adviceError, setAdviceError] = useState("");
+  const [sendingAdvice, setSendingAdvice] = useState(false);
+  const [adviceSent, setAdviceSent] = useState(false);
   const envelopeKey = useRefugioStore((s) => s.envelopeKey);
   const fontKey = useRefugioStore((s) => s.fontKey);
   const setEnvelope = useRefugioStore((s) => s.setEnvelope);
@@ -1865,9 +1868,6 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
   const review = reviewLetterText(message, "advice");
   const sendEnergy = trpc.letters.sendEnergy.useMutation({
     onSuccess: (result) => { setSent(true); onEnergy(Boolean(result?.grewSeed)); },
-  });
-  const sendAdvice = trpc.letters.advise.useMutation({
-    onError: (err) => setAdviceError(err.message),
   });
   const thankAdvice = trpc.letters.thankAdvice.useMutation({
     onSuccess: (result) => { if (result) onDew(); },
@@ -1882,26 +1882,59 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
   void adviceTick;
   const submitAdvice = () => {
     setAdviceError("");
-    if (!loggedIn) { setAdviceError("Entre para o conselho ficar salvo na carta."); return; }
+    const entered = signedIn || useRefugioStore.getState().loggedIn;
+    if (!entered) {
+      setAdviceError("Entre na sua conta para o conselho ficar salvo na carta.");
+      return;
+    }
+    const body = message.trim();
+    if (body.length < 4) {
+      setAdviceError("Escreva pelo menos uma frase curta.");
+      return;
+    }
     if (!canPublish(review)) { setAdviceError(review.summary); return; }
-    if (!ownAdvice) { setAdviceError("Marque que este conselho é seu e que você fala com cuidado."); return; }
+    if (!ownAdvice) { setAdviceError("Marque a caixinha: este conselho é seu."); return; }
     if (useRefugioStore.getState().adviceStatus().atRest) {
       setAdviceError(REST_MESSAGE);
       return;
     }
-    const beforeSeeds = useRefugioStore.getState().amazonSeeds.length;
-    const beforeAdvice = useRefugioStore.getState().adviceSent;
-    sendAdvice.mutate({ letterId, body: message, envelopeKey, fontKey });
-    const after = useRefugioStore.getState();
-    if (after.adviceSent <= beforeAdvice) return;
-    const granted = after.amazonSeeds.length > beforeSeeds ? after.amazonSeeds[after.amazonSeeds.length - 1] : null;
-    setMessage("");
-    setOwnAdvice(false);
-    onAdvice(granted);
+    const advice = {
+      id: `adv-${Date.now()}`,
+      author: (useRefugioStore.getState().userName || "Guardião sereno").slice(0, 40),
+      body,
+      ...(envelopeKey ? { envelopeKey } : {}),
+      ...(fontKey ? { fontKey } : {}),
+    };
+    setSendingAdvice(true);
+    const save = adviseMuralLetter({ data: { letterId, advice } });
+    const timed = new Promise((_, reject) => {
+      window.setTimeout(() => reject(new Error("A carta demorou a responder. Tente de novo.")), 12000);
+    });
+    void Promise.race([save, timed])
+      .then(() => {
+        useRefugioStore.getState().addAdvice({ letterId, body, envelopeKey, fontKey });
+        setFetched((current) => {
+          const base = current || localLetter.data;
+          if (!base) return current;
+          return { ...base, advice: [...(base.advice || []), advice] };
+        });
+        setMessage("");
+        setOwnAdvice(false);
+        setAdviceSent(true);
+        onAdvice(null);
+      })
+      .catch((err) => {
+        const text = err instanceof Error ? err.message : "";
+        if (/unauthor|401|sess/i.test(text)) {
+          setAdviceError("Sua entrada expirou. Saia e entre de novo, aí o conselho grava.");
+        } else {
+          setAdviceError(text || "Não foi possível enviar agora. Tente de novo.");
+        }
+      })
+      .finally(() => setSendingAdvice(false));
   };
   const data = localLetter.data || fetched;
   const opening = looking && !data;
-  const loggedIn = useRefugioStore((s) => s.loggedIn);
   useEffect(() => {
     if (!data) return;
     let want = false;
@@ -2007,8 +2040,9 @@ function CardDetail({ onBack, onEnergy, onAdvice, onDew, onRetire }) {
               <p className="filter-hint">O envelope chega lacrado. Só quem escreveu a carta escolhe abrir. Linho, luar e caligrafia são VIP.</p>
               {message.trim() && review.flags.length > 0 && <div className={"review-box " + review.level}><span className="review-kicker">leitura automática</span><strong>{review.summary}</strong>{review.careNeeded && <p className="review-care">CVV 188 · 24h · gratuito.</p>}</div>}
               <label className="check-row"><input type="checkbox" checked={ownAdvice} onChange={(e) => setOwnAdvice(e.target.checked)} /><span>Este conselho é meu. Não colei texto de IA. Não estou diagnosticando ninguém.</span></label>
+              {adviceSent && <p className="advice-sent">Conselho enviado. Ele fica lacrado para quem escreveu a carta.</p>}
               {adviceError && <p className="checkout-error" role="alert">{adviceError}</p>}
-              <Button disabled={!message.trim() || sendAdvice.isPending || !data} className="button button-secondary full-button" onClick={submitAdvice}>{sendAdvice.isPending ? "Enviando..." : "Enviar conselho com cuidado"} <ArrowRight size={16}/></Button>
+              <Button disabled={!message.trim() || sendingAdvice || !letterId} className="button button-secondary full-button" onClick={submitAdvice}>{sendingAdvice ? "Enviando..." : adviceSent ? "Enviar outro conselho" : "Enviar conselho com cuidado"} <ArrowRight size={16}/></Button>
             </>
           )}
         </aside>

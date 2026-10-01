@@ -1199,7 +1199,20 @@
 .checkout-error {
   color: #a44f4f;
   margin: 5px 0 0;
-  font-size: 11px;
+  font-size: 13px;
+  font-weight: 700;
+}
+html[data-theme="night"] .checkout-error {
+  color: #f3c1c1;
+}
+.advice-sent {
+  margin: 8px 0 0;
+  color: #1f6b4a;
+  font-size: 14px;
+  font-weight: 700;
+}
+html[data-theme="night"] .advice-sent {
+  color: #c9efdc;
 }
 .checkout-footnote {
   color: var(--muted);
