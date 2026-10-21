@@ -214,6 +214,7 @@ type RefugioState = {
   letterWeek: string;
   lettersThisWeek: number;
   theme: "day" | "night";
+  lang: "pt" | "es";
   protectScreen: boolean;
   liveNotices: boolean;
   notices: GardenNotice[];
@@ -263,6 +264,7 @@ type RefugioState = {
   setEnvelope: (key: string) => void;
   setLetterFont: (key: string) => void;
   setTheme: (theme: "day" | "night") => void;
+  setLang: (lang: "pt" | "es") => void;
   setLiveNotices: (on: boolean) => void;
   receiveEnergy: (n?: number) => void;
   pushNotice: (notice: Omit<GardenNotice, "id" | "time" | "read">) => void;
@@ -309,6 +311,7 @@ export const useRefugioStore = create<RefugioState>()(
       letterWeek: weekKey(),
       lettersThisWeek: 0,
       theme: "day",
+      lang: "pt",
       protectScreen: false,
       liveNotices: true,
       notices: [],
@@ -650,6 +653,7 @@ export const useRefugioStore = create<RefugioState>()(
       setEnvelope: (key) => set({ envelopeKey: key }),
       setLetterFont: (key) => set({ fontKey: key }),
       setTheme: (theme) => set({ theme }),
+      setLang: (lang) => set({ lang }),
       setLiveNotices: (on) => set({ liveNotices: on }),
       receiveEnergy: (n = 1) => set((state) => ({ energiesReceived: state.energiesReceived + n })),
       pushNotice: (notice) =>
@@ -711,6 +715,7 @@ export const useRefugioStore = create<RefugioState>()(
         letterWeek: state.letterWeek,
         lettersThisWeek: state.lettersThisWeek,
         theme: state.theme,
+        lang: state.lang,
         protectScreen: state.protectScreen,
         liveNotices: state.liveNotices,
         notices: state.notices,

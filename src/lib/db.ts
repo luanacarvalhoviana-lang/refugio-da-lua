@@ -185,7 +185,13 @@ async function createSql(): Promise<Sql> {
         "or a server route loader, never from client code.",
     );
   }
-  return dbSource === "neon" ? createNeonSql() : createPgliteSql();
+  if (dbSource === "neon") return createNeonSql();
+  if (process.env.VERCEL || process.env.GROK_PROJECT_ID) {
+    throw new Error(
+      "DATABASE_URL está vazio neste servidor. O Refúgio não vai abrir um banco local no ar.",
+    );
+  }
+  return createPgliteSql();
 }
 
 /**

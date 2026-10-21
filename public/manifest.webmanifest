@@ -1,9 +1,9 @@
 {
   "name": "Refúgio da Lua",
   "short_name": "Refúgio",
-  "description": "Seu lugar de paz em meio ao caos. Escreva, respire e encontre presença.",
+  "description": "Histórias interativas sáficas de romance e mistério.",
   "id": "/refugio-v3",
-  "start_url": "/inicio",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

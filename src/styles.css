@@ -3358,3 +3358,219 @@ html.protect-on .diary-card::after {
   }
 }
 
+
+.soon {
+  min-height: 100vh;
+  color: #f8f5ee;
+  background: #0c3442;
+}
+.soon.is-day {
+  color: #142d36;
+  background:
+    radial-gradient(900px 420px at 80% -10%, rgba(246, 215, 122, .35), transparent 60%),
+    #f8f5ee;
+}
+.soon-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px 0;
+  font-family: "Fraunces", Georgia, serif;
+}
+.soon-bar img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.soon-tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.soon-lang {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 253, 248, .12);
+}
+.soon.is-day .soon-lang { background: rgba(12, 52, 66, .06); }
+.soon-lang a {
+  min-width: 36px;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  letter-spacing: .04em;
+}
+.soon-lang a.is-on { background: #f6d77a; color: #0c3442; }
+.soon-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 48px 20px 36px;
+  max-width: 720px;
+}
+.soon-rain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to bottom, transparent, rgba(248, 245, 238, .28));
+  background-size: 2px 28px;
+  opacity: .18;
+  animation: soon-rain 1.8s linear infinite;
+}
+@keyframes soon-rain { to { background-position: 0 28px; } }
+.soon-kicker {
+  margin: 0 0 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #f6d77a;
+}
+.soon.is-day .soon-kicker { color: #174b59; }
+.soon-hero h1 {
+  position: relative;
+  margin: 0;
+  max-width: 16ch;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(36px, 8vw, 64px);
+  line-height: .98;
+}
+.soon-lead {
+  position: relative;
+  max-width: 38ch;
+  margin: 16px 0 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #d9e2e4;
+}
+.soon.is-day .soon-lead { color: #46616a; }
+.soon-form {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 253, 248, .94);
+  color: #142d36;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .16);
+}
+.soon-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+}
+.soon-form input,
+.soon-form select {
+  width: 100%;
+  border: 1px solid #e5e1d8;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #fffdf8;
+  color: #142d36;
+}
+.soon-check {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px !important;
+  line-height: 1.4;
+}
+.soon-check input { width: auto; margin-top: 3px; }
+.soon-check a { text-decoration: underline; }
+.soon-form button,
+.soon-share button,
+.soon-share a {
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 18px;
+  background: #0c3442;
+  color: #f8f5ee;
+  text-align: center;
+}
+.soon-error { margin: 0; color: #8a3b3b; }
+.soon-count { position: relative; margin: 14px 0 0; color: #f6d77a; }
+.soon-hooks, .soon-places, .soon-authors, .soon-foot {
+  padding: 8px 20px 28px;
+  max-width: 860px;
+}
+.soon-hooks {
+  display: grid;
+  gap: 14px;
+}
+@media (min-width: 800px) {
+  .soon-hooks { grid-template-columns: repeat(3, 1fr); }
+}
+.soon-hooks article, .soon-authors {
+  border: 1px solid rgba(248, 245, 238, .16);
+  border-radius: 20px;
+  padding: 18px;
+  background: rgba(255, 253, 248, .04);
+}
+.soon.is-day .soon-hooks article,
+.soon.is-day .soon-authors {
+  background: #fffdf8;
+  border-color: #e5e1d8;
+}
+.soon-hooks h2, .soon-places h2, .soon-authors h2 {
+  margin: 0 0 8px;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 26px;
+}
+.soon-hooks p, .soon-authors p { margin: 0; line-height: 1.5; }
+.soon-places > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.soon-place {
+  min-height: 140px;
+  margin: 0;
+  border-radius: 18px;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+  color: #fffdf8;
+}
+.soon-place figcaption { font-family: "Fraunces", Georgia, serif; font-size: 20px; }
+.soon-place.is-city { background: linear-gradient(160deg, #1d4e63, #0b1c28 70%); }
+.soon-place.is-beach { background: linear-gradient(160deg, #c9854a, #174b59 72%); }
+.soon-place.is-cafe { background: linear-gradient(160deg, #6d5a78, #24343c); }
+.soon-place.is-library { background: linear-gradient(160deg, #3d4a38, #1a2420); }
+.soon-authors {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.soon-authors img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ece8f7;
+}
+.soon-foot {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 40px;
+  font-size: 14px;
+}
+.soon-foot a { text-decoration: underline; text-underline-offset: 3px; }
+.soon-thanks { max-width: 640px; }
+.soon-link {
+  word-break: break-all;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 253, 248, .08);
+}
+.soon-share { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.soon-back { display: inline-block; margin-top: 18px; text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) {
+  .soon-rain { animation: none; }
+}

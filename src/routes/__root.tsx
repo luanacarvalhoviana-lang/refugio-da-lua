@@ -1,5 +1,6 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
+import { ForgetLocalAccounts } from "@/components/refugio/forget-local-accounts";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
@@ -12,9 +13,9 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Refúgio da Lua — seu lugar de paz em meio ao caos" },
+      { title: "Refúgio da Lua — histórias que acontecem à noite" },
       { name: "theme-color", content: "#0c3442" },
-      { name: "description", content: "Seu lugar de paz em meio ao caos. Escreva, respire e encontre presença no Refúgio da Lua." },
+      { name: "description", content: "Histórias interativas sáficas de romance e mistério, em português e espanhol. A escolha é sempre de graça." },
       { name: "robots", content: "index, follow" },
       { property: "og:url", content: "https://www.refugiodalua.com.br/" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
@@ -23,6 +24,9 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "canonical", href: "https://www.refugiodalua.com.br/" },
+      { rel: "alternate", hrefLang: "pt-BR", href: "https://www.refugiodalua.com.br/" },
+      { rel: "alternate", hrefLang: "es-419", href: "https://www.refugiodalua.com.br/es" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://www.refugiodalua.com.br/" },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/brand-v5-192.png" },
       { rel: "stylesheet", href: appCss },
@@ -40,6 +44,7 @@ export const Route = createRootRoute({
       <body>
         <PreviewHostBridge />
         <AuthProvider>
+          <ForgetLocalAccounts />
           <Outlet />
         </AuthProvider>
         <Scripts />

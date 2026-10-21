@@ -41,6 +41,11 @@ import { Route as OnboardingPactoRouteImport } from './routes/onboarding.pacto'
 import { Route as OnboardingPerfilRouteImport } from './routes/onboarding.perfil'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
+import { Route as EsRouteImport } from './routes/es'
+import { Route as ObrigadaRouteImport } from './routes/obrigada'
+import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
+import { Route as RegrasRouteImport } from './routes/regras'
+import { Route as PactoRouteImport } from './routes/pacto'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -202,6 +207,31 @@ const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
   path: '/api/stripe/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsRoute = EsRouteImport.update({
+  id: '/es',
+  path: '/es',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObrigadaRoute = ObrigadaRouteImport.update({
+  id: '/obrigada',
+  path: '/obrigada',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EsObrigadaRoute = EsObrigadaRouteImport.update({
+  id: '/obrigada',
+  path: '/obrigada',
+  getParentRoute: () => EsRoute,
+} as any)
+const RegrasRoute = RegrasRouteImport.update({
+  id: '/regras',
+  path: '/regras',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PactoRoute = PactoRouteImport.update({
+  id: '/pacto',
+  path: '/pacto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -236,6 +266,11 @@ export interface FileRoutesByFullPath {
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/es': typeof EsRouteWithChildren
+  '/obrigada': typeof ObrigadaRoute
+  '/es/obrigada': typeof EsObrigadaRoute
+  '/regras': typeof RegrasRoute
+  '/pacto': typeof PactoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -270,6 +305,11 @@ export interface FileRoutesByTo {
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/es': typeof EsRouteWithChildren
+  '/obrigada': typeof ObrigadaRoute
+  '/es/obrigada': typeof EsObrigadaRoute
+  '/regras': typeof RegrasRoute
+  '/pacto': typeof PactoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -305,6 +345,11 @@ export interface FileRoutesById {
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/es': typeof EsRouteWithChildren
+  '/obrigada': typeof ObrigadaRoute
+  '/es/obrigada': typeof EsObrigadaRoute
+  '/regras': typeof RegrasRoute
+  '/pacto': typeof PactoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -341,6 +386,11 @@ export interface FileRouteTypes {
     | '/onboarding/perfil'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/es'
+    | '/obrigada'
+    | '/es/obrigada'
+    | '/regras'
+    | '/pacto'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -375,6 +425,11 @@ export interface FileRouteTypes {
     | '/onboarding/perfil'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/es'
+    | '/obrigada'
+    | '/es/obrigada'
+    | '/regras'
+    | '/pacto'
   id:
     | '__root__'
     | '/'
@@ -409,6 +464,11 @@ export interface FileRouteTypes {
     | '/onboarding/perfil'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/es'
+    | '/obrigada'
+    | '/es/obrigada'
+    | '/regras'
+    | '/pacto'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -441,6 +501,10 @@ export interface RootRouteChildren {
   OnboardingPerfilRoute: typeof OnboardingPerfilRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
+  EsRoute: typeof EsRouteWithChildren
+  ObrigadaRoute: typeof ObrigadaRoute
+  RegrasRoute: typeof RegrasRoute
+  PactoRoute: typeof PactoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -669,6 +733,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es': {
+      id: '/es'
+      path: '/es'
+      fullPath: '/es'
+      preLoaderRoute: typeof EsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/obrigada': {
+      id: '/obrigada'
+      path: '/obrigada'
+      fullPath: '/obrigada'
+      preLoaderRoute: typeof ObrigadaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/es/obrigada': {
+      id: '/es/obrigada'
+      path: '/obrigada'
+      fullPath: '/es/obrigada'
+      preLoaderRoute: typeof EsObrigadaRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/regras': {
+      id: '/regras'
+      path: '/regras'
+      fullPath: '/regras'
+      preLoaderRoute: typeof RegrasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pacto': {
+      id: '/pacto'
+      path: '/pacto'
+      fullPath: '/pacto'
+      preLoaderRoute: typeof PactoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -695,6 +794,16 @@ const EscreverRouteChildren: EscreverRouteChildren = {
 const EscreverRouteWithChildren = EscreverRoute._addFileChildren(
   EscreverRouteChildren,
 )
+
+interface EsRouteChildren {
+  EsObrigadaRoute: typeof EsObrigadaRoute
+}
+
+const EsRouteChildren: EsRouteChildren = {
+  EsObrigadaRoute: EsObrigadaRoute,
+}
+
+const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -726,6 +835,10 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingPerfilRoute: OnboardingPerfilRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
+  EsRoute: EsRouteWithChildren,
+  ObrigadaRoute: ObrigadaRoute,
+  RegrasRoute: RegrasRoute,
+  PactoRoute: PactoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

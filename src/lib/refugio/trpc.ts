@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useRefugioStore, currentSubscription } from "@/lib/refugio/store";
 import { loadLocalDiary, loadLocalMemories } from "@/lib/refugio/localGarden";
-import { findAccount, removeAccount, resetPassword, upsertAccount, verifyAccount } from "@/lib/refugio/accounts";
 import type { AmazonSeed } from "@/lib/refugio/amazonTrees";
 import { adviseMuralLetter, energyMuralLetter, hideMuralLetter, publishMuralLetter } from "@/lib/refugio/mural-cloud";
 import { cachedMuralLetters } from "@/lib/refugio/use-mural";
@@ -48,49 +47,29 @@ export const trpc = {
   auth: {
     login: {
       useMutation: (handlers?: Handlers<void, { email: string; password: string }>) =>
-        useMutation((vars) => {
-          const existing = findAccount(vars.email);
-          if (existing) {
-            const result = verifyAccount(vars.email, vars.password);
-            if (!result.ok) throw new Error(result.error);
-            useRefugioStore.getState().login({ email: result.account.email });
-            return;
-          }
-          const account = upsertAccount({ name: "Girassol sereno", email: vars.email, password: vars.password });
-          useRefugioStore.getState().register({ name: account.name, email: account.email });
+        useMutation(() => {
+          throw new Error("Entre pela página de login.");
         }, handlers),
     },
     register: {
       useMutation: (
         handlers?: Handlers<void, { name: string; email: string; password: string; isAdult: boolean }>,
       ) =>
-        useMutation((vars) => {
-          if (!vars.isAdult) throw new Error("É preciso aceitar os Termos.");
-          if (vars.password.length < 8) throw new Error("A senha precisa ter pelo menos 8 caracteres.");
-          if (findAccount(vars.email)) throw new Error("Já existe uma conta com este e-mail. Entre nela.");
-          const account = upsertAccount({ name: vars.name, email: vars.email, password: vars.password });
-          useRefugioStore.getState().register({ name: account.name, email: account.email });
+        useMutation(() => {
+          throw new Error("Crie a conta pela página de login.");
         }, handlers),
     },
     requestPasswordReset: {
       useMutation: (handlers?: Handlers<void, { email: string }>) =>
-        useMutation((vars) => {
-          const account = findAccount(vars.email);
-          if (account) {
-            const next = "lua-" + Math.random().toString(36).slice(2, 8);
-            resetPassword(vars.email, next);
-            if (typeof window !== "undefined") window.sessionStorage.setItem("refugio-temp-pass", `${vars.email}|${next}`);
-          } else if (typeof window !== "undefined") {
-            window.sessionStorage.removeItem("refugio-temp-pass");
-          }
+        useMutation(() => {
+          throw new Error("Use recuperar senha na página da conta.");
         }, handlers),
     },
     deleteAccount: {
       useMutation: (handlers?: Handlers<void, void>) =>
         useMutation(() => {
-          const email = useRefugioStore.getState().email;
-          if (email) removeAccount(email);
           useRefugioStore.getState().logout();
+          window.localStorage.removeItem("refugio-accounts");
           window.localStorage.removeItem("refugio-session");
           window.localStorage.removeItem("refugio-favorites");
           window.localStorage.removeItem("refugio-diary-entries");

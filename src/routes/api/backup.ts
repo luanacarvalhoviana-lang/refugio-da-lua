@@ -23,8 +23,7 @@ export const Route = createFileRoute("/api/backup")({
         const counts = Object.fromEntries(
           Object.entries(dump.tables).map(([name, rows]) => [name, rows.length]),
         );
-        const full = new URL(request.url).searchParams.get("full") === "1";
-        return Response.json(full ? { ok: true, at: dump.at, counts, emailed, tables: dump.tables } : { ok: true, at: dump.at, counts, emailed });
+        return Response.json({ ok: true, at: dump.at, counts, emailed });
       },
     },
   },

@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.refugiodalua.com.br/</loc></url>
-  <url><loc>https://www.refugiodalua.com.br/inicio</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.refugiodalua.com.br/</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
+    <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
+  </url>
+  <url>
+    <loc>https://www.refugiodalua.com.br/es</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
+    <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
+  </url>
   <url><loc>https://www.refugiodalua.com.br/sobre</loc></url>
   <url><loc>https://www.refugiodalua.com.br/planos</loc></url>
   <url><loc>https://www.refugiodalua.com.br/privacidade</loc></url>
   <url><loc>https://www.refugiodalua.com.br/termos</loc></url>
-  <url><loc>https://www.refugiodalua.com.br/apoio</loc></url>
   <url><loc>https://www.refugiodalua.com.br/contato</loc></url>
-  <url><loc>https://www.refugiodalua.com.br/login</loc></url>
+  <url><loc>https://www.refugiodalua.com.br/regras</loc></url>
 </urlset>

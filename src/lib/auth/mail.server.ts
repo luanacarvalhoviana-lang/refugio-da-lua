@@ -60,6 +60,19 @@ export async function sendLetterActivityEmail(input: {
   });
 }
 
+export async function sendWaitlistWelcome(input: { to: string; lang: "pt" | "es"; code: string }) {
+  const origin = (process.env.SITE_URL || "https://www.refugiodalua.com.br").replace(/\/$/, "");
+  const link = `${origin}${input.lang === "es" ? "/es" : ""}/?ref=${encodeURIComponent(input.code)}`;
+  const es = input.lang === "es";
+  await resendEmail({
+    to: input.to,
+    subject: es ? "Estás en la lista — Refúgio da Lua" : "Você está na lista — Refúgio da Lua",
+    html: es
+      ? `<p>Hola.</p><p>Tu correo quedó en la lista del Refúgio. Cuando las historias abran, avisamos aquí.</p><p>Si quieres invitar a alguien: <a href="${esc(link)}">${esc(link)}</a></p><p>Luna y el Refúgio</p>`
+      : `<p>Olá.</p><p>Seu e-mail ficou na lista do Refúgio. Quando as histórias abrirem, avisamos por aqui.</p><p>Se quiser chamar alguém: <a href="${esc(link)}">${esc(link)}</a></p><p>Luna e o Refúgio</p>`,
+  });
+}
+
 export async function sendPasswordResetEmail(input: { to: string; url: string }) {
   await resendEmail({
     to: input.to,
