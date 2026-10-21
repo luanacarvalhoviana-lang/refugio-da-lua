@@ -46,6 +46,9 @@ import { Route as ObrigadaRouteImport } from './routes/obrigada'
 import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
 import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as PactoRouteImport } from './routes/pacto'
+import { Route as HistoriasRouteImport } from './routes/historias'
+import { Route as HistoriaSlugRouteImport } from './routes/historia.$slug'
+import { Route as LerSlugRouteImport } from './routes/ler.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -232,6 +235,21 @@ const PactoRoute = PactoRouteImport.update({
   path: '/pacto',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HistoriasRoute = HistoriasRouteImport.update({
+  id: '/historias',
+  path: '/historias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoriaSlugRoute = HistoriaSlugRouteImport.update({
+  id: '/historia/$slug',
+  path: '/historia/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LerSlugRoute = LerSlugRouteImport.update({
+  id: '/ler/$slug',
+  path: '/ler/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -271,6 +289,9 @@ export interface FileRoutesByFullPath {
   '/es/obrigada': typeof EsObrigadaRoute
   '/regras': typeof RegrasRoute
   '/pacto': typeof PactoRoute
+  '/historias': typeof HistoriasRoute
+  '/historia/$slug': typeof HistoriaSlugRoute
+  '/ler/$slug': typeof LerSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -310,6 +331,9 @@ export interface FileRoutesByTo {
   '/es/obrigada': typeof EsObrigadaRoute
   '/regras': typeof RegrasRoute
   '/pacto': typeof PactoRoute
+  '/historias': typeof HistoriasRoute
+  '/historia/$slug': typeof HistoriaSlugRoute
+  '/ler/$slug': typeof LerSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -350,6 +374,9 @@ export interface FileRoutesById {
   '/es/obrigada': typeof EsObrigadaRoute
   '/regras': typeof RegrasRoute
   '/pacto': typeof PactoRoute
+  '/historias': typeof HistoriasRoute
+  '/historia/$slug': typeof HistoriaSlugRoute
+  '/ler/$slug': typeof LerSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -391,6 +418,9 @@ export interface FileRouteTypes {
     | '/es/obrigada'
     | '/regras'
     | '/pacto'
+    | '/historias'
+    | '/historia/$slug'
+    | '/ler/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -430,6 +460,9 @@ export interface FileRouteTypes {
     | '/es/obrigada'
     | '/regras'
     | '/pacto'
+    | '/historias'
+    | '/historia/$slug'
+    | '/ler/$slug'
   id:
     | '__root__'
     | '/'
@@ -469,6 +502,9 @@ export interface FileRouteTypes {
     | '/es/obrigada'
     | '/regras'
     | '/pacto'
+    | '/historias'
+    | '/historia/$slug'
+    | '/ler/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -505,6 +541,9 @@ export interface RootRouteChildren {
   ObrigadaRoute: typeof ObrigadaRoute
   RegrasRoute: typeof RegrasRoute
   PactoRoute: typeof PactoRoute
+  HistoriasRoute: typeof HistoriasRoute
+  HistoriaSlugRoute: typeof HistoriaSlugRoute
+  LerSlugRoute: typeof LerSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -768,6 +807,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PactoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/historias': {
+      id: '/historias'
+      path: '/historias'
+      fullPath: '/historias'
+      preLoaderRoute: typeof HistoriasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/historia/$slug': {
+      id: '/historia/$slug'
+      path: '/historia/$slug'
+      fullPath: '/historia/$slug'
+      preLoaderRoute: typeof HistoriaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ler/$slug': {
+      id: '/ler/$slug'
+      path: '/ler/$slug'
+      fullPath: '/ler/$slug'
+      preLoaderRoute: typeof LerSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -839,6 +899,9 @@ const rootRouteChildren: RootRouteChildren = {
   ObrigadaRoute: ObrigadaRoute,
   RegrasRoute: RegrasRoute,
   PactoRoute: PactoRoute,
+  HistoriasRoute: HistoriasRoute,
+  HistoriaSlugRoute: HistoriaSlugRoute,
+  LerSlugRoute: LerSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

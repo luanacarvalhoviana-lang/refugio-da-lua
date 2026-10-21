@@ -16,7 +16,7 @@ function Login() {
             type="button"
             className="google-button"
             onClick={() => {
-              void signIn(google.providerId, { callbackURL: "/mural", errorCallbackURL: "/conta" });
+              void signIn(google.providerId, { callbackURL: "/historias", errorCallbackURL: "/conta" });
             }}
           >
             <span>G</span> Continuar com Google

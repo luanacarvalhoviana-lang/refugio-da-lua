@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RefugioApp } from "@/components/refugio/app";
+import { ContactPage } from "@/components/refugio/house-pages";
 
 export const Route = createFileRoute("/contato")({
-  component: RefugioApp,
+  component: ContactPage,
 });
