@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RefugioApp } from "@/components/refugio/app";
+import { ResetPage } from "@/components/refugio/account-pages";
 
 export const Route = createFileRoute("/conta/redefinir-senha")({
-  component: RefugioApp,
+  component: ResetPage,
 });

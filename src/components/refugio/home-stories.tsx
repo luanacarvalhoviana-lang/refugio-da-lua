@@ -44,15 +44,18 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
       </section>
       <section className="house-block">
         <h2>{t.now}</h2>
-        <a className="story-card" href={`/historia/${story.slug}`}>
-          <span className="soon-kicker">{story.place}</span>
-          <strong>{story.title}</strong>
-          <em>
-            {t.by} {story.author} · {story.rating} · {story.minutes} {t.minutes}
-          </em>
-          <p>{story.synopsis}</p>
-        </a>
-        <p className="house-note">{t.soonStory}</p>
+        <div className="story-list">
+          {stories[lang].map((item) => (
+            <a key={item.slug} className="story-card" href={`/historia/${item.slug}`}>
+              <span className="soon-kicker">{item.place}</span>
+              <strong>{item.title}</strong>
+              <em>
+                {t.by} {item.author} · {item.rating} · {item.minutes} {t.minutes}
+              </em>
+              <p>{item.synopsis}</p>
+            </a>
+          ))}
+        </div>
       </section>
       <section className="house-luna">
         <MoonMascot mood="hi" size={96} />

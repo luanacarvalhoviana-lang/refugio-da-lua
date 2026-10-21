@@ -159,7 +159,7 @@ export async function signInGoogle(
   if (inLivePreview()) {
     return signIn("grok-google", opts);
   }
-  const callbackURL = opts.callbackURL ?? "/mural";
+  const callbackURL = opts.callbackURL ?? "/historias";
   const errorCallbackURL = opts.errorCallbackURL ?? "/conta";
   const { data, error } = await authClient.signIn.social({
     provider: "google",
@@ -188,7 +188,7 @@ export async function signInEmail(email: string, password: string): Promise<void
   const { error } = await authClient.signIn.email({
     email: email.trim().toLowerCase(),
     password,
-    callbackURL: "/mural",
+    callbackURL: "/historias",
   });
   if (error) throw new Error(mapEmailAuthError(error.message));
 }
@@ -198,7 +198,7 @@ export async function signUpEmail(input: { email: string; password: string; name
     email: input.email.trim().toLowerCase(),
     password: input.password,
     name: input.name.trim() || "Visitante",
-    callbackURL: "/mural",
+    callbackURL: "/historias",
   });
   if (error) throw new Error(mapEmailAuthError(error.message));
 }

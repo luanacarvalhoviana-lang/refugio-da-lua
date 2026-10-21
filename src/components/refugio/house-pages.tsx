@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
+import { loadGardenCloud } from "@/lib/refugio/progress-cloud";
 import { readEndings, type SavedEnding } from "@/lib/refugio/reading-local";
 
 export function PlansPage() {
@@ -115,7 +116,19 @@ export function HelpPage() {
 export function GardenPage() {
   const { t } = useHouse();
   const [endings, setEndings] = useState<SavedEnding[]>([]);
-  useEffect(() => setEndings(readEndings()), []);
+  useEffect(() => {
+    const local = readEndings();
+    setEndings(local);
+    void loadGardenCloud()
+      .then((result) => {
+        if (!result.signedIn) return;
+        const merged = new Map<string, SavedEnding>();
+        for (const item of result.endings) merged.set(`${item.lang}:${item.slug}:${item.key}`, item);
+        for (const item of local) merged.set(`${item.lang}:${item.slug}:${item.key}`, item);
+        setEndings([...merged.values()]);
+      })
+      .catch(() => undefined);
+  }, []);
   return (
     <StoryShell>
       <section className="house-block">

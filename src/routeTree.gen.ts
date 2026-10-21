@@ -16,7 +16,9 @@ import { Route as ContaRouteImport } from './routes/conta'
 import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CuidarRouteImport } from './routes/cuidar'
 import { Route as DiarioRouteImport } from './routes/diario'
+import { Route as EsRouteImport } from './routes/es'
 import { Route as EscreverRouteImport } from './routes/escrever'
+import { Route as HistoriasRouteImport } from './routes/historias'
 import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as InstalarRouteImport } from './routes/instalar'
 import { Route as JardimRouteImport } from './routes/jardim'
@@ -26,9 +28,12 @@ import { Route as MemoriasRouteImport } from './routes/memorias'
 import { Route as MuralRouteImport } from './routes/mural'
 import { Route as MuralPublicoRouteImport } from './routes/mural-publico'
 import { Route as NotificacoesRouteImport } from './routes/notificacoes'
+import { Route as ObrigadaRouteImport } from './routes/obrigada'
+import { Route as PactoRouteImport } from './routes/pacto'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as SelosRouteImport } from './routes/selos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
@@ -36,19 +41,14 @@ import { Route as ApiBackupRouteImport } from './routes/api/backup'
 import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
 import { Route as ContaRedefinirSenhaRouteImport } from './routes/conta.redefinir-senha'
+import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
 import { Route as EscreverConfirmacaoRouteImport } from './routes/escrever.confirmacao'
+import { Route as HistoriaSlugRouteImport } from './routes/historia.$slug'
+import { Route as LerSlugRouteImport } from './routes/ler.$slug'
 import { Route as OnboardingPactoRouteImport } from './routes/onboarding.pacto'
 import { Route as OnboardingPerfilRouteImport } from './routes/onboarding.perfil'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
-import { Route as EsRouteImport } from './routes/es'
-import { Route as ObrigadaRouteImport } from './routes/obrigada'
-import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
-import { Route as RegrasRouteImport } from './routes/regras'
-import { Route as PactoRouteImport } from './routes/pacto'
-import { Route as HistoriasRouteImport } from './routes/historias'
-import { Route as HistoriaSlugRouteImport } from './routes/historia.$slug'
-import { Route as LerSlugRouteImport } from './routes/ler.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -85,9 +85,19 @@ const DiarioRoute = DiarioRouteImport.update({
   path: '/diario',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsRoute = EsRouteImport.update({
+  id: '/es',
+  path: '/es',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EscreverRoute = EscreverRouteImport.update({
   id: '/escrever',
   path: '/escrever',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoriasRoute = HistoriasRouteImport.update({
+  id: '/historias',
+  path: '/historias',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InicioRoute = InicioRouteImport.update({
@@ -135,6 +145,16 @@ const NotificacoesRoute = NotificacoesRouteImport.update({
   path: '/notificacoes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ObrigadaRoute = ObrigadaRouteImport.update({
+  id: '/obrigada',
+  path: '/obrigada',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PactoRoute = PactoRouteImport.update({
+  id: '/pacto',
+  path: '/pacto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PerfilRoute = PerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
@@ -148,6 +168,11 @@ const PlanosRoute = PlanosRouteImport.update({
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
   id: '/privacidade',
   path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegrasRoute = RegrasRouteImport.update({
+  id: '/regras',
+  path: '/regras',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SelosRoute = SelosRouteImport.update({
@@ -185,10 +210,25 @@ const ContaRedefinirSenhaRoute = ContaRedefinirSenhaRouteImport.update({
   path: '/redefinir-senha',
   getParentRoute: () => ContaRoute,
 } as any)
+const EsObrigadaRoute = EsObrigadaRouteImport.update({
+  id: '/obrigada',
+  path: '/obrigada',
+  getParentRoute: () => EsRoute,
+} as any)
 const EscreverConfirmacaoRoute = EscreverConfirmacaoRouteImport.update({
   id: '/confirmacao',
   path: '/confirmacao',
   getParentRoute: () => EscreverRoute,
+} as any)
+const HistoriaSlugRoute = HistoriaSlugRouteImport.update({
+  id: '/historia/$slug',
+  path: '/historia/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LerSlugRoute = LerSlugRouteImport.update({
+  id: '/ler/$slug',
+  path: '/ler/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingPactoRoute = OnboardingPactoRouteImport.update({
   id: '/onboarding/pacto',
@@ -210,46 +250,6 @@ const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
   path: '/api/stripe/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EsRoute = EsRouteImport.update({
-  id: '/es',
-  path: '/es',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ObrigadaRoute = ObrigadaRouteImport.update({
-  id: '/obrigada',
-  path: '/obrigada',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EsObrigadaRoute = EsObrigadaRouteImport.update({
-  id: '/obrigada',
-  path: '/obrigada',
-  getParentRoute: () => EsRoute,
-} as any)
-const RegrasRoute = RegrasRouteImport.update({
-  id: '/regras',
-  path: '/regras',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PactoRoute = PactoRouteImport.update({
-  id: '/pacto',
-  path: '/pacto',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HistoriasRoute = HistoriasRouteImport.update({
-  id: '/historias',
-  path: '/historias',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HistoriaSlugRoute = HistoriaSlugRouteImport.update({
-  id: '/historia/$slug',
-  path: '/historia/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LerSlugRoute = LerSlugRouteImport.update({
-  id: '/ler/$slug',
-  path: '/ler/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -259,7 +259,9 @@ export interface FileRoutesByFullPath {
   '/contato': typeof ContatoRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
+  '/es': typeof EsRouteWithChildren
   '/escrever': typeof EscreverRouteWithChildren
+  '/historias': typeof HistoriasRoute
   '/inicio': typeof InicioRoute
   '/instalar': typeof InstalarRoute
   '/jardim': typeof JardimRoute
@@ -269,9 +271,12 @@ export interface FileRoutesByFullPath {
   '/mural': typeof MuralRoute
   '/mural-publico': typeof MuralPublicoRoute
   '/notificacoes': typeof NotificacoesRoute
+  '/obrigada': typeof ObrigadaRoute
+  '/pacto': typeof PactoRoute
   '/perfil': typeof PerfilRoute
   '/planos': typeof PlanosRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/regras': typeof RegrasRoute
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -279,19 +284,14 @@ export interface FileRoutesByFullPath {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/es/obrigada': typeof EsObrigadaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
+  '/historia/$slug': typeof HistoriaSlugRoute
+  '/ler/$slug': typeof LerSlugRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
-  '/es': typeof EsRouteWithChildren
-  '/obrigada': typeof ObrigadaRoute
-  '/es/obrigada': typeof EsObrigadaRoute
-  '/regras': typeof RegrasRoute
-  '/pacto': typeof PactoRoute
-  '/historias': typeof HistoriasRoute
-  '/historia/$slug': typeof HistoriaSlugRoute
-  '/ler/$slug': typeof LerSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -301,7 +301,9 @@ export interface FileRoutesByTo {
   '/contato': typeof ContatoRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
+  '/es': typeof EsRouteWithChildren
   '/escrever': typeof EscreverRouteWithChildren
+  '/historias': typeof HistoriasRoute
   '/inicio': typeof InicioRoute
   '/instalar': typeof InstalarRoute
   '/jardim': typeof JardimRoute
@@ -311,9 +313,12 @@ export interface FileRoutesByTo {
   '/mural': typeof MuralRoute
   '/mural-publico': typeof MuralPublicoRoute
   '/notificacoes': typeof NotificacoesRoute
+  '/obrigada': typeof ObrigadaRoute
+  '/pacto': typeof PactoRoute
   '/perfil': typeof PerfilRoute
   '/planos': typeof PlanosRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/regras': typeof RegrasRoute
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -321,19 +326,14 @@ export interface FileRoutesByTo {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/es/obrigada': typeof EsObrigadaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
+  '/historia/$slug': typeof HistoriaSlugRoute
+  '/ler/$slug': typeof LerSlugRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
-  '/es': typeof EsRouteWithChildren
-  '/obrigada': typeof ObrigadaRoute
-  '/es/obrigada': typeof EsObrigadaRoute
-  '/regras': typeof RegrasRoute
-  '/pacto': typeof PactoRoute
-  '/historias': typeof HistoriasRoute
-  '/historia/$slug': typeof HistoriaSlugRoute
-  '/ler/$slug': typeof LerSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -344,7 +344,9 @@ export interface FileRoutesById {
   '/contato': typeof ContatoRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
+  '/es': typeof EsRouteWithChildren
   '/escrever': typeof EscreverRouteWithChildren
+  '/historias': typeof HistoriasRoute
   '/inicio': typeof InicioRoute
   '/instalar': typeof InstalarRoute
   '/jardim': typeof JardimRoute
@@ -354,9 +356,12 @@ export interface FileRoutesById {
   '/mural': typeof MuralRoute
   '/mural-publico': typeof MuralPublicoRoute
   '/notificacoes': typeof NotificacoesRoute
+  '/obrigada': typeof ObrigadaRoute
+  '/pacto': typeof PactoRoute
   '/perfil': typeof PerfilRoute
   '/planos': typeof PlanosRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/regras': typeof RegrasRoute
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
@@ -364,19 +369,14 @@ export interface FileRoutesById {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/es/obrigada': typeof EsObrigadaRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
+  '/historia/$slug': typeof HistoriaSlugRoute
+  '/ler/$slug': typeof LerSlugRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
-  '/es': typeof EsRouteWithChildren
-  '/obrigada': typeof ObrigadaRoute
-  '/es/obrigada': typeof EsObrigadaRoute
-  '/regras': typeof RegrasRoute
-  '/pacto': typeof PactoRoute
-  '/historias': typeof HistoriasRoute
-  '/historia/$slug': typeof HistoriaSlugRoute
-  '/ler/$slug': typeof LerSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -388,7 +388,9 @@ export interface FileRouteTypes {
     | '/contato'
     | '/cuidar'
     | '/diario'
+    | '/es'
     | '/escrever'
+    | '/historias'
     | '/inicio'
     | '/instalar'
     | '/jardim'
@@ -398,9 +400,12 @@ export interface FileRouteTypes {
     | '/mural'
     | '/mural-publico'
     | '/notificacoes'
+    | '/obrigada'
+    | '/pacto'
     | '/perfil'
     | '/planos'
     | '/privacidade'
+    | '/regras'
     | '/selos'
     | '/sobre'
     | '/termos'
@@ -408,19 +413,14 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/es/obrigada'
     | '/escrever/confirmacao'
+    | '/historia/$slug'
+    | '/ler/$slug'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
     | '/api/auth/$'
     | '/api/stripe/webhook'
-    | '/es'
-    | '/obrigada'
-    | '/es/obrigada'
-    | '/regras'
-    | '/pacto'
-    | '/historias'
-    | '/historia/$slug'
-    | '/ler/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -430,7 +430,9 @@ export interface FileRouteTypes {
     | '/contato'
     | '/cuidar'
     | '/diario'
+    | '/es'
     | '/escrever'
+    | '/historias'
     | '/inicio'
     | '/instalar'
     | '/jardim'
@@ -440,9 +442,12 @@ export interface FileRouteTypes {
     | '/mural'
     | '/mural-publico'
     | '/notificacoes'
+    | '/obrigada'
+    | '/pacto'
     | '/perfil'
     | '/planos'
     | '/privacidade'
+    | '/regras'
     | '/selos'
     | '/sobre'
     | '/termos'
@@ -450,19 +455,14 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/es/obrigada'
     | '/escrever/confirmacao'
+    | '/historia/$slug'
+    | '/ler/$slug'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
     | '/api/auth/$'
     | '/api/stripe/webhook'
-    | '/es'
-    | '/obrigada'
-    | '/es/obrigada'
-    | '/regras'
-    | '/pacto'
-    | '/historias'
-    | '/historia/$slug'
-    | '/ler/$slug'
   id:
     | '__root__'
     | '/'
@@ -472,7 +472,9 @@ export interface FileRouteTypes {
     | '/contato'
     | '/cuidar'
     | '/diario'
+    | '/es'
     | '/escrever'
+    | '/historias'
     | '/inicio'
     | '/instalar'
     | '/jardim'
@@ -482,9 +484,12 @@ export interface FileRouteTypes {
     | '/mural'
     | '/mural-publico'
     | '/notificacoes'
+    | '/obrigada'
+    | '/pacto'
     | '/perfil'
     | '/planos'
     | '/privacidade'
+    | '/regras'
     | '/selos'
     | '/sobre'
     | '/termos'
@@ -492,19 +497,14 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/es/obrigada'
     | '/escrever/confirmacao'
+    | '/historia/$slug'
+    | '/ler/$slug'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
     | '/api/auth/$'
     | '/api/stripe/webhook'
-    | '/es'
-    | '/obrigada'
-    | '/es/obrigada'
-    | '/regras'
-    | '/pacto'
-    | '/historias'
-    | '/historia/$slug'
-    | '/ler/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -515,7 +515,9 @@ export interface RootRouteChildren {
   ContatoRoute: typeof ContatoRoute
   CuidarRoute: typeof CuidarRoute
   DiarioRoute: typeof DiarioRoute
+  EsRoute: typeof EsRouteWithChildren
   EscreverRoute: typeof EscreverRouteWithChildren
+  HistoriasRoute: typeof HistoriasRoute
   InicioRoute: typeof InicioRoute
   InstalarRoute: typeof InstalarRoute
   JardimRoute: typeof JardimRoute
@@ -525,25 +527,23 @@ export interface RootRouteChildren {
   MuralRoute: typeof MuralRoute
   MuralPublicoRoute: typeof MuralPublicoRoute
   NotificacoesRoute: typeof NotificacoesRoute
+  ObrigadaRoute: typeof ObrigadaRoute
+  PactoRoute: typeof PactoRoute
   PerfilRoute: typeof PerfilRoute
   PlanosRoute: typeof PlanosRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
+  RegrasRoute: typeof RegrasRoute
   SelosRoute: typeof SelosRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
   ApiBackupRoute: typeof ApiBackupRoute
   CartaIdRoute: typeof CartaIdRoute
+  HistoriaSlugRoute: typeof HistoriaSlugRoute
+  LerSlugRoute: typeof LerSlugRoute
   OnboardingPactoRoute: typeof OnboardingPactoRoute
   OnboardingPerfilRoute: typeof OnboardingPerfilRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
-  EsRoute: typeof EsRouteWithChildren
-  ObrigadaRoute: typeof ObrigadaRoute
-  RegrasRoute: typeof RegrasRoute
-  PactoRoute: typeof PactoRoute
-  HistoriasRoute: typeof HistoriasRoute
-  HistoriaSlugRoute: typeof HistoriaSlugRoute
-  LerSlugRoute: typeof LerSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -597,11 +597,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiarioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es': {
+      id: '/es'
+      path: '/es'
+      fullPath: '/es'
+      preLoaderRoute: typeof EsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/escrever': {
       id: '/escrever'
       path: '/escrever'
       fullPath: '/escrever'
       preLoaderRoute: typeof EscreverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/historias': {
+      id: '/historias'
+      path: '/historias'
+      fullPath: '/historias'
+      preLoaderRoute: typeof HistoriasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inicio': {
@@ -667,6 +681,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificacoesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/obrigada': {
+      id: '/obrigada'
+      path: '/obrigada'
+      fullPath: '/obrigada'
+      preLoaderRoute: typeof ObrigadaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pacto': {
+      id: '/pacto'
+      path: '/pacto'
+      fullPath: '/pacto'
+      preLoaderRoute: typeof PactoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/perfil': {
       id: '/perfil'
       path: '/perfil'
@@ -686,6 +714,13 @@ declare module '@tanstack/react-router' {
       path: '/privacidade'
       fullPath: '/privacidade'
       preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/regras': {
+      id: '/regras'
+      path: '/regras'
+      fullPath: '/regras'
+      preLoaderRoute: typeof RegrasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/selos': {
@@ -737,12 +772,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContaRedefinirSenhaRouteImport
       parentRoute: typeof ContaRoute
     }
+    '/es/obrigada': {
+      id: '/es/obrigada'
+      path: '/obrigada'
+      fullPath: '/es/obrigada'
+      preLoaderRoute: typeof EsObrigadaRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/escrever/confirmacao': {
       id: '/escrever/confirmacao'
       path: '/confirmacao'
       fullPath: '/escrever/confirmacao'
       preLoaderRoute: typeof EscreverConfirmacaoRouteImport
       parentRoute: typeof EscreverRoute
+    }
+    '/historia/$slug': {
+      id: '/historia/$slug'
+      path: '/historia/$slug'
+      fullPath: '/historia/$slug'
+      preLoaderRoute: typeof HistoriaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ler/$slug': {
+      id: '/ler/$slug'
+      path: '/ler/$slug'
+      fullPath: '/ler/$slug'
+      preLoaderRoute: typeof LerSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/onboarding/pacto': {
       id: '/onboarding/pacto'
@@ -772,62 +828,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/es': {
-      id: '/es'
-      path: '/es'
-      fullPath: '/es'
-      preLoaderRoute: typeof EsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/obrigada': {
-      id: '/obrigada'
-      path: '/obrigada'
-      fullPath: '/obrigada'
-      preLoaderRoute: typeof ObrigadaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/es/obrigada': {
-      id: '/es/obrigada'
-      path: '/obrigada'
-      fullPath: '/es/obrigada'
-      preLoaderRoute: typeof EsObrigadaRouteImport
-      parentRoute: typeof EsRoute
-    }
-    '/regras': {
-      id: '/regras'
-      path: '/regras'
-      fullPath: '/regras'
-      preLoaderRoute: typeof RegrasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pacto': {
-      id: '/pacto'
-      path: '/pacto'
-      fullPath: '/pacto'
-      preLoaderRoute: typeof PactoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/historias': {
-      id: '/historias'
-      path: '/historias'
-      fullPath: '/historias'
-      preLoaderRoute: typeof HistoriasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/historia/$slug': {
-      id: '/historia/$slug'
-      path: '/historia/$slug'
-      fullPath: '/historia/$slug'
-      preLoaderRoute: typeof HistoriaSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ler/$slug': {
-      id: '/ler/$slug'
-      path: '/ler/$slug'
-      fullPath: '/ler/$slug'
-      preLoaderRoute: typeof LerSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -843,6 +843,16 @@ const ContaRouteChildren: ContaRouteChildren = {
 
 const ContaRouteWithChildren = ContaRoute._addFileChildren(ContaRouteChildren)
 
+interface EsRouteChildren {
+  EsObrigadaRoute: typeof EsObrigadaRoute
+}
+
+const EsRouteChildren: EsRouteChildren = {
+  EsObrigadaRoute: EsObrigadaRoute,
+}
+
+const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
+
 interface EscreverRouteChildren {
   EscreverConfirmacaoRoute: typeof EscreverConfirmacaoRoute
 }
@@ -855,16 +865,6 @@ const EscreverRouteWithChildren = EscreverRoute._addFileChildren(
   EscreverRouteChildren,
 )
 
-interface EsRouteChildren {
-  EsObrigadaRoute: typeof EsObrigadaRoute
-}
-
-const EsRouteChildren: EsRouteChildren = {
-  EsObrigadaRoute: EsObrigadaRoute,
-}
-
-const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApoioRoute: ApoioRoute,
@@ -873,7 +873,9 @@ const rootRouteChildren: RootRouteChildren = {
   ContatoRoute: ContatoRoute,
   CuidarRoute: CuidarRoute,
   DiarioRoute: DiarioRoute,
+  EsRoute: EsRouteWithChildren,
   EscreverRoute: EscreverRouteWithChildren,
+  HistoriasRoute: HistoriasRoute,
   InicioRoute: InicioRoute,
   InstalarRoute: InstalarRoute,
   JardimRoute: JardimRoute,
@@ -883,25 +885,23 @@ const rootRouteChildren: RootRouteChildren = {
   MuralRoute: MuralRoute,
   MuralPublicoRoute: MuralPublicoRoute,
   NotificacoesRoute: NotificacoesRoute,
+  ObrigadaRoute: ObrigadaRoute,
+  PactoRoute: PactoRoute,
   PerfilRoute: PerfilRoute,
   PlanosRoute: PlanosRoute,
   PrivacidadeRoute: PrivacidadeRoute,
+  RegrasRoute: RegrasRoute,
   SelosRoute: SelosRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
   ApiBackupRoute: ApiBackupRoute,
   CartaIdRoute: CartaIdRoute,
+  HistoriaSlugRoute: HistoriaSlugRoute,
+  LerSlugRoute: LerSlugRoute,
   OnboardingPactoRoute: OnboardingPactoRoute,
   OnboardingPerfilRoute: OnboardingPerfilRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
-  EsRoute: EsRouteWithChildren,
-  ObrigadaRoute: ObrigadaRoute,
-  RegrasRoute: RegrasRoute,
-  PactoRoute: PactoRoute,
-  HistoriasRoute: HistoriasRoute,
-  HistoriaSlugRoute: HistoriaSlugRoute,
-  LerSlugRoute: LerSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

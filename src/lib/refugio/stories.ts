@@ -1,3 +1,4 @@
+import { moreStories } from "@/lib/refugio/stories-more";
 export type Lang = "pt" | "es";
 
 export type Choice = {
@@ -33,6 +34,7 @@ export type Story = {
   synopsis: string;
   place: string;
   start: string;
+  sound?: string;
   scenes: Scene[];
 };
 
@@ -46,6 +48,7 @@ const pt: Story = {
   synopsis: "Depois do expediente, um livro sem ficha espera na mesa. O bilhete lá dentro não pede para ser lido. Pede para não ser devolvido.",
   place: "Biblioteca antiga",
   start: "mesa",
+  sound: "/sounds/rain.mp3",
   scenes: [
     {
       id: "mesa",
@@ -135,6 +138,7 @@ const es: Story = {
   synopsis: "Después del cierre, un libro sin ficha espera en la mesa. La nota que hay dentro no pide ser leída. Pide que no lo devuelvan.",
   place: "Biblioteca antigua",
   start: "mesa",
+  sound: "/sounds/rain.mp3",
   scenes: [
     {
       id: "mesa",
@@ -214,7 +218,10 @@ const es: Story = {
   ],
 };
 
-export const stories: Record<Lang, Story[]> = { pt: [pt], es: [es] };
+export const stories: Record<Lang, Story[]> = {
+  pt: [pt, ...moreStories.pt],
+  es: [es, ...moreStories.es],
+};
 
 export function getStory(lang: Lang, slug: string) {
   return stories[lang].find((story) => story.slug === slug) ?? null;

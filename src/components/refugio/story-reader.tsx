@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
-import { saveEnding } from "@/lib/refugio/reading-local";
-import { getStory, sceneOf, type Choice } from "@/lib/refugio/stories";
+import { loadBirth, loadReading, saveBirth, saveReading } from "@/lib/refugio/progress-cloud";
+import { ageFromBirth, readBirth, readProgress, saveEnding, writeBirth, writeProgress } from "@/lib/refugio/reading-local";
+import { getStory, sceneOf, stories, type Choice, type Story } from "@/lib/refugio/stories";
 
 export function StoryReader({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
@@ -11,12 +12,66 @@ export function StoryReader({ slug }: { slug: string }) {
   const [affinity, setAffinity] = useState(0);
   const [clues, setClues] = useState<string[]>([]);
   const [sound, setSound] = useState(false);
+  const [birth, setBirth] = useState<string | null>(null);
+  const [ageReady, setAgeReady] = useState(false);
+  const [kept, setKept] = useState(false);
   const audio = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (story) setSceneId(story.start);
-    setAffinity(0);
-    setClues([]);
+    let cancel = false;
+    const localBirth = readBirth();
+    void loadBirth()
+      .then((result) => {
+        if (cancel) return;
+        const date = result.birthDate || localBirth;
+        if (date) writeBirth(date);
+        setBirth(date);
+        setAgeReady(true);
+      })
+      .catch(() => {
+        if (cancel) return;
+        setBirth(localBirth);
+        setAgeReady(true);
+      });
+    return () => {
+      cancel = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!story) return;
+    let cancel = false;
+    const local = readProgress(story.slug, lang);
+    void loadReading({ data: { slug: story.slug, lang } })
+      .then((result) => {
+        if (cancel) return;
+        const remote = result.progress;
+        if (remote?.sceneId) {
+          setSceneId(remote.sceneId);
+          setAffinity(remote.affinity);
+          setClues(remote.clues);
+          setKept(result.signedIn);
+        } else if (local) {
+          setSceneId(local.sceneId);
+          setAffinity(local.affinity);
+          setClues(local.clues);
+          setKept(false);
+        } else {
+          setSceneId(story.start);
+          setAffinity(0);
+          setClues([]);
+          setKept(result.signedIn);
+        }
+      })
+      .catch(() => {
+        if (cancel || !local) return;
+        setSceneId(local.sceneId);
+        setAffinity(local.affinity);
+        setClues(local.clues);
+      });
+    return () => {
+      cancel = true;
+    };
   }, [story, lang]);
 
   useEffect(() => {
@@ -26,29 +81,80 @@ export function StoryReader({ slug }: { slug: string }) {
   const scene = useMemo(() => (story ? sceneOf(story, sceneId) : null), [story, sceneId]);
 
   useEffect(() => {
-    if (scene?.ending && story) saveEnding({ slug: story.slug, lang, story: story.title, ending: scene.ending });
-  }, [scene?.ending, story, lang]);
+    if (!scene?.ending || !story) return;
+    saveEnding({ slug: story.slug, lang, story: story.title, ending: scene.ending });
+    persist(story, scene.id, affinity, clues, {
+      key: scene.ending.key,
+      title: scene.ending.title,
+      flower: scene.ending.flower,
+    });
+  }, [scene?.ending, scene?.id, story, lang, affinity, clues]);
 
-  if (!story || !scene) {
+  function persist(
+    current: Story,
+    nextScene: string,
+    nextAffinity: number,
+    nextClues: string[],
+    ending?: { key: string; title: string; flower: string },
+  ) {
+    writeProgress({ slug: current.slug, lang, sceneId: nextScene, affinity: nextAffinity, clues: nextClues });
+    void saveReading({
+      data: {
+        slug: current.slug,
+        lang,
+        sceneId: nextScene,
+        affinity: nextAffinity,
+        clues: nextClues,
+        storyTitle: current.title,
+        endingKey: ending?.key,
+        endingTitle: ending?.title,
+        flower: ending?.flower,
+      },
+    })
+      .then((result) => setKept(result.signedIn))
+      .catch(() => setKept(false));
+  }
+
+  if (!ageReady || !story || !scene) {
     return (
       <StoryShell>
         <section className="house-hero">
-          <h1>{t.back}</h1>
-          <a href="/historias">{t.navStories}</a>
+          <p className="soon-kicker">{t.brand}</p>
         </section>
       </StoryShell>
     );
   }
 
+  const age = birth ? ageFromBirth(birth) : null;
+  if (!birth || age === null || age < 16) {
+    return (
+      <StoryShell>
+        <AgeGate
+          birth={birth}
+          tooYoung={age !== null && age < 16}
+          onSave={(value) => {
+            writeBirth(value);
+            setBirth(value);
+            void saveBirth({ data: { birthDate: value } }).catch(() => undefined);
+          }}
+        />
+      </StoryShell>
+    );
+  }
+
   function choose(choice: Choice) {
-    if (choice.clue) setClues((list) => (list.includes(choice.clue!) ? list : [...list, choice.clue!]));
-    setAffinity((value) => value + (choice.affinity ?? 0));
+    const nextClues = choice.clue && !clues.includes(choice.clue) ? [...clues, choice.clue] : clues;
+    const nextAffinity = affinity + (choice.affinity ?? 0);
+    if (choice.clue) setClues(nextClues);
+    setAffinity(nextAffinity);
     setSceneId(choice.to);
+    persist(story!, choice.to, nextAffinity, nextClues);
   }
 
   function toggleSound() {
+    const src = story?.sound || "/sounds/rain.mp3";
     if (!audio.current) {
-      const el = new Audio("/sounds/rain.mp3");
+      const el = new Audio(src);
       el.loop = true;
       el.volume = 0.35;
       audio.current = el;
@@ -57,6 +163,10 @@ export function StoryReader({ slug }: { slug: string }) {
       audio.current.pause();
       setSound(false);
       return;
+    }
+    if (!audio.current.src.includes(src)) {
+      audio.current.src = src;
+      audio.current.load();
     }
     void audio.current.play().then(() => setSound(true)).catch(() => setSound(false));
   }
@@ -72,6 +182,7 @@ export function StoryReader({ slug }: { slug: string }) {
             {sound ? t.soundOn : t.soundOff}
           </button>
         </header>
+        <p className="house-note reader-keep">{kept ? t.savedAccount : t.savedDevice}</p>
         <div className="reader-layout">
           <div className="reader-sheet">
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
@@ -90,6 +201,7 @@ export function StoryReader({ slug }: { slug: string }) {
                     setSceneId(story.start);
                     setAffinity(0);
                     setClues([]);
+                    persist(story, story.start, 0, []);
                   }}
                 >
                   {t.replay}
@@ -180,5 +292,35 @@ export function StoryList() {
 }
 
 function storiesOf(lang: "pt" | "es") {
-  return getStory(lang, "o-bilhete") ? [getStory(lang, "o-bilhete")!] : [];
+  return stories[lang];
+}
+
+function AgeGate({ birth, tooYoung, onSave }: { birth: string | null; tooYoung: boolean; onSave: (value: string) => void }) {
+  const { t } = useHouse();
+  const [value, setValue] = useState(birth && !tooYoung ? birth : "");
+  return (
+    <section className="house-hero">
+      <p className="soon-kicker">16+</p>
+      <h1>{tooYoung ? t.ageYoungTitle : t.ageTitle}</h1>
+      <p className="soon-lead">{tooYoung ? t.ageYoung : t.ageLead}</p>
+      {tooYoung ? null : (
+        <form
+          className="soon-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (value) onSave(value);
+          }}
+        >
+          <label>
+            {t.ageLabel}
+            <input type="date" required max={new Date().toISOString().slice(0, 10)} value={value} onChange={(event) => setValue(event.target.value)} />
+          </label>
+          <button type="submit">{t.ageSave}</button>
+        </form>
+      )}
+      <a className="soon-back" href="/historias">
+        {t.back}
+      </a>
+    </section>
+  );
 }
