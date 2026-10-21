@@ -3671,3 +3671,48 @@ html.protect-on .diary-card::after {
   .house-nav { order: 3; width: 100%; }
   .house-hero h1 { max-width: 12ch; }
 }
+
+.house .soon-lead { color: #3e555c; }
+.house.is-night .soon-lead { color: #d7e0e3; }
+.house.is-night .house-steps p,
+.house.is-night .story-card p,
+.house.is-night .plan-grid li,
+.house.is-night .house-luna p { color: #f4efe4; }
+
+.reader.has-art {
+  color: #f8f5ee;
+  background-size: cover;
+  background-position: center;
+  min-height: 70vh;
+}
+.reader.has-art .reader-top a,
+.reader.has-art .house-note { color: #f4efe4; }
+.reader-choices button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.reader-choices button small { color: #f6d77a; font-size: 12px; letter-spacing: .02em; }
+.reader-end { display: grid; gap: 10px; justify-items: start; }
+.path-notes { margin-top: 18px; display: grid; gap: 10px; }
+.path-notes ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.path-notes li {
+  display: grid; gap: 2px; padding: 10px 12px; border-radius: 16px;
+  background: rgba(12, 52, 66, .05);
+}
+.path-notes strong { font-family: "Fraunces", Georgia, serif; font-weight: 500; }
+.path-notes form { display: grid; gap: 8px; }
+.path-notes input, .path-notes textarea, .editor-form input, .editor-form textarea, .editor-form select {
+  width: 100%; border: 1px solid #e5e1d8; border-radius: 12px; padding: 12px 14px;
+  background: #fffdf8; color: #142d36;
+}
+.editor-form { max-width: 720px; margin: 0 20px 40px; }
+.editor-form fieldset {
+  border: 1px solid #e5e1d8; border-radius: 22px; padding: 14px; display: grid; gap: 8px;
+}
+.editor-form legend { font-family: "Fraunces", Georgia, serif; padding: 0 6px; }
+@media (min-width: 800px) {
+  .reader-layout { grid-template-columns: .8fr 1.4fr; }
+}
+

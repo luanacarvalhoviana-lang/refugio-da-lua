@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
-import { stories, type Lang } from "@/lib/refugio/stories";
+import { useShelf } from "@/components/refugio/use-shelf";
+import type { Lang } from "@/lib/refugio/stories";
 
 export function HomeStories({ initialLang }: { initialLang?: Lang }) {
   const { lang, setLang, t } = useHouse();
+  const shelf = useShelf(lang);
   useEffect(() => {
     if (initialLang && initialLang !== lang) setLang(initialLang);
   }, [initialLang, lang, setLang]);
-  const story = stories[lang][0];
+  const story = shelf[0];
   return (
     <StoryShell>
       <section className="house-hero">
@@ -17,7 +19,7 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
         <h1>{t.heroTitle}</h1>
         <p className="soon-lead">{t.heroLead}</p>
         <div className="house-cta">
-          <a className="house-primary" href={`/ler/${story.slug}`}>
+          <a className="house-primary" href={`/ler/${story?.slug ?? "o-bilhete"}`}>
             {t.read}
           </a>
           <a className="house-quiet" href="/historias">
@@ -45,7 +47,7 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
       <section className="house-block">
         <h2>{t.now}</h2>
         <div className="story-list">
-          {stories[lang].map((item) => (
+          {shelf.map((item) => (
             <a key={item.slug} className="story-card" href={`/historia/${item.slug}`}>
               <span className="soon-kicker">{item.place}</span>
               <strong>{item.title}</strong>

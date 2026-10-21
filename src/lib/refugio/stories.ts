@@ -33,6 +33,7 @@ export type Story = {
   minutes: number;
   synopsis: string;
   place: string;
+  art?: string;
   start: string;
   sound?: string;
   scenes: Scene[];
@@ -229,4 +230,12 @@ export function getStory(lang: Lang, slug: string) {
 
 export function sceneOf(story: Story, id: string) {
   return story.scenes.find((scene) => scene.id === id) ?? story.scenes[0];
+}
+
+export function artOf(story: Story) {
+  if (story.art) return story.art;
+  const place = story.place.toLowerCase();
+  if (place.includes("caf")) return "/scenes/cafe.jpg";
+  if (place.includes("praia") || place.includes("playa")) return "/scenes/praia.jpg";
+  return "/scenes/biblioteca.jpg";
 }

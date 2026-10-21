@@ -14,6 +14,7 @@ import { Route as ApoioRouteImport } from './routes/apoio'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ContaRouteImport } from './routes/conta'
 import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as CriarRouteImport } from './routes/criar'
 import { Route as CuidarRouteImport } from './routes/cuidar'
 import { Route as DiarioRouteImport } from './routes/diario'
 import { Route as EsRouteImport } from './routes/es'
@@ -73,6 +74,11 @@ const ContaRoute = ContaRouteImport.update({
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriarRoute = CriarRouteImport.update({
+  id: '/criar',
+  path: '/criar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CuidarRoute = CuidarRouteImport.update({
@@ -257,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/criar': typeof CriarRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
   '/es': typeof EsRouteWithChildren
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/criar': typeof CriarRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
   '/es': typeof EsRouteWithChildren
@@ -342,6 +350,7 @@ export interface FileRoutesById {
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/criar': typeof CriarRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
   '/es': typeof EsRouteWithChildren
@@ -386,6 +395,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/conta'
     | '/contato'
+    | '/criar'
     | '/cuidar'
     | '/diario'
     | '/es'
@@ -428,6 +438,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/conta'
     | '/contato'
+    | '/criar'
     | '/cuidar'
     | '/diario'
     | '/es'
@@ -470,6 +481,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/conta'
     | '/contato'
+    | '/criar'
     | '/cuidar'
     | '/diario'
     | '/es'
@@ -513,6 +525,7 @@ export interface RootRouteChildren {
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ContaRoute: typeof ContaRouteWithChildren
   ContatoRoute: typeof ContatoRoute
+  CriarRoute: typeof CriarRoute
   CuidarRoute: typeof CuidarRoute
   DiarioRoute: typeof DiarioRoute
   EsRoute: typeof EsRouteWithChildren
@@ -581,6 +594,13 @@ declare module '@tanstack/react-router' {
       path: '/contato'
       fullPath: '/contato'
       preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criar': {
+      id: '/criar'
+      path: '/criar'
+      fullPath: '/criar'
+      preLoaderRoute: typeof CriarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cuidar': {
@@ -871,6 +891,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiguracoesRoute: ConfiguracoesRoute,
   ContaRoute: ContaRouteWithChildren,
   ContatoRoute: ContatoRoute,
+  CriarRoute: CriarRoute,
   CuidarRoute: CuidarRoute,
   DiarioRoute: DiarioRoute,
   EsRoute: EsRouteWithChildren,
