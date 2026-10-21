@@ -7,6 +7,8 @@ import { loadBirth, loadReading, saveBirth, saveReading } from "@/lib/refugio/pr
 import { ageFromBirth, readBirth, readProgress, saveEnding, writeBirth, writeProgress } from "@/lib/refugio/reading-local";
 import { addNote, choiceStats, listNotes, recordChoice } from "@/lib/refugio/room-cloud";
 import { artOf, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
+import { crossfade, isStoryPass, sourceForScene } from "@/lib/refugio/music";
+import { useRefugioStore } from "@/lib/refugio/store";
 
 export function StoryReader({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
@@ -22,7 +24,13 @@ export function StoryReader({ slug }: { slug: string }) {
   const [trail, setTrail] = useState<Array<{ sceneId: string; affinity: number; clues: string[] }>>([]);
   const [arrived, setArrived] = useState<{ from: string; choiceId: string } | null>(null);
   const [stats, setStats] = useState<{ total: number; counts: Record<string, number> }>({ total: 0, counts: {} });
-  const audio = useRef<HTMLAudioElement | null>(null);
+  const [volume, setVolume] = useState(0.35);
+  const slots = useRef<Array<HTMLAudioElement | null>>([null, null]);
+  const activeSlot = useRef(0);
+  const fadeFrame = useRef(0);
+  const volumeRef = useRef(0.35);
+  const soundRef = useRef(false);
+  const plan = useRefugioStore((state) => state.plan);
 
   useEffect(() => {
     let cancel = false;
@@ -82,7 +90,10 @@ export function StoryReader({ slug }: { slug: string }) {
   }, [story, lang]);
 
   useEffect(() => {
-    return () => audio.current?.pause();
+    return () => {
+      cancelAnimationFrame(fadeFrame.current);
+      for (const el of slots.current) el?.pause();
+    };
   }, []);
 
   const scene = useMemo(() => (story ? sceneOf(story, sceneId) : null), [story, sceneId]);
@@ -173,6 +184,9 @@ export function StoryReader({ slug }: { slug: string }) {
     setArrived({ from: sceneId, choiceId: choice.id });
     setSceneId(choice.to);
     persist(story!, choice.to, nextAffinity, nextClues);
+    if (soundRef.current) {
+      playSource(sourceForScene(story!, [...trail.map((step) => step.sceneId), sceneId, choice.to], isStoryPass(plan)));
+    }
     const key = readerKey();
     void recordChoice({
       data: { slug: story!.slug, lang, sceneId, choiceId: choice.id, readerKey: key },
@@ -188,26 +202,40 @@ export function StoryReader({ slug }: { slug: string }) {
     setAffinity(previous.affinity);
     setClues(previous.clues);
     persist(story, previous.sceneId, previous.affinity, previous.clues);
+    if (soundRef.current) {
+      const ids = trail.slice(0, -1).map((step) => step.sceneId);
+      ids.push(previous.sceneId);
+      playSource(sourceForScene(story, ids, isStoryPass(plan)));
+    }
+  }
+
+  function playSource(src: string) {
+    crossfade(slots.current, activeSlot, src, volumeRef.current, fadeFrame);
   }
 
   function toggleSound() {
-    const src = story?.sound || "/sounds/rain.mp3";
-    if (!audio.current) {
-      const el = new Audio(src);
-      el.loop = true;
-      el.volume = 0.35;
-      audio.current = el;
-    }
-    if (sound) {
-      audio.current.pause();
+    if (soundRef.current) {
+      cancelAnimationFrame(fadeFrame.current);
+      for (const el of slots.current) el?.pause();
+      soundRef.current = false;
+      localStorage.setItem("refugio-sound", "off");
       setSound(false);
       return;
     }
-    if (!audio.current.src.includes(src)) {
-      audio.current.src = src;
-      audio.current.load();
-    }
-    void audio.current.play().then(() => setSound(true)).catch(() => setSound(false));
+    soundRef.current = true;
+    localStorage.setItem("refugio-sound", "on");
+    setSound(true);
+    if (!story) return;
+    const ids = [...trail.map((step) => step.sceneId), scene.id];
+    playSource(sourceForScene(story, ids, isStoryPass(plan)));
+  }
+
+  function changeVolume(value: number) {
+    const next = Math.min(1, Math.max(0, value));
+    volumeRef.current = next;
+    setVolume(next);
+    const current = slots.current[activeSlot.current];
+    if (current && !current.paused) current.volume = next;
   }
 
   const moons = Math.max(0, Math.min(5, affinity + 2));
@@ -220,9 +248,23 @@ export function StoryReader({ slug }: { slug: string }) {
       >
         <header className="reader-top">
           <a href={`/historia/${story.slug}`}>{story.title}</a>
-          <button type="button" onClick={toggleSound}>
-            {sound ? t.soundOn : t.soundOff}
-          </button>
+          <div className="reader-sound">
+            <button type="button" onClick={toggleSound} aria-pressed={sound}>
+              {sound ? t.soundOn : t.soundOff}
+            </button>
+            <label className="reader-volume">
+              {t.volume}
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.05}
+                value={volume}
+                aria-label={t.volume}
+                onChange={(event) => changeVolume(Number(event.target.value))}
+              />
+            </label>
+          </div>
         </header>
         <p className="house-note reader-keep">{kept ? t.savedAccount : t.savedDevice}</p>
         <div className="reader-layout">
@@ -258,6 +300,7 @@ export function StoryReader({ slug }: { slug: string }) {
                     setAffinity(0);
                     setClues([]);
                     persist(story, story.start, 0, []);
+                    if (soundRef.current) playSource(sourceForScene(story, [story.start], isStoryPass(plan)));
                   }}
                 >
                   {t.replay}

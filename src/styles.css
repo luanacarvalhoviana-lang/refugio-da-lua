@@ -3685,8 +3685,9 @@ html.protect-on .diary-card::after {
   background-position: center;
   min-height: 70vh;
 }
-.reader.has-art .reader-top a,
-.reader.has-art .house-note { color: #f4efe4; }
+.reader-sound { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.reader-volume { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.reader-volume input { width: 88px; accent-color: #f6d77a; }
 .reader-choices button {
   display: flex;
   flex-direction: column;

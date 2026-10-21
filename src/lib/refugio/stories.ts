@@ -22,6 +22,7 @@ export type Scene = {
   body?: string;
   choices?: Choice[];
   ending?: Ending;
+  music?: string;
 };
 
 export type Story = {
@@ -53,6 +54,7 @@ const pt: Story = {
   scenes: [
     {
       id: "mesa",
+      music: "calma",
       body: "A chuva encosta na vidraça. O último leitor já foi embora, e a biblioteca fica só com o cheiro de papel molhado de quem chegou da rua. Na mesa de devolução há um romance sem ficha. Dentro, um bilhete estreito, escrito com letra firme: “Não devolva este livro. Se quiser saber por quê, a última estante ainda está acesa.”",
       choices: [
         { id: "abrir", label: "Abrir o livro antes de ir", to: "corredor", affinity: 1, clue: "O bilhete pede para o livro não ser devolvido." },
@@ -71,6 +73,7 @@ const pt: Story = {
     },
     {
       id: "helena",
+      music: "romance",
       speaker: "Helena",
       body: "Ela está de joelhos entre os volumes grandes, a luz do abajur cortando só o rosto. Cabelo preso de qualquer jeito, mãos manchadas de cola de restauro. Não se assusta. “Você não devolveu”, ela diz, e isso soa menos como pergunta do que como alívio. “Esse livro não é da biblioteca. É meu. Eu o deixei para quem fosse capaz de não cumprir a regra.”",
       choices: [
@@ -81,6 +84,7 @@ const pt: Story = {
     },
     {
       id: "margem",
+      music: "suspense",
       speaker: "Helena",
       body: "“Porque a pessoa que escreveu comigo nesse livro sumiu sem se despedir. O nome na margem era o jeito dela dizer que ia voltar. Faz um ano. Eu fico depois da hora porque, se ela entrar, quero que alguém ainda esteja aqui. Hoje você chegou primeiro.” A chuva engrossa. Helena olha a sua boca e depois desvia, como quem se corrige.",
       choices: [
@@ -101,6 +105,7 @@ const pt: Story = {
     },
     {
       id: "fim-chuva",
+      music: "revelacao",
       ending: {
         key: "chuva",
         title: "A chuva não devolve",
@@ -119,6 +124,7 @@ const pt: Story = {
     },
     {
       id: "fim-fechado",
+      music: "despedida",
       ending: {
         key: "fechado",
         title: "A luz que se apaga",
@@ -143,6 +149,7 @@ const es: Story = {
   scenes: [
     {
       id: "mesa",
+      music: "calma",
       body: "La lluvia se apoya en el vidrio. El último lector ya se fue, y la biblioteca se queda con el olor del papel mojado de quien llegó de la calle. En la mesa de devolución hay una novela sin ficha. Dentro, una nota breve, con letra firme: “No devuelvas este libro. Si quieres saber por qué, el último estante sigue encendido.”",
       choices: [
         { id: "abrir", label: "Abrir el libro antes de irte", to: "corredor", affinity: 1, clue: "La nota pide que el libro no sea devuelto." },
@@ -161,6 +168,7 @@ const es: Story = {
     },
     {
       id: "helena",
+      music: "romance",
       speaker: "Helena",
       body: "Está de rodillas entre los volúmenes grandes, y la lámpara le corta solo el rostro. El pelo mal recogido, las manos manchadas de cola de restauración. No se asusta. “No lo devolviste”, dice, y suena menos a pregunta que a alivio. “Este libro no es de la biblioteca. Es mío. Lo dejé para quien fuera capaz de no cumplir la regla.”",
       choices: [
@@ -171,6 +179,7 @@ const es: Story = {
     },
     {
       id: "margem",
+      music: "suspense",
       speaker: "Helena",
       body: "“Porque la persona que escribió conmigo en este libro desapareció sin despedirse. El nombre al margen era su manera de decir que iba a volver. Hace un año. Me quedo después de hora porque, si entra, quiero que alguien siga aquí. Hoy llegaste tú primero.” La lluvia arrecia. Helena mira tu boca y luego aparta la vista, como quien se corrige.",
       choices: [
@@ -191,6 +200,7 @@ const es: Story = {
     },
     {
       id: "fim-chuva",
+      music: "revelacao",
       ending: {
         key: "chuva",
         title: "La lluvia no devuelve",
@@ -209,6 +219,7 @@ const es: Story = {
     },
     {
       id: "fim-fechado",
+      music: "despedida",
       ending: {
         key: "fechado",
         title: "La luz que se apaga",
