@@ -3800,4 +3800,7 @@ html.protect-on .diary-card::after {
 .comment-list button, .house-note button {
   border: 0; background: transparent; color: inherit; text-decoration: underline; padding: 0; font-size: 14px;
 }
+.author-head { display: flex; gap: 16px; align-items: center; }
+.author-photo { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; background: #ece8f7; }
+.story-card em a, .story-card strong a { color: inherit; }
 

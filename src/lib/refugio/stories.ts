@@ -250,3 +250,12 @@ export function artOf(story: Story) {
   if (place.includes("praia") || place.includes("playa")) return "/scenes/praia.jpg";
   return "/scenes/biblioteca.jpg";
 }
+
+export function authorSlug(name: string) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}

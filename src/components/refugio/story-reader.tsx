@@ -8,7 +8,7 @@ import { ageFromBirth, readBirth, readProgress, saveEnding, writeBirth, writePro
 import { addNote, listNotes } from "@/lib/refugio/room-cloud";
 import { tallyChoice } from "@/lib/refugio/community-cloud";
 import { CommunityDesk } from "@/components/refugio/community";
-import { artOf, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
+import { artOf, authorSlug, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
 import { crossfade, isStoryPass, sourceForScene } from "@/lib/refugio/music";
 import { useRefugioStore } from "@/lib/refugio/store";
 
@@ -343,7 +343,7 @@ export function StoryPage({ slug }: { slug: string }) {
         <h1>{story.title}</h1>
         <p className="soon-lead">{story.synopsis}</p>
         <p className="house-note">
-          {t.by} {story.author} · {story.genres.join(" · ")} · {story.minutes} {t.minutes}
+          {t.by} <a href={`/autora/${authorSlug(story.author)}`}>{story.author}</a> · {story.genres.join(" · ")} · {story.minutes} {t.minutes}
         </p>
         <div className="house-cta">
           <a className="house-primary" href={`/ler/${story.slug}`}>

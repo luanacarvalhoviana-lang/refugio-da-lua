@@ -4,7 +4,7 @@ import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { saveStoryAlert } from "@/lib/refugio/alert-cloud";
 import { useShelf } from "@/components/refugio/use-shelf";
-import type { Lang } from "@/lib/refugio/stories";
+import { authorSlug, type Lang } from "@/lib/refugio/stories";
 
 export function HomeStories({ initialLang }: { initialLang?: Lang }) {
   const { lang, setLang, t } = useHouse();
@@ -49,14 +49,14 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
         <h2>{t.now}</h2>
         <div className="story-list">
           {shelf.map((item) => (
-            <a key={item.slug} className="story-card" href={`/historia/${item.slug}`}>
+            <article key={item.slug} className="story-card">
               <span className="soon-kicker">{item.place}</span>
-              <strong>{item.title}</strong>
+              <strong><a href={`/historia/${item.slug}`}>{item.title}</a></strong>
               <em>
-                {t.by} {item.author} · {item.rating} · {item.minutes} {t.minutes}
+                {t.by} <a href={`/autora/${authorSlug(item.author)}`}>{item.author}</a> · {item.rating} · {item.minutes} {t.minutes}
               </em>
               <p>{item.synopsis}</p>
-            </a>
+            </article>
           ))}
         </div>
       </section>

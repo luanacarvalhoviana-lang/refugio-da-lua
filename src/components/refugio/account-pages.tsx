@@ -2,6 +2,7 @@ import { useState } from "react";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { confirmPasswordReset, requestPasswordReset, signInEmail, signInGoogle, signUpEmail, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { AuthorEditor } from "@/components/refugio/author-page";
 
 export function Door({ heading = false }: { heading?: boolean }) {
   const { t } = useHouse();
@@ -84,6 +85,7 @@ export function AccountPage() {
       <section className="house-block">
         <h1>{t.accountTitle}</h1>
         <Door />
+        <AuthorEditor />
       </section>
     </StoryShell>
   );

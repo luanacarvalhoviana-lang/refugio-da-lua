@@ -40,6 +40,7 @@ import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AdminModeracaoRouteImport } from './routes/admin.moderacao'
 import { Route as ApiBackupRouteImport } from './routes/api/backup'
+import { Route as AutoraSlugRouteImport } from './routes/autora.$slug'
 import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
 import { Route as ContaRedefinirSenhaRouteImport } from './routes/conta.redefinir-senha'
@@ -53,6 +54,7 @@ import { Route as OnboardingPactoRouteImport } from './routes/onboarding.pacto'
 import { Route as OnboardingPerfilRouteImport } from './routes/onboarding.perfil'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
+import { Route as EsAutoraSlugRouteImport } from './routes/es.autora.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -209,6 +211,11 @@ const ApiBackupRoute = ApiBackupRouteImport.update({
   path: '/api/backup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AutoraSlugRoute = AutoraSlugRouteImport.update({
+  id: '/autora/$slug',
+  path: '/autora/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartaIdRoute = CartaIdRouteImport.update({
   id: '/carta/$id',
   path: '/carta/$id',
@@ -274,6 +281,11 @@ const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
   path: '/api/stripe/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsAutoraSlugRoute = EsAutoraSlugRouteImport.update({
+  id: '/autora/$slug',
+  path: '/autora/$slug',
+  getParentRoute: () => EsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -307,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
+  '/autora/$slug': typeof AutoraSlugRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
@@ -320,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/es/autora/$slug': typeof EsAutoraSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -352,6 +366,7 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
+  '/autora/$slug': typeof AutoraSlugRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
@@ -365,6 +380,7 @@ export interface FileRoutesByTo {
   '/es': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/es/autora/$slug': typeof EsAutoraSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -399,6 +415,7 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
+  '/autora/$slug': typeof AutoraSlugRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
@@ -412,6 +429,7 @@ export interface FileRoutesById {
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/es/autora/$slug': typeof EsAutoraSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -447,6 +465,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/admin/moderacao'
     | '/api/backup'
+    | '/autora/$slug'
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
@@ -460,6 +479,7 @@ export interface FileRouteTypes {
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/es/autora/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -492,6 +512,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/admin/moderacao'
     | '/api/backup'
+    | '/autora/$slug'
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
@@ -505,6 +526,7 @@ export interface FileRouteTypes {
     | '/es'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/es/autora/$slug'
   id:
     | '__root__'
     | '/'
@@ -538,6 +560,7 @@ export interface FileRouteTypes {
     | '/termos'
     | '/admin/moderacao'
     | '/api/backup'
+    | '/autora/$slug'
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
@@ -551,6 +574,7 @@ export interface FileRouteTypes {
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/es/autora/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -585,6 +609,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   AdminModeracaoRoute: typeof AdminModeracaoRoute
   ApiBackupRoute: typeof ApiBackupRoute
+  AutoraSlugRoute: typeof AutoraSlugRoute
   CartaIdRoute: typeof CartaIdRoute
   HistoriaSlugRoute: typeof HistoriaSlugRoute
   LerSlugRoute: typeof LerSlugRoute
@@ -813,6 +838,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBackupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/autora/$slug': {
+      id: '/autora/$slug'
+      path: '/autora/$slug'
+      fullPath: '/autora/$slug'
+      preLoaderRoute: typeof AutoraSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/carta/$id': {
       id: '/carta/$id'
       path: '/carta/$id'
@@ -904,6 +936,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/autora/$slug': {
+      id: '/es/autora/$slug'
+      path: '/autora/$slug'
+      fullPath: '/es/autora/$slug'
+      preLoaderRoute: typeof EsAutoraSlugRouteImport
+      parentRoute: typeof EsRoute
+    }
   }
 }
 
@@ -923,12 +962,14 @@ interface EsRouteChildren {
   EsObrigadaRoute: typeof EsObrigadaRoute
   EsPactoRoute: typeof EsPactoRoute
   EsIndexRoute: typeof EsIndexRoute
+  EsAutoraSlugRoute: typeof EsAutoraSlugRoute
 }
 
 const EsRouteChildren: EsRouteChildren = {
   EsObrigadaRoute: EsObrigadaRoute,
   EsPactoRoute: EsPactoRoute,
   EsIndexRoute: EsIndexRoute,
+  EsAutoraSlugRoute: EsAutoraSlugRoute,
 }
 
 const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
@@ -977,6 +1018,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   AdminModeracaoRoute: AdminModeracaoRoute,
   ApiBackupRoute: ApiBackupRoute,
+  AutoraSlugRoute: AutoraSlugRoute,
   CartaIdRoute: CartaIdRoute,
   HistoriaSlugRoute: HistoriaSlugRoute,
   LerSlugRoute: LerSlugRoute,
