@@ -1,18 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { listCommunity } from "@/lib/refugio/room-cloud";
+import { listPublishedStories } from "@/lib/refugio/studio-cloud";
 import { stories, type Lang, type Story } from "@/lib/refugio/stories";
 
 export function useShelf(lang: Lang) {
   const [extra, setExtra] = useState<Story[]>([]);
   useEffect(() => {
     let cancel = false;
-    void listCommunity({ data: { lang } })
-      .then((rows) => {
-        if (!cancel) setExtra(rows);
-      })
-      .catch(() => {
-        if (!cancel) setExtra([]);
-      });
+    void Promise.all([
+      listCommunity({ data: { lang } }).catch(() => [] as Story[]),
+      listPublishedStories({ data: { lang } }).catch(() => [] as Story[]),
+    ]).then(([community, published]) => {
+      if (!cancel) setExtra([...published, ...community]);
+    });
     return () => {
       cancel = true;
     };

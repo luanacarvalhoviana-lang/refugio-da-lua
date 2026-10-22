@@ -7,6 +7,7 @@ import { loadBirth, loadReading, saveBirth, saveReading } from "@/lib/refugio/pr
 import { ageFromBirth, readBirth, readProgress, saveEnding, writeBirth, writeProgress } from "@/lib/refugio/reading-local";
 import { addNote, listNotes } from "@/lib/refugio/room-cloud";
 import { tallyChoice } from "@/lib/refugio/community-cloud";
+import { loadStudioStory } from "@/lib/refugio/studio-cloud";
 import { CommunityDesk } from "@/components/refugio/community";
 import { artOf, authorSlug, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
 import { crossfade, isStoryPass, sourceForScene } from "@/lib/refugio/music";
@@ -15,7 +16,23 @@ import { useRefugioStore } from "@/lib/refugio/store";
 export function StoryReader({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
   const shelf = useShelf(lang);
-  const story = shelf.find((item) => item.slug === slug) ?? null;
+  const fromShelf = shelf.find((item) => item.slug === slug) ?? null;
+  const [preview, setPreview] = useState<Story | null>(null);
+  const story = fromShelf ?? preview;
+  useEffect(() => {
+    if (fromShelf) return;
+    let cancel = false;
+    void loadStudioStory({ data: { slug, lang } })
+      .then((result) => {
+        if (!cancel) setPreview(result.story);
+      })
+      .catch(() => {
+        if (!cancel) setPreview(null);
+      });
+    return () => {
+      cancel = true;
+    };
+  }, [fromShelf, slug, lang]);
   const [sceneId, setSceneId] = useState(story?.start ?? "");
   const [affinity, setAffinity] = useState(0);
   const [clues, setClues] = useState<string[]>([]);
@@ -381,7 +398,7 @@ export function StoryList() {
           ))}
         </div>
         <p className="house-note">
-          <a href="/criar">{t.writeStory}</a>
+          <a href="/escrever">{t.writeStory}</a>
         </p>
       </section>
     </StoryShell>

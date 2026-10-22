@@ -3803,4 +3803,12 @@ html.protect-on .diary-card::after {
 .author-head { display: flex; gap: 16px; align-items: center; }
 .author-photo { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; background: #ece8f7; }
 .story-card em a, .story-card strong a { color: inherit; }
+.studio { display: grid; gap: 14px; }
+.studio-scene, .studio-choice { display: grid; gap: 8px; border: 1px solid #e5e1d8; border-radius: 16px; padding: 12px; }
+.studio label { display: grid; gap: 6px; font-size: 14px; }
+.studio input, .studio textarea, .studio select {
+  width: 100%; border: 1px solid #e5e1d8; border-radius: 12px; padding: 12px 14px;
+  background: #fffdf8; color: #142d36;
+}
+.studio-scene button, .studio > button { border: 0; background: transparent; color: #174b59; text-decoration: underline; padding: 0; }
 

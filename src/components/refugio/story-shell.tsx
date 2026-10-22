@@ -52,7 +52,7 @@ export function StoryShell({ children }: { children: ReactNode }) {
         <a href="/privacidade">{t.privacyLink}</a>
         <a href="/termos">{t.termsLink}</a>
         <a href="/contato">{t.contactLink}</a>
-        <a href="/criar">{t.writeStory}</a>
+        <a href="/escrever">{t.writeStory}</a>
         <a href="/apoio">{t.helpLink}</a>
         <a href="/instalar">{t.install}</a>
       </footer>
