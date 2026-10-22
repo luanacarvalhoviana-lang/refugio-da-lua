@@ -38,6 +38,9 @@ export type Story = {
   start: string;
   sound?: string;
   scenes: Scene[];
+  access?: "aberta" | "cheia" | "antecipada";
+  opensOn?: string;
+  locked?: boolean;
 };
 
 const pt: Story = {
@@ -246,6 +249,8 @@ export function sceneOf(story: Story, id: string) {
 export function artOf(story: Story) {
   if (story.art) return story.art;
   const place = story.place.toLowerCase();
+  if (place.includes("templ")) return "/scenes/templo.jpg";
+  if (place.includes("varanda") || place.includes("balc")) return "/scenes/varanda.jpg";
   if (place.includes("caf")) return "/scenes/cafe.jpg";
   if (place.includes("praia") || place.includes("playa")) return "/scenes/praia.jpg";
   return "/scenes/biblioteca.jpg";

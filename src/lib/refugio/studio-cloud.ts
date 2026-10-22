@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { PACTO_VERSION } from "@/lib/refugio/pacto";
-import { FREE_PUBLISHED_STORIES } from "@/lib/refugio/studio-limits";
+import { FREE_PUBLISHED_STORIES, STORY_BILLING_LIVE } from "@/lib/refugio/studio-limits";
 import { checkStory, type StudioScene } from "@/lib/refugio/studio-check";
 import type { Story } from "@/lib/refugio/stories";
 
@@ -267,6 +267,15 @@ export const saveStudioDraft = createServerFn({ method: "POST" })
       [data.id, user.id],
     );
     if (!owned[0] || owned[0].status === "publicada") return { ok: false as const, reason: "sumiu" as const };
+    if (STORY_BILLING_LIVE) {
+      const premiumMusic = data.scenes.some((scene) => scene.musica === "templo" || scene.musica === "luar");
+      const place = await sql.query<{ lugar: string }>(`select lugar from stories where id = $1 limit 1`, [data.id]);
+      const premiumPlace = /templ|varanda|balc/i.test(place[0]?.lugar || "");
+      if (premiumMusic || premiumPlace) {
+        const pass = await sql.query<{ plan: string }>(`select plan from story_passes where user_id = $1 limit 1`, [user.id]);
+        if (pass[0]?.plan !== "constelacao") return { ok: false as const, reason: "plano" as const };
+      }
+    }
     const ids = data.scenes.map((scene) => scene.id);
     if (new Set(ids).size !== ids.length) return { ok: false as const, reason: "cena" as const };
     await sql.query(`delete from choices where scene_id in (select id from scenes where story_id = $1)`, [data.id]);
@@ -395,15 +404,61 @@ export const decideStory = createServerFn({ method: "POST" })
     const rows = await sql.query<{ autora_id: string }>(`select autora_id from stories where id = $1 limit 1`, [data.id]);
     if (!rows[0]) return { ok: false as const, reason: "sumiu" as const };
     if (data.status === "publicada") {
+      const pass = await sql.query<{ plan: string }>(
+        `select plan from story_passes where user_id = $1 limit 1`,
+        [rows[0].autora_id],
+      );
+      const unlimited = pass[0]?.plan === "constelacao";
       const count = await sql.query<{ n: number }>(
         `select count(*)::int as n from stories where autora_id = $1 and status = 'publicada' and id <> $2`,
         [rows[0].autora_id, data.id],
       );
-      if ((Number(count[0]?.n) || 0) >= FREE_PUBLISHED_STORIES) return { ok: false as const, reason: "limite" as const };
+      if (!unlimited && (Number(count[0]?.n) || 0) >= FREE_PUBLISHED_STORIES) return { ok: false as const, reason: "limite" as const };
       await sql.query(`update stories set status = 'publicada', motivo = null where id = $1`, [data.id]);
       return { ok: true as const };
     }
     if (!data.motivo) return { ok: false as const, reason: "motivo" as const };
     await sql.query(`update stories set status = 'recusada', motivo = $2 where id = $1`, [data.id, data.motivo]);
     return { ok: true as const };
+  });
+
+const HOUSE = ["o-bilhete", "a-chave", "a-mare"];
+
+export const authorChoiceStats = createServerFn({ method: "POST" })
+  .validator(z.object({ slug: z.string().trim().min(2).max(48), lang }))
+  .handler(async ({ data }) => {
+    const user = await sessionUser();
+    if (!user?.id) return { ok: false as const, scenes: [] as Array<{ sceneId: string; total: number; ready: boolean; choices: Array<{ choiceId: string; total: number; percent: number }> }> };
+    const email = user.email?.trim().toLowerCase() || "";
+    const { getSql } = await import("@/lib/db");
+    const sql = await getSql();
+    const owned = await sql.query<{ id: string }>(
+      `select id from stories where slug = $1 and autora_id = $2 limit 1`,
+      [data.slug, user.id],
+    );
+    if (!owned[0] && !(HOUSE.includes(data.slug) && OWNERS.has(email))) return { ok: false as const, scenes: [] };
+    const rows = await sql.query<{ scene_id: string; choice_id: string; total: number }>(
+      `select scene_id, choice_id, total from choice_stats where story_slug = $1 and lang = $2`,
+      [data.slug, data.lang],
+    );
+    const byScene = new Map<string, Array<{ choiceId: string; total: number }>>();
+    for (const row of rows) {
+      const list = byScene.get(row.scene_id) ?? [];
+      list.push({ choiceId: row.choice_id, total: Number(row.total) || 0 });
+      byScene.set(row.scene_id, list);
+    }
+    const scenes = [...byScene.entries()].map(([sceneId, choices]) => {
+      const total = choices.reduce((sum, choice) => sum + choice.total, 0);
+      const ready = total >= 10;
+      return {
+        sceneId,
+        total,
+        ready,
+        choices: choices.map((choice) => ({
+          ...choice,
+          percent: ready && total ? Math.round((choice.total / total) * 100) : 0,
+        })),
+      };
+    });
+    return { ok: true as const, scenes };
   });

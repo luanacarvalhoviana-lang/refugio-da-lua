@@ -17,6 +17,8 @@ export const tracks: Track[] = [
   { id: "suspense", title: { pt: "Suspense", es: "Suspense" }, mood: "suspense", src: "/music/suspense.mp3", premium: false },
   { id: "despedida", title: { pt: "Despedida", es: "Despedida" }, mood: "despedida", src: "/music/despedida.mp3", premium: false },
   { id: "revelacao", title: { pt: "Revelação", es: "Revelación" }, mood: "revelacao", src: "/music/revelacao.mp3", premium: false },
+  { id: "templo", title: { pt: "Templo", es: "Templo" }, mood: "calma", src: "/music/templo.mp3", premium: true },
+  { id: "luar", title: { pt: "Luar", es: "Luz de luna" }, mood: "romance", src: "/music/luar.mp3", premium: true },
 ];
 
 const STORY_PASS = new Set(["cheia", "lua-cheia", "lua_cheia", "constelacao", "constelação", "star", "full"]);

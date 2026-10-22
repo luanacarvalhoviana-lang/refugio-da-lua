@@ -23,6 +23,7 @@ import { Route as HistoriasRouteImport } from './routes/historias'
 import { Route as InicioRouteImport } from './routes/inicio'
 import { Route as InstalarRouteImport } from './routes/instalar'
 import { Route as JardimRouteImport } from './routes/jardim'
+import { Route as LembrancasRouteImport } from './routes/lembrancas'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as MemoriasRouteImport } from './routes/memorias'
@@ -124,6 +125,11 @@ const InstalarRoute = InstalarRouteImport.update({
 const JardimRoute = JardimRouteImport.update({
   id: '/jardim',
   path: '/jardim',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LembrancasRoute = LembrancasRouteImport.update({
+  id: '/lembrancas',
+  path: '/lembrancas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -302,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/inicio': typeof InicioRoute
   '/instalar': typeof InstalarRoute
   '/jardim': typeof JardimRoute
+  '/lembrancas': typeof LembrancasRoute
   '/login': typeof LoginRoute
   '/mapa': typeof MapaRoute
   '/memorias': typeof MemoriasRoute
@@ -349,6 +356,7 @@ export interface FileRoutesByTo {
   '/inicio': typeof InicioRoute
   '/instalar': typeof InstalarRoute
   '/jardim': typeof JardimRoute
+  '/lembrancas': typeof LembrancasRoute
   '/login': typeof LoginRoute
   '/mapa': typeof MapaRoute
   '/memorias': typeof MemoriasRoute
@@ -398,6 +406,7 @@ export interface FileRoutesById {
   '/inicio': typeof InicioRoute
   '/instalar': typeof InstalarRoute
   '/jardim': typeof JardimRoute
+  '/lembrancas': typeof LembrancasRoute
   '/login': typeof LoginRoute
   '/mapa': typeof MapaRoute
   '/memorias': typeof MemoriasRoute
@@ -448,6 +457,7 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/instalar'
     | '/jardim'
+    | '/lembrancas'
     | '/login'
     | '/mapa'
     | '/memorias'
@@ -495,6 +505,7 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/instalar'
     | '/jardim'
+    | '/lembrancas'
     | '/login'
     | '/mapa'
     | '/memorias'
@@ -543,6 +554,7 @@ export interface FileRouteTypes {
     | '/inicio'
     | '/instalar'
     | '/jardim'
+    | '/lembrancas'
     | '/login'
     | '/mapa'
     | '/memorias'
@@ -592,6 +604,7 @@ export interface RootRouteChildren {
   InicioRoute: typeof InicioRoute
   InstalarRoute: typeof InstalarRoute
   JardimRoute: typeof JardimRoute
+  LembrancasRoute: typeof LembrancasRoute
   LoginRoute: typeof LoginRoute
   MapaRoute: typeof MapaRoute
   MemoriasRoute: typeof MemoriasRoute
@@ -717,6 +730,13 @@ declare module '@tanstack/react-router' {
       path: '/jardim'
       fullPath: '/jardim'
       preLoaderRoute: typeof JardimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lembrancas': {
+      id: '/lembrancas'
+      path: '/lembrancas'
+      fullPath: '/lembrancas'
+      preLoaderRoute: typeof LembrancasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1001,6 +1021,7 @@ const rootRouteChildren: RootRouteChildren = {
   InicioRoute: InicioRoute,
   InstalarRoute: InstalarRoute,
   JardimRoute: JardimRoute,
+  LembrancasRoute: LembrancasRoute,
   LoginRoute: LoginRoute,
   MapaRoute: MapaRoute,
   MemoriasRoute: MemoriasRoute,

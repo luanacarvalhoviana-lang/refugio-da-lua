@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { AccessMark } from "@/components/refugio/access-mark";
 import { Door } from "@/components/refugio/account-pages";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
@@ -50,7 +51,7 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
         <div className="story-list">
           {shelf.map((item) => (
             <article key={item.slug} className="story-card">
-              <span className="soon-kicker">{item.place}</span>
+              <span className="soon-kicker">{item.place} <AccessMark story={item} cheia={t.accessCheia} early={t.accessEarly} /></span>
               <strong><a href={`/historia/${item.slug}`}>{item.title}</a></strong>
               <em>
                 {t.by} <a href={`/autora/${authorSlug(item.author)}`}>{item.author}</a> · {item.rating} · {item.minutes} {t.minutes}

@@ -34,6 +34,7 @@ export function PlansPage() {
         ))}
       </section>
       <p className="house-note plan-note">{t.plansNote}</p>
+      <p className="house-note plan-note">{t.plansLater}</p>
     </StoryShell>
   );
 }
@@ -136,6 +137,7 @@ export function GardenPage() {
         <p className="soon-kicker">{t.navGarden}</p>
         <h1>{t.gardenTitle}</h1>
         <p>{t.gardenLead}</p>
+        <p><a href="/lembrancas">{t.keepBox}</a></p>
         {endings.length === 0 ? (
           <p className="house-note">{t.gardenEmpty}</p>
         ) : (

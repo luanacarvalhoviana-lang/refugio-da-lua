@@ -3,7 +3,9 @@ import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { checkStory, type StudioIssue, type StudioScene } from "@/lib/refugio/studio-check";
 import { FREE_PUBLISHED_STORIES } from "@/lib/refugio/studio-limits";
+import { tracks } from "@/lib/refugio/music";
 import {
+  authorChoiceStats,
   createStudioStory,
   listMyStories,
   loadStudioDraft,
@@ -13,7 +15,24 @@ import {
 } from "@/lib/refugio/studio-cloud";
 
 type Mine = { id: string; slug: string; titulo: string; status: string; motivo: string | null };
+type StatScene = { sceneId: string; total: number; ready: boolean; choices: Array<{ choiceId: string; total: number; percent: number }> };
 type Access = { ok: false; reason: "conta" | "pacto" | "perfil" } | { ok: true; nome: string; published: number; limit: number };
+
+function StatsBlock({ title, wait, scenes }: { title: string; wait: string; scenes: StatScene[] }) {
+  if (scenes.length === 0) return null;
+  return (
+    <div>
+      <p className="soon-kicker">{title}</p>
+      {scenes.map((scene) => (
+        <p key={scene.sceneId} className="house-note">
+          {scene.ready
+            ? scene.choices.map((choice) => `${choice.choiceId} ${choice.percent}%`).join(" · ")
+            : wait}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 function blankScene(): StudioScene {
   return { id: crypto.randomUUID(), quem: "", texto: "", musica: "", final: false, endingTitle: "", endingBody: "", flower: "", choices: [] };
@@ -40,11 +59,28 @@ export function StudioPage() {
   const [note, setNote] = useState("");
   const [fresh, setFresh] = useState({ titulo: "", sinopse: "", classificacao: "16" as "livre" | "14" | "16", generos: "", lugar: "" });
   const [original, setOriginal] = useState(false);
+  const [stats, setStats] = useState<StatScene[]>([]);
+  const [house, setHouse] = useState<Array<{ slug: string; scenes: StatScene[] }>>([]);
 
   function refresh() {
     void listMyStories().then(setMine).catch(() => setMine([]));
     void studioAccess().then((result) => setAccess(result)).catch(() => setAccess({ ok: false, reason: "conta" }));
   }
+
+  useEffect(() => {
+    if (!access?.ok) return;
+    void Promise.all(
+      ["o-bilhete", "a-chave", "a-mare"].map((slug) =>
+        authorChoiceStats({ data: { slug, lang } }).then((result) => ({ slug, ok: result.ok, scenes: result.scenes })),
+      ),
+    ).then((rows) => {
+      if (!rows[0]?.ok) {
+        setHouse([]);
+        return;
+      }
+      setHouse(rows.map((row) => ({ slug: row.slug, scenes: row.scenes })));
+    }).catch(() => setHouse([]));
+  }, [access, lang]);
 
   useEffect(() => {
     refresh();
@@ -58,6 +94,9 @@ export function StudioPage() {
       setOpenId(id);
       setMeta({ id, slug: result.story.slug, titulo: result.story.titulo, status: result.story.status, motivo: result.story.motivo });
       setScenes(result.scenes.length ? result.scenes : [blankScene()]);
+      void authorChoiceStats({ data: { slug: result.story.slug, lang } })
+        .then((statsResult) => setStats(statsResult.ok ? statsResult.scenes : []))
+        .catch(() => setStats([]));
     });
   }
 
@@ -105,11 +144,19 @@ export function StudioPage() {
             </li>
           ))}
         </ul>
+        {house.length > 0 ? (
+          <div>
+            {house.map((item) => (
+              <StatsBlock key={item.slug} title={`${t.studioStats} · ${item.slug}`} wait={t.studioStatsWait} scenes={item.scenes} />
+            ))}
+          </div>
+        ) : null}
       </section>
       {openId && meta ? (
         <section className="house-block studio">
           <h2>{meta.titulo}</h2>
           <p className="house-note">{statusLabel[meta.status] || meta.status}</p>
+          <StatsBlock title={t.studioStats} wait={t.studioStatsWait} scenes={stats} />
           {scenes.map((scene, index) => (
             <article key={scene.id} className="studio-scene">
               <p className="soon-kicker">{t.studioScene} {index + 1}</p>
@@ -132,7 +179,14 @@ export function StudioPage() {
                   <label>{t.studioText}<textarea rows={5} value={scene.texto} onChange={(event) => patchScene(index, { texto: event.target.value })} /></label>
                   <label>
                     {t.studioMusic}
-                    <input value={scene.musica} placeholder="calma" onChange={(event) => patchScene(index, { musica: event.target.value })} />
+                    <select value={scene.musica} onChange={(event) => patchScene(index, { musica: event.target.value })}>
+                      <option value="">{t.studioMusicNone}</option>
+                      {tracks.map((track) => (
+                        <option key={track.id} value={track.id}>
+                          {track.title[lang]}{track.premium ? " · premium" : ""}
+                        </option>
+                      ))}
+                    </select>
                   </label>
                   {scene.choices.map((choice, choiceIndex) => (
                     <div key={choice.id} className="studio-choice">

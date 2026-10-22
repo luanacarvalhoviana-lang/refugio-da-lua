@@ -7,7 +7,10 @@ import { loadBirth, loadReading, saveBirth, saveReading } from "@/lib/refugio/pr
 import { ageFromBirth, readBirth, readProgress, saveEnding, writeBirth, writeProgress } from "@/lib/refugio/reading-local";
 import { addNote, listNotes } from "@/lib/refugio/room-cloud";
 import { tallyChoice } from "@/lib/refugio/community-cloud";
+import { AccessMark } from "@/components/refugio/access-mark";
+import { saveKeepsake } from "@/lib/refugio/night-cloud";
 import { loadStudioStory } from "@/lib/refugio/studio-cloud";
+import { STORY_BILLING_LIVE } from "@/lib/refugio/studio-limits";
 import { CommunityDesk } from "@/components/refugio/community";
 import { artOf, authorSlug, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
 import { crossfade, isStoryPass, sourceForScene } from "@/lib/refugio/music";
@@ -50,6 +53,8 @@ export function StoryReader({ slug }: { slug: string }) {
   const volumeRef = useRef(0.35);
   const soundRef = useRef(false);
   const plan = useRefugioStore((state) => state.plan);
+  const premiumOn = !STORY_BILLING_LIVE || isStoryPass(plan);
+  const [boxNote, setBoxNote] = useState("");
 
   useEffect(() => {
     let cancel = false;
@@ -152,7 +157,7 @@ export function StoryReader({ slug }: { slug: string }) {
       .catch(() => setKept(false));
   }
 
-  if (!ageReady || !story || !scene) {
+  if (!ageReady || !story || (!scene && !story.locked)) {
     return (
       <StoryShell>
         <section className="house-hero">
@@ -179,6 +184,20 @@ export function StoryReader({ slug }: { slug: string }) {
     );
   }
 
+  if (story.locked || !scene) {
+    return (
+      <StoryShell>
+        <section className="house-hero">
+          <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} />
+          <h1>{story.title}</h1>
+          <p className="soon-lead">{story.synopsis}</p>
+          <p>{t.lockLead}</p>
+          <p><a className="house-primary" href="/planos">{t.navPlans}</a></p>
+        </section>
+      </StoryShell>
+    );
+  }
+
   function choose(choice: Choice) {
     const nextClues = choice.clue && !clues.includes(choice.clue) ? [...clues, choice.clue] : clues;
     const nextAffinity = affinity + (choice.affinity ?? 0);
@@ -190,7 +209,7 @@ export function StoryReader({ slug }: { slug: string }) {
     setSceneId(choice.to);
     persist(story!, choice.to, nextAffinity, nextClues);
     if (soundRef.current) {
-      playSource(sourceForScene(story!, [...trail.map((step) => step.sceneId), sceneId, choice.to], isStoryPass(plan)));
+      playSource(sourceForScene(story!, [...trail.map((step) => step.sceneId), sceneId, choice.to], premiumOn));
     }
     const key = readerKey();
     const chosenScene = sceneId;
@@ -214,7 +233,7 @@ export function StoryReader({ slug }: { slug: string }) {
     if (soundRef.current) {
       const ids = trail.slice(0, -1).map((step) => step.sceneId);
       ids.push(previous.sceneId);
-      playSource(sourceForScene(story, ids, isStoryPass(plan)));
+      playSource(sourceForScene(story, ids, premiumOn));
     }
   }
 
@@ -236,7 +255,7 @@ export function StoryReader({ slug }: { slug: string }) {
     setSound(true);
     if (!story) return;
     const ids = [...trail.map((step) => step.sceneId), scene.id];
-    playSource(sourceForScene(story, ids, isStoryPass(plan)));
+    playSource(sourceForScene(story, ids, premiumOn));
   }
 
   function changeVolume(value: number) {
@@ -289,6 +308,24 @@ export function StoryReader({ slug }: { slug: string }) {
           <div className="reader-sheet">
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
             <p className="reader-body">{scene.ending ? scene.ending.body : scene.body}</p>
+            <p className="house-note">
+              <button
+                type="button"
+                onClick={() => {
+                  const trecho = (scene.ending?.body || scene.body || "").slice(0, 280);
+                  void saveKeepsake({
+                    data: { slug: story.slug, lang, sceneId: scene.id, titulo: story.title, trecho },
+                  })
+                    .then((result) => setBoxNote(result.ok ? t.keepSaved : result.reason === "conta" ? t.keepNeed : t.keepPact))
+                    .catch(() => setBoxNote(t.keepNeed));
+                }}
+              >
+                {t.keepScene}
+              </button>
+              {boxNote ? <span> {boxNote}</span> : null}
+              {" · "}
+              <a href="/lembrancas">{t.keepBox}</a>
+            </p>
             {scene.ending ? (
               <div className="reader-end">
                 <MoonMascot mood="rest" size={84} />
@@ -310,7 +347,7 @@ export function StoryReader({ slug }: { slug: string }) {
                     setAffinity(0);
                     setClues([]);
                     persist(story, story.start, 0, []);
-                    if (soundRef.current) playSource(sourceForScene(story, [story.start], isStoryPass(plan)));
+                    if (soundRef.current) playSource(sourceForScene(story, [story.start], premiumOn));
                   }}
                 >
                   {t.replay}
@@ -357,6 +394,7 @@ export function StoryPage({ slug }: { slug: string }) {
         <p className="soon-kicker">
           {story.place} · {t.rating} {story.rating}
         </p>
+        <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} />
         <h1>{story.title}</h1>
         <p className="soon-lead">{story.synopsis}</p>
         <p className="house-note">
@@ -388,7 +426,7 @@ export function StoryList() {
         <div className="story-list">
           {shelf.map((story) => (
             <a key={story.slug} className="story-card" href={`/historia/${story.slug}`}>
-              <span className="soon-kicker">{story.place}</span>
+              <span className="soon-kicker">{story.place} <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} /></span>
               <strong>{story.title}</strong>
               <em>
                 {story.rating} · {story.minutes} {t.minutes}
