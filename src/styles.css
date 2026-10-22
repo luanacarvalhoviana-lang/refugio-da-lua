@@ -3787,3 +3787,17 @@ html.protect-on .diary-card::after {
   .house-stage { flex-direction: column-reverse; align-items: flex-start; }
 }
 
+.same-choice { margin: 12px 0 0; color: #174b59; font-size: 14px; }
+.house.is-night .same-choice { color: #f6d77a; }
+.community { margin-top: 16px; }
+.comment-list { display: grid; gap: 10px; margin-top: 10px; }
+.comment-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.comment-list li, .comment-list form { display: grid; gap: 6px; }
+.comment-list textarea {
+  width: 100%; border: 1px solid #e5e1d8; border-radius: 12px; padding: 12px 14px;
+  background: #fffdf8; color: #142d36;
+}
+.comment-list button, .house-note button {
+  border: 0; background: transparent; color: inherit; text-decoration: underline; padding: 0; font-size: 14px;
+}
+

@@ -38,6 +38,7 @@ import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as SelosRouteImport } from './routes/selos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as AdminModeracaoRouteImport } from './routes/admin.moderacao'
 import { Route as ApiBackupRouteImport } from './routes/api/backup'
 import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
@@ -198,6 +199,11 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminModeracaoRoute = AdminModeracaoRouteImport.update({
+  id: '/admin/moderacao',
+  path: '/admin/moderacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiBackupRoute = ApiBackupRouteImport.update({
   id: '/api/backup',
   path: '/api/backup',
@@ -299,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
@@ -343,6 +350,7 @@ export interface FileRoutesByTo {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
@@ -389,6 +397,7 @@ export interface FileRoutesById {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
@@ -436,6 +445,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/moderacao'
     | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
@@ -480,6 +490,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/moderacao'
     | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
@@ -525,6 +536,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/moderacao'
     | '/api/backup'
     | '/carta/$id'
     | '/conta/recuperar-senha'
@@ -571,6 +583,7 @@ export interface RootRouteChildren {
   SelosRoute: typeof SelosRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  AdminModeracaoRoute: typeof AdminModeracaoRoute
   ApiBackupRoute: typeof ApiBackupRoute
   CartaIdRoute: typeof CartaIdRoute
   HistoriaSlugRoute: typeof HistoriaSlugRoute
@@ -786,6 +799,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/moderacao': {
+      id: '/admin/moderacao'
+      path: '/admin/moderacao'
+      fullPath: '/admin/moderacao'
+      preLoaderRoute: typeof AdminModeracaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/backup': {
       id: '/api/backup'
       path: '/api/backup'
@@ -955,6 +975,7 @@ const rootRouteChildren: RootRouteChildren = {
   SelosRoute: SelosRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  AdminModeracaoRoute: AdminModeracaoRoute,
   ApiBackupRoute: ApiBackupRoute,
   CartaIdRoute: CartaIdRoute,
   HistoriaSlugRoute: HistoriaSlugRoute,

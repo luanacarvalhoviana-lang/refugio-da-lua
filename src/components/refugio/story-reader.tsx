@@ -5,7 +5,9 @@ import { useShelf } from "@/components/refugio/use-shelf";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadBirth, loadReading, saveBirth, saveReading } from "@/lib/refugio/progress-cloud";
 import { ageFromBirth, readBirth, readProgress, saveEnding, writeBirth, writeProgress } from "@/lib/refugio/reading-local";
-import { addNote, choiceStats, listNotes, recordChoice } from "@/lib/refugio/room-cloud";
+import { addNote, listNotes } from "@/lib/refugio/room-cloud";
+import { tallyChoice } from "@/lib/refugio/community-cloud";
+import { CommunityDesk } from "@/components/refugio/community";
 import { artOf, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
 import { crossfade, isStoryPass, sourceForScene } from "@/lib/refugio/music";
 import { useRefugioStore } from "@/lib/refugio/store";
@@ -23,7 +25,7 @@ export function StoryReader({ slug }: { slug: string }) {
   const [kept, setKept] = useState(false);
   const [trail, setTrail] = useState<Array<{ sceneId: string; affinity: number; clues: string[] }>>([]);
   const [arrived, setArrived] = useState<{ from: string; choiceId: string } | null>(null);
-  const [stats, setStats] = useState<{ total: number; counts: Record<string, number> }>({ total: 0, counts: {} });
+  const [samePercent, setSamePercent] = useState<number | null>(null);
   const [volume, setVolume] = useState(0.35);
   const slots = useRef<Array<HTMLAudioElement | null>>([null, null]);
   const activeSlot = useRef(0);
@@ -99,21 +101,6 @@ export function StoryReader({ slug }: { slug: string }) {
   const scene = useMemo(() => (story ? sceneOf(story, sceneId) : null), [story, sceneId]);
 
   useEffect(() => {
-    if (!story || !sceneId) return;
-    let cancel = false;
-    void choiceStats({ data: { slug: story.slug, lang, sceneId } })
-      .then((result) => {
-        if (!cancel) setStats(result);
-      })
-      .catch(() => {
-        if (!cancel) setStats({ total: 0, counts: {} });
-      });
-    return () => {
-      cancel = true;
-    };
-  }, [story, lang, sceneId]);
-
-  useEffect(() => {
     if (!scene?.ending || !story) return;
     saveEnding({ slug: story.slug, lang, story: story.title, ending: scene.ending });
     persist(story, scene.id, affinity, clues, {
@@ -182,15 +169,19 @@ export function StoryReader({ slug }: { slug: string }) {
     setAffinity(nextAffinity);
     setTrail((current) => [...current, { sceneId, affinity, clues }]);
     setArrived({ from: sceneId, choiceId: choice.id });
+    setSamePercent(null);
     setSceneId(choice.to);
     persist(story!, choice.to, nextAffinity, nextClues);
     if (soundRef.current) {
       playSource(sourceForScene(story!, [...trail.map((step) => step.sceneId), sceneId, choice.to], isStoryPass(plan)));
     }
     const key = readerKey();
-    void recordChoice({
-      data: { slug: story!.slug, lang, sceneId, choiceId: choice.id, readerKey: key },
-    }).catch(() => undefined);
+    const chosenScene = sceneId;
+    void tallyChoice({
+      data: { slug: story!.slug, lang, sceneId: chosenScene, choiceId: choice.id, readerKey: key },
+    })
+      .then((result) => setSamePercent(result.percent))
+      .catch(() => setSamePercent(null));
   }
 
   function stepBack() {
@@ -198,6 +189,7 @@ export function StoryReader({ slug }: { slug: string }) {
     if (!previous || !story) return;
     setTrail((current) => current.slice(0, -1));
     setArrived(null);
+    setSamePercent(null);
     setSceneId(previous.sceneId);
     setAffinity(previous.affinity);
     setClues(previous.clues);
@@ -296,6 +288,7 @@ export function StoryReader({ slug }: { slug: string }) {
                   onClick={() => {
                     setTrail([]);
                     setArrived(null);
+                    setSamePercent(null);
                     setSceneId(story.start);
                     setAffinity(0);
                     setClues([]);
@@ -308,29 +301,19 @@ export function StoryReader({ slug }: { slug: string }) {
                 <a className="house-note" href={`/contato?historia=${encodeURIComponent(story.title)}`}>
                   {t.report}
                 </a>
+                <CommunityDesk slug={story.slug} lang={lang} sceneId={scene.id} />
               </div>
             ) : (
               <div className="reader-choices">
-                {stats.total === 0 ? <p className="house-note">{t.noReadersYet}</p> : null}
-                {scene.choices?.map((choice) => {
-                  const count = stats.counts[choice.id] ?? 0;
-                  const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-                  return (
-                    <button key={choice.id} type="button" onClick={() => choose(choice)}>
-                      <span>{choice.label}</span>
-                      {stats.total > 0 ? (
-                        <small>
-                          {pct}% · {stats.total} {t.readersHere}
-                        </small>
-                      ) : null}
-                    </button>
-                  );
-                })}
+                {scene.choices?.map((choice) => (
+                  <button key={choice.id} type="button" onClick={() => choose(choice)}>
+                    <span>{choice.label}</span>
+                  </button>
+                ))}
               </div>
             )}
-            {arrived ? (
-              <PathNotes slug={story.slug} lang={lang} sceneId={arrived.from} choiceId={arrived.choiceId} />
-            ) : null}
+            {samePercent !== null ? <p className="same-choice">{t.sameChoice.replace("{n}", String(samePercent))}</p> : null}
+            {arrived && !scene.ending ? <CommunityDesk slug={story.slug} lang={lang} sceneId={arrived.from} /> : null}
           </div>
         </div>
       </article>
