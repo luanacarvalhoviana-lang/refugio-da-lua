@@ -3584,7 +3584,7 @@ html.protect-on .diary-card::after {
 }
 .house.is-night .house-bar { background: rgba(12,52,66,.92); }
 .house-brand { display: flex; align-items: center; gap: 10px; font-family: "Fraunces", Georgia, serif; font-size: 18px; }
-.house-brand img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.house-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: transparent; }
 .house-nav { display: flex; gap: 14px; font-size: 14px; }
 .house-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .soon-lang button {

@@ -21,7 +21,7 @@ export function StoryShell({ children }: { children: ReactNode }) {
     <div className={`house ${night ? "is-night" : "is-day"}`}>
       <header className="house-bar">
         <a className="house-brand" href={lang === "es" ? "/es" : "/"}>
-          <img src={night ? "/icons/logo-night.png" : "/icons/logo-day.png"} alt="" width={40} height={40} />
+          <img src={night ? "/icons/logo-night.png" : "/icons/logo-day.png"} alt="" width={48} height={48} />
           <span>{t.brand}</span>
         </a>
         <nav className="house-nav">
