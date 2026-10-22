@@ -68,6 +68,7 @@ export function RulesPage() {
             <li key={rule}>{rule}</li>
           ))}
         </ol>
+        <p>{t.rulesPunish}</p>
       </section>
     </StoryShell>
   );
@@ -162,6 +163,12 @@ export function ContactPage() {
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
+  useEffect(() => {
+    const story = new URLSearchParams(window.location.search).get("historia");
+    if (!story) return;
+    setTopic("relato");
+    setBody((current) => current || `${t.report}: ${story}\n\n`);
+  }, [t.report]);
   return (
     <StoryShell>
       <section className="house-block">

@@ -48,6 +48,7 @@ export function StoryShell({ children }: { children: ReactNode }) {
       {children}
       <footer className="house-foot">
         <a href="/regras">{t.rulesLink}</a>
+        <a href={lang === "es" ? "/es/pacto" : "/pacto"}>{t.pactoLink}</a>
         <a href="/privacidade">{t.privacyLink}</a>
         <a href="/termos">{t.termsLink}</a>
         <a href="/contato">{t.contactLink}</a>

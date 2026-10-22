@@ -305,6 +305,9 @@ export function StoryReader({ slug }: { slug: string }) {
                 >
                   {t.replay}
                 </button>
+                <a className="house-note" href={`/contato?historia=${encodeURIComponent(story.title)}`}>
+                  {t.report}
+                </a>
               </div>
             ) : (
               <div className="reader-choices">
@@ -367,6 +370,9 @@ export function StoryPage({ slug }: { slug: string }) {
             {t.back}
           </a>
         </div>
+        <p className="house-note">
+          <a href={`/contato?historia=${encodeURIComponent(story.title)}`}>{t.report}</a>
+        </p>
       </section>
     </StoryShell>
   );

@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { HomeStories } from "@/components/refugio/home-stories";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/es")({
-  component: () => <HomeStories initialLang="es" />,
+  component: () => <Outlet />,
 });

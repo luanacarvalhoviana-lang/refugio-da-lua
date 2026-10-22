@@ -1,7 +1,6 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { PactPage } from "@/components/refugio/pacto-page";
 
 export const Route = createFileRoute("/pacto")({
-  beforeLoad: () => {
-    throw redirect({ to: "/regras" });
-  },
+  component: () => <PactPage />,
 });

@@ -42,7 +42,9 @@ import { Route as ApiBackupRouteImport } from './routes/api/backup'
 import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
 import { Route as ContaRedefinirSenhaRouteImport } from './routes/conta.redefinir-senha'
+import { Route as EsIndexRouteImport } from './routes/es.index'
 import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
+import { Route as EsPactoRouteImport } from './routes/es.pacto'
 import { Route as EscreverConfirmacaoRouteImport } from './routes/escrever.confirmacao'
 import { Route as HistoriaSlugRouteImport } from './routes/historia.$slug'
 import { Route as LerSlugRouteImport } from './routes/ler.$slug'
@@ -216,9 +218,19 @@ const ContaRedefinirSenhaRoute = ContaRedefinirSenhaRouteImport.update({
   path: '/redefinir-senha',
   getParentRoute: () => ContaRoute,
 } as any)
+const EsIndexRoute = EsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EsRoute,
+} as any)
 const EsObrigadaRoute = EsObrigadaRouteImport.update({
   id: '/obrigada',
   path: '/obrigada',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsPactoRoute = EsPactoRouteImport.update({
+  id: '/pacto',
+  path: '/pacto',
   getParentRoute: () => EsRoute,
 } as any)
 const EscreverConfirmacaoRoute = EscreverConfirmacaoRouteImport.update({
@@ -292,11 +304,13 @@ export interface FileRoutesByFullPath {
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
   '/es/obrigada': typeof EsObrigadaRoute
+  '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
+  '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
 }
@@ -309,7 +323,6 @@ export interface FileRoutesByTo {
   '/criar': typeof CriarRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
-  '/es': typeof EsRouteWithChildren
   '/escrever': typeof EscreverRouteWithChildren
   '/historias': typeof HistoriasRoute
   '/inicio': typeof InicioRoute
@@ -335,11 +348,13 @@ export interface FileRoutesByTo {
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
   '/es/obrigada': typeof EsObrigadaRoute
+  '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
+  '/es': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
 }
@@ -379,11 +394,13 @@ export interface FileRoutesById {
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
   '/es/obrigada': typeof EsObrigadaRoute
+  '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
+  '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
 }
@@ -424,11 +441,13 @@ export interface FileRouteTypes {
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
     | '/es/obrigada'
+    | '/es/pacto'
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
+    | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -441,7 +460,6 @@ export interface FileRouteTypes {
     | '/criar'
     | '/cuidar'
     | '/diario'
-    | '/es'
     | '/escrever'
     | '/historias'
     | '/inicio'
@@ -467,11 +485,13 @@ export interface FileRouteTypes {
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
     | '/es/obrigada'
+    | '/es/pacto'
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
+    | '/es'
     | '/api/auth/$'
     | '/api/stripe/webhook'
   id:
@@ -510,11 +530,13 @@ export interface FileRouteTypes {
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
     | '/es/obrigada'
+    | '/es/pacto'
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
+    | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
   fileRoutesById: FileRoutesById
@@ -792,11 +814,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContaRedefinirSenhaRouteImport
       parentRoute: typeof ContaRoute
     }
+    '/es/': {
+      id: '/es/'
+      path: '/'
+      fullPath: '/es/'
+      preLoaderRoute: typeof EsIndexRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/es/obrigada': {
       id: '/es/obrigada'
       path: '/obrigada'
       fullPath: '/es/obrigada'
       preLoaderRoute: typeof EsObrigadaRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/pacto': {
+      id: '/es/pacto'
+      path: '/pacto'
+      fullPath: '/es/pacto'
+      preLoaderRoute: typeof EsPactoRouteImport
       parentRoute: typeof EsRoute
     }
     '/escrever/confirmacao': {
@@ -865,10 +901,14 @@ const ContaRouteWithChildren = ContaRoute._addFileChildren(ContaRouteChildren)
 
 interface EsRouteChildren {
   EsObrigadaRoute: typeof EsObrigadaRoute
+  EsPactoRoute: typeof EsPactoRoute
+  EsIndexRoute: typeof EsIndexRoute
 }
 
 const EsRouteChildren: EsRouteChildren = {
   EsObrigadaRoute: EsObrigadaRoute,
+  EsPactoRoute: EsPactoRoute,
+  EsIndexRoute: EsIndexRoute,
 }
 
 const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)

@@ -3679,6 +3679,19 @@ html.protect-on .diary-card::after {
 .story-card em, .flower-grid em, .house-note { color: #243f48; font-style: normal; }
 .house.is-night .house-note, .house.is-night .story-card em { color: #e7eeea; }
 .age-row { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px; }
+.pacto { display: grid; gap: 14px; max-width: 680px; }
+.pacto h1 { max-width: 16ch; }
+.pacto label { display: grid; gap: 6px; font-size: 14px; }
+.pacto input[type="text"], .pacto input:not([type="checkbox"]) {
+  width: 100%; border: 1px solid #e5e1d8; border-radius: 12px; padding: 12px 14px;
+  background: #fffdf8; color: #142d36;
+}
+.pacto ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.pacto button {
+  border: 0; border-radius: 999px; padding: 12px 16px; background: #0c3442; color: #f8f5ee;
+}
+.pacto button:disabled { opacity: .45; }
+.house.is-night .pacto button { background: #f6d77a; color: #0c3442; }
 .house.is-night .house-steps p,
 .house.is-night .story-card p,
 .house.is-night .plan-grid li,
