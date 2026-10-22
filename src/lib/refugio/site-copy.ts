@@ -117,6 +117,10 @@ const pt = {
   ageTitle: "Antes de abrir a noite",
   ageLead: "O Refúgio é para quem tem 16 anos ou mais. A data fica com você. Não pedimos documento.",
   ageLabel: "Data de nascimento",
+  ageDay: "Dia",
+  ageMonth: "Mês",
+  ageYear: "Ano",
+  ageInvalid: "Essa data não existe. Use dia, mês e ano.",
   ageSave: "Continuar",
   ageYoungTitle: "Ainda não é a sua noite",
   ageYoung: "Esta casa abre aos 16. Pode voltar quando essa data chegar. Até lá, cuide de você.",
@@ -166,6 +170,11 @@ const pt = {
   placeLibrary: "Biblioteca",
   placeCafe: "Café",
   placeBeach: "Praia",
+  alertTitle: "A próxima noite",
+  alertLead: "Deixe o e-mail se quiser ser avisada quando sair uma história nova. Sem propaganda.",
+  alertSend: "Me avise",
+  alertDone: "Anotado. A casa escreve quando tiver noite nova.",
+  alertFail: "Não deu para anotar agora. Tente de novo.",
 };
 
 const es: typeof pt = {
@@ -285,6 +294,10 @@ const es: typeof pt = {
   ageTitle: "Antes de abrir la noche",
   ageLead: "El Refúgio es para quien tiene 16 años o más. La fecha se queda contigo. No pedimos documento.",
   ageLabel: "Fecha de nacimiento",
+  ageDay: "Día",
+  ageMonth: "Mes",
+  ageYear: "Año",
+  ageInvalid: "Esa fecha no existe. Usa día, mes y año.",
   ageSave: "Continuar",
   ageYoungTitle: "Todavía no es tu noche",
   ageYoung: "Esta casa abre a los 16. Puedes volver cuando llegue esa fecha. Hasta entonces, cuídate.",
@@ -334,6 +347,11 @@ const es: typeof pt = {
   placeLibrary: "Biblioteca",
   placeCafe: "Café",
   placeBeach: "Playa",
+  alertTitle: "La próxima noche",
+  alertLead: "Deja el correo si quieres que te avisemos cuando salga una historia nueva. Sin propaganda.",
+  alertSend: "Avísenme",
+  alertDone: "Anotado. La casa escribe cuando haya una noche nueva.",
+  alertFail: "No se pudo anotar ahora. Inténtalo de nuevo.",
 };
 
 export function copy(lang: Lang) {

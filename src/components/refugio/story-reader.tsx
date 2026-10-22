@@ -401,7 +401,11 @@ export function StoryList() {
 
 function AgeGate({ birth, tooYoung, onSave }: { birth: string | null; tooYoung: boolean; onSave: (value: string) => void }) {
   const { t } = useHouse();
-  const [value, setValue] = useState(birth && !tooYoung ? birth : "");
+  const parts = birth?.split("-") ?? [];
+  const [day, setDay] = useState(parts[2] ?? "");
+  const [month, setMonth] = useState(parts[1] ?? "");
+  const [year, setYear] = useState(parts[0] ?? "");
+  const [invalid, setInvalid] = useState(false);
   return (
     <section className="house-hero">
       <p className="soon-kicker">16+</p>
@@ -412,13 +416,30 @@ function AgeGate({ birth, tooYoung, onSave }: { birth: string | null; tooYoung: 
           className="soon-form"
           onSubmit={(event) => {
             event.preventDefault();
-            if (value) onSave(value);
+            const iso = birthIso(day, month, year);
+            if (!iso) {
+              setInvalid(true);
+              return;
+            }
+            setInvalid(false);
+            onSave(iso);
           }}
         >
-          <label>
-            {t.ageLabel}
-            <input type="date" required max={new Date().toISOString().slice(0, 10)} value={value} onChange={(event) => setValue(event.target.value)} />
-          </label>
+          <div className="age-row">
+            <label>
+              {t.ageDay}
+              <input inputMode="numeric" autoComplete="bday-day" required maxLength={2} value={day} onChange={(event) => setDay(event.target.value.replace(/\D/g, "").slice(0, 2))} />
+            </label>
+            <label>
+              {t.ageMonth}
+              <input inputMode="numeric" autoComplete="bday-month" required maxLength={2} value={month} onChange={(event) => setMonth(event.target.value.replace(/\D/g, "").slice(0, 2))} />
+            </label>
+            <label>
+              {t.ageYear}
+              <input inputMode="numeric" autoComplete="bday-year" required maxLength={4} value={year} onChange={(event) => setYear(event.target.value.replace(/\D/g, "").slice(0, 4))} />
+            </label>
+          </div>
+          {invalid ? <p className="soon-error">{t.ageInvalid}</p> : null}
           <button type="submit">{t.ageSave}</button>
         </form>
       )}
@@ -427,6 +448,18 @@ function AgeGate({ birth, tooYoung, onSave }: { birth: string | null; tooYoung: 
       </a>
     </section>
   );
+}
+
+function birthIso(day: string, month: string, year: string) {
+  const d = Number(day);
+  const m = Number(month);
+  const y = Number(year);
+  if (!Number.isInteger(y) || y < 1900 || y > new Date().getFullYear()) return null;
+  if (m < 1 || m > 12 || d < 1 || d > 31) return null;
+  const date = new Date(y, m - 1, d);
+  if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) return null;
+  if (date.getTime() > Date.now()) return null;
+  return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
 function readerKey() {

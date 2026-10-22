@@ -3632,7 +3632,7 @@ html.protect-on .diary-card::after {
 }
 .house-steps p, .story-card p, .prose p, .prose li { line-height: 1.55; }
 .story-card { display: grid; gap: 6px; }
-.story-card em, .flower-grid em, .house-note { color: #5d7178; font-style: normal; }
+.story-card em, .flower-grid em, .house-note { color: #243f48; font-style: normal; }
 .house.is-night .house-note, .house.is-night .story-card em { color: #c5d0d4; }
 .plan-grid { padding: 10px 20px 20px; max-width: 980px; }
 .plan-grid .is-main { outline: 2px solid #f6d77a; }
@@ -3672,8 +3672,13 @@ html.protect-on .diary-card::after {
   .house-hero h1 { max-width: 12ch; }
 }
 
-.house .soon-lead { color: #3e555c; }
-.house.is-night .soon-lead { color: #d7e0e3; }
+.house .soon-kicker { color: #174b59; }
+.house.is-night .soon-kicker { color: #f6d77a; }
+.house .soon-lead { color: #1a333c; }
+.house.is-night .soon-lead { color: #f4efe4; }
+.story-card em, .flower-grid em, .house-note { color: #243f48; font-style: normal; }
+.house.is-night .house-note, .house.is-night .story-card em { color: #e7eeea; }
+.age-row { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px; }
 .house.is-night .house-steps p,
 .house.is-night .story-card p,
 .house.is-night .plan-grid li,
