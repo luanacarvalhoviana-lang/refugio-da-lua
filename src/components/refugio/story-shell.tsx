@@ -40,7 +40,7 @@ export function StoryShell({ children }: { children: ReactNode }) {
             </button>
           </div>
           <ThemeToggle compact />
-          <a className="house-enter" href="/login">
+          <a className="house-enter" href="/#entrar">
             {t.enter}
           </a>
         </div>

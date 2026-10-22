@@ -3717,3 +3717,55 @@ html.protect-on .diary-card::after {
   .reader-layout { grid-template-columns: .8fr 1.4fr; }
 }
 
+.house-stage {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  margin: 12px 16px 0; padding: 36px 22px 32px; max-width: 1040px;
+  border-radius: 32px; color: #f8f5ee;
+  background:
+    radial-gradient(180px 120px at 100% 0%, rgba(246,215,122,.45), transparent 60%),
+    linear-gradient(165deg, #1a5c6e 0%, #0c3442 72%);
+}
+.house-stage-copy { max-width: 640px; }
+.house-stage h1 {
+  margin: 0; max-width: 12ch;
+  font-family: "Fraunces", Georgia, serif; font-weight: 500;
+  font-size: clamp(42px, 10vw, 76px); line-height: .94; color: #f8f5ee;
+}
+.house-stage .soon-kicker { color: #f6d77a; }
+.house .house-stage .soon-lead { color: #f4efe4; max-width: 36ch; }
+.house-stage .house-primary { background: #f6d77a; color: #0c3442; }
+.house-stage .house-quiet { color: #f8f5ee; border-color: rgba(248,245,238,.7) !important; }
+.safe-row {
+  display: grid; gap: 10px; list-style: none; margin: 16px 16px 0; padding: 0; max-width: 1040px;
+}
+.safe-row li {
+  margin: 0; padding: 14px 16px; border-radius: 18px;
+  background: #fffdf8; color: #142d36; border: 1px solid #e5e1d8; line-height: 1.45;
+}
+.house.is-night .safe-row li { background: rgba(255,253,248,.08); color: #f4efe4; border-color: rgba(248,245,238,.16); }
+.house-split {
+  display: grid; gap: 18px; align-items: start;
+  max-width: 1040px; padding: 28px 20px 8px;
+}
+.house-split h2, .door h2 {
+  margin: 0 0 8px; font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 32px;
+}
+.house-split p { line-height: 1.55; }
+.door {
+  border-radius: 28px; padding: 18px; background: #fffdf8; color: #142d36; border: 1px solid #e5e1d8;
+  display: grid; gap: 10px;
+}
+.house.is-night .door { background: #f6f1e6; color: #142d36; }
+.door .soon-form { margin: 0; padding: 0; background: transparent; box-shadow: none; }
+.door .google-button { width: 100%; border-radius: 999px; background: #fff; color: #142d36; }
+.door-or { margin: 0; text-align: center; font-size: 13px; letter-spacing: .04em; color: #5d7178; }
+.door-links { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.door .house-primary { display: inline-block; }
+@media (min-width: 800px) {
+  .safe-row { grid-template-columns: repeat(4, 1fr); }
+  .house-split { grid-template-columns: 1.15fr .85fr; }
+}
+@media (max-width: 720px) {
+  .house-stage { flex-direction: column-reverse; align-items: flex-start; }
+}
+

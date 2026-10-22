@@ -1,68 +1,89 @@
 import { useState } from "react";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
-import { confirmPasswordReset, requestPasswordReset, signInEmail, signUpEmail } from "@/lib/auth/client";
+import { confirmPasswordReset, requestPasswordReset, signInEmail, signInGoogle, signUpEmail, authEnabled } from "@/lib/auth/client";
+import { useCurrentUserState } from "@/lib/auth/use-current-user";
 
-export function AccountPage() {
+export function Door({ heading = false }: { heading?: boolean }) {
   const { t } = useHouse();
+  const { user } = useCurrentUserState();
   const [mode, setMode] = useState<"enter" | "create">("enter");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  if (user && !user.isDevFallback) {
+    return (
+      <div className="door" id="entrar">
+        {heading ? <h2>{t.accountTitle}</h2> : null}
+        <p>{t.accountIn}</p>
+        <a className="house-primary" href="/historias">{t.accountGo}</a>
+      </div>
+    );
+  }
+  return (
+    <div className="door" id="entrar">
+      {heading ? <h2>{t.accountTitle}</h2> : null}
+      <p className="house-note">{t.accountLead}</p>
+      {authEnabled ? (
+        <button type="button" className="google-button" onClick={() => void signInGoogle({ callbackURL: "/historias", errorCallbackURL: "/#entrar" })}>
+          <span>G</span> {t.googleContinue}
+        </button>
+      ) : (
+        <p className="house-note">O entrar com Google liga quando o site publica o acesso.</p>
+      )}
+      <p className="door-or">{t.accountOr}</p>
+      <form
+        className="soon-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          setError("");
+          setPending(true);
+          const run = mode === "create" ? signUpEmail({ name, email, password }) : signInEmail(email, password);
+          void run
+            .then(() => {
+              window.location.assign("/historias");
+            })
+            .catch((err) => setError(err instanceof Error ? err.message : "…"))
+            .finally(() => setPending(false));
+        }}
+      >
+        {mode === "create" ? (
+          <label>
+            {t.name}
+            <input required value={name} onChange={(event) => setName(event.target.value)} />
+          </label>
+        ) : null}
+        <label>
+          {t.email}
+          <input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" />
+        </label>
+        <label>
+          {t.accountPassword}
+          <input type="password" required minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "create" ? "new-password" : "current-password"} />
+        </label>
+        {error ? <p className="soon-error">{error}</p> : null}
+        <button type="submit" disabled={pending}>
+          {mode === "create" ? t.accountCreate : t.accountEnter}
+        </button>
+      </form>
+      <p className="house-note door-links">
+        <button type="button" className="house-quiet" onClick={() => setMode(mode === "create" ? "enter" : "create")}>
+          {mode === "create" ? t.accountHave : t.accountCreate}
+        </button>
+        <a href="/conta/recuperar-senha">{t.accountForgot}</a>
+      </p>
+    </div>
+  );
+}
+
+export function AccountPage() {
+  const { t } = useHouse();
   return (
     <StoryShell>
       <section className="house-block">
         <h1>{t.accountTitle}</h1>
-        <p>{t.accountLead}</p>
-        <form
-          className="soon-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            setError("");
-            setPending(true);
-            const run =
-              mode === "create"
-                ? signUpEmail({ name, email, password })
-                : signInEmail(email, password);
-            void run
-              .then(() => {
-                window.location.assign("/historias");
-              })
-              .catch((err) => setError(err instanceof Error ? err.message : "…"))
-              .finally(() => setPending(false));
-          }}
-        >
-          {mode === "create" ? (
-            <label>
-              {t.name}
-              <input required value={name} onChange={(event) => setName(event.target.value)} />
-            </label>
-          ) : null}
-          <label>
-            {t.email}
-            <input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" />
-          </label>
-          <label>
-            {t.accountPassword}
-            <input type="password" required minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "create" ? "new-password" : "current-password"} />
-          </label>
-          {error ? <p className="soon-error">{error}</p> : null}
-          <button type="submit" disabled={pending}>
-            {mode === "create" ? t.accountCreate : t.accountEnter}
-          </button>
-        </form>
-        <p className="house-note">
-          <button type="button" className="house-quiet" onClick={() => setMode(mode === "create" ? "enter" : "create")}>
-            {mode === "create" ? t.accountHave : t.accountCreate}
-          </button>
-        </p>
-        <p>
-          <a href="/conta/recuperar-senha">{t.accountForgot}</a>
-        </p>
-        <p>
-          <a href="/login">Google</a>
-        </p>
+        <Door />
       </section>
     </StoryShell>
   );
