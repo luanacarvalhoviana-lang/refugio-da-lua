@@ -4,6 +4,7 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadAuthor, myAuthorProfile, saveAuthorProfile, toggleFollow } from "@/lib/refugio/author-cloud";
 import { authorSlug, type Lang } from "@/lib/refugio/stories";
 import { useShelf } from "@/components/refugio/use-shelf";
+import { MoonCount, TipBox } from "@/components/refugio/shop-page";
 
 export function AuthorPage({ slug, initialLang }: { slug: string; initialLang?: Lang }) {
   const { lang, setLang, t } = useHouse();
@@ -57,6 +58,7 @@ export function AuthorPage({ slug, initialLang }: { slug: string; initialLang?: 
           <p className="house-note">
             {author.followers} {t.followers}
           </p>
+          <MoonCount authorSlug={author.slug} />
           <FollowButton slug={author.slug} following={author.following} onChange={(followers, following) => {
             setProfile({ found: true, profile: { ...author, followers, following } });
           }} />
@@ -73,6 +75,9 @@ export function AuthorPage({ slug, initialLang }: { slug: string; initialLang?: 
             </a>
           ))}
         </div>
+      </section>
+      <section className="house-block">
+        <TipBox authorSlug={author.slug} />
       </section>
     </StoryShell>
   );

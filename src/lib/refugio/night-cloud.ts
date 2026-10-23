@@ -40,7 +40,10 @@ export const listNightStories = createServerFn({ method: "POST" })
       const { getSql } = await import("@/lib/db");
       const sql = await getSql();
       const rows = await sql.query<{ item: string }>(
-        `select item from story_purchases where user_id = $1 and status = 'paid' and item in ('a-lampada', 'antes-da-lua')`,
+        `select item from story_purchases where user_id = $1 and status = 'paid' and item in ('a-lampada', 'antes-da-lua')
+         union
+         select p.story_slug as item from purchases u join products p on p.id = u.product_id
+         where u.user_id = $1 and u.status = 'paid' and p.type = 'special_story' and p.story_slug is not null`,
         [user.id],
       );
       bought = new Set(rows.map((row) => row.item));

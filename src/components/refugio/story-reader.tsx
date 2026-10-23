@@ -13,6 +13,8 @@ import { loadStudioStory } from "@/lib/refugio/studio-cloud";
 import { CommunityDesk } from "@/components/refugio/community";
 import { artOf, authorSlug, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
 import { crossfade, sourceForScene } from "@/lib/refugio/music";
+import { HiddenPath, StoryExtras, TipBox } from "@/components/refugio/shop-page";
+import { storyLook } from "@/lib/refugio/shop-cloud";
 
 export function StoryReader({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
@@ -50,8 +52,18 @@ export function StoryReader({ slug }: { slug: string }) {
   const fadeFrame = useRef(0);
   const volumeRef = useRef(0.35);
   const soundRef = useRef(false);
+  const dressRef = useRef("");
+  const [dress, setDress] = useState("");
   const premiumOn = !story?.locked;
   const [boxNote, setBoxNote] = useState("");
+
+  useEffect(() => {
+    if (!story?.slug) return;
+    void storyLook({ data: { slug: story.slug } }).then((look) => {
+      dressRef.current = look.audio || "";
+      setDress(look.image || "");
+    }).catch(() => undefined);
+  }, [story?.slug]);
 
   useEffect(() => {
     let cancel = false;
@@ -206,7 +218,7 @@ export function StoryReader({ slug }: { slug: string }) {
     setSceneId(choice.to);
     persist(story!, choice.to, nextAffinity, nextClues);
     if (soundRef.current) {
-      playSource(sourceForScene(story!, [...trail.map((step) => step.sceneId), sceneId, choice.to], premiumOn));
+      playSource(track([...trail.map((step) => step.sceneId), sceneId, choice.to]));
     }
     const key = readerKey();
     const chosenScene = sceneId;
@@ -230,8 +242,12 @@ export function StoryReader({ slug }: { slug: string }) {
     if (soundRef.current) {
       const ids = trail.slice(0, -1).map((step) => step.sceneId);
       ids.push(previous.sceneId);
-      playSource(sourceForScene(story, ids, premiumOn));
+      playSource(track(ids));
     }
+  }
+
+  function track(ids: string[]) {
+    return dressRef.current || sourceForScene(story!, ids, premiumOn);
   }
 
   function playSource(src: string) {
@@ -252,7 +268,7 @@ export function StoryReader({ slug }: { slug: string }) {
     setSound(true);
     if (!story) return;
     const ids = [...trail.map((step) => step.sceneId), scene.id];
-    playSource(sourceForScene(story, ids, premiumOn));
+    playSource(track(ids));
   }
 
   function changeVolume(value: number) {
@@ -269,7 +285,7 @@ export function StoryReader({ slug }: { slug: string }) {
     <StoryShell>
       <article
         className={story.art || artOf(story) ? "reader has-art" : "reader"}
-        style={{ backgroundImage: `linear-gradient(180deg, rgba(12,52,66,.45), rgba(12,52,66,.62)), url(${artOf(story)})` }}
+        style={{ backgroundImage: `linear-gradient(180deg, rgba(12,52,66,.45), rgba(12,52,66,.62)), url(${dress || artOf(story)})` }}
       >
         <header className="reader-top">
           <a href={`/historia/${story.slug}`}>{story.title}</a>
@@ -344,11 +360,13 @@ export function StoryReader({ slug }: { slug: string }) {
                     setAffinity(0);
                     setClues([]);
                     persist(story, story.start, 0, []);
-                    if (soundRef.current) playSource(sourceForScene(story, [story.start], premiumOn));
+                    if (soundRef.current) playSource(track([story.start]));
                   }}
                 >
                   {t.replay}
                 </button>
+                <HiddenPath slug={story.slug} />
+                <TipBox authorSlug={authorSlug(story.author)} storySlug={story.slug} />
                 <a className="house-note" href={`/contato?historia=${encodeURIComponent(story.title)}`}>
                   {t.report}
                 </a>
@@ -408,6 +426,7 @@ export function StoryPage({ slug }: { slug: string }) {
         <p className="house-note">
           <a href={`/contato?historia=${encodeURIComponent(story.title)}`}>{t.report}</a>
         </p>
+        <StoryExtras slug={story.slug} />
       </section>
     </StoryShell>
   );

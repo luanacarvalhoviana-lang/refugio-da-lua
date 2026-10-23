@@ -26,6 +26,7 @@ export function StoryShell({ children }: { children: ReactNode }) {
         </a>
         <nav className="house-nav">
           <a href="/historias">{t.navStories}</a>
+          <a href="/loja">{t.navShop}</a>
           <a href="/planos">{t.navPlans}</a>
           <a href="/jardim">{t.navGarden}</a>
           <a href="/sobre">{t.navAbout}</a>

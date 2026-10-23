@@ -3,6 +3,7 @@ import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { confirmPasswordReset, requestPasswordReset, signInEmail, signInGoogle, signUpEmail, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { AuthorEditor } from "@/components/refugio/author-page";
+import { MemoryBox } from "@/components/refugio/shop-page";
 import { cancelStoryPlan, readOncePurchases, readStoryPass, refundOnceBuy, refundStoryPlan } from "@/lib/refugio/billing";
 
 function PassPanel() {
@@ -93,6 +94,8 @@ function PassPanel() {
           ))}
         </ul>
       ) : null}
+      <h2>{t.shopBox}</h2>
+      <MemoryBox />
     </section>
   );
 }

@@ -108,30 +108,9 @@ export function PlansPage() {
         ))}
       </section>
       <section className="house-block">
-        <h2>{t.onceTitle}</h2>
-        <p className="soon-lead">{t.onceLead}</p>
-        <div className="plan-grid once-grid">
-          {singles.map(([item, name, price, body]) => (
-            <article key={item}>
-              <h2>{name}</h2>
-              <p className="plan-price">{price}</p>
-              <p>{body}</p>
-              <div className="plan-actions">
-                {signedIn ? (
-                  item !== "gorjeta" && owned.includes(item) ? (
-                    <p className="house-note">{t.onceOwned}</p>
-                  ) : (
-                    <button type="button" disabled={pending !== ""} onClick={() => buy(item)}>
-                      {pending === item ? t.passWorking : t.onceBuy}
-                    </button>
-                  )
-                ) : (
-                  <a className="house-primary" href="/conta">{t.planEnter}</a>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
+        <h2>{t.shopTitle}</h2>
+        <p className="soon-lead">{t.shopLead}</p>
+        <a className="house-primary" href="/loja">{t.navShop}</a>
       </section>
       {note ? <p className="house-note plan-note">{note}</p> : null}
       <p className="house-note plan-note">{ready ? t.plansOpen : t.plansNote}</p>

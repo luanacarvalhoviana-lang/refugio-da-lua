@@ -377,6 +377,102 @@ export async function refundOncePurchase(userId: string, purchaseId: string) {
   return { ok: true as const };
 }
 
+export async function createShopPayment(input: {
+  name: string;
+  description: string;
+  amount: number;
+  priceId?: string | null;
+  email: string;
+  origin: string;
+  successPath: string;
+  cancelPath: string;
+  lang: "pt" | "es";
+  metadata: Record<string, string>;
+}) {
+  const body: Record<string, string> = {
+    mode: "payment",
+    success_url: `${input.origin}${input.successPath}`,
+    cancel_url: `${input.origin}${input.cancelPath}`,
+    customer_email: input.email,
+    locale: input.lang === "es" ? "es" : "pt-BR",
+    "line_items[0][quantity]": "1",
+  };
+  if (input.priceId && input.metadata.discounted !== "1") {
+    body["line_items[0][price]"] = input.priceId;
+  } else {
+    body["line_items[0][price_data][currency]"] = "brl";
+    body["line_items[0][price_data][unit_amount]"] = String(input.amount);
+    body["line_items[0][price_data][product_data][name]"] = input.name;
+    body["line_items[0][price_data][product_data][description]"] = input.description;
+  }
+  for (const [key, value] of Object.entries(input.metadata)) {
+    if (!value) continue;
+    body[`metadata[${key}]`] = value.slice(0, 500);
+    body[`payment_intent_data[metadata][${key}]`] = value.slice(0, 500);
+  }
+  const attempts = [
+    body,
+    { ...body, "payment_method_types[0]": "card", "payment_method_types[1]": "pix" },
+    { ...body, "payment_method_types[0]": "card" },
+  ];
+  let last: Error | null = null;
+  for (const attempt of attempts) {
+    try {
+      const session = await stripeForm("/checkout/sessions", attempt);
+      if (!session.url) throw new Error("O Stripe não devolveu a página de pagamento.");
+      return { url: session.url as string };
+    } catch (error) {
+      last = error instanceof Error ? error : new Error("Stripe");
+    }
+  }
+  throw last || new Error("O Stripe não abriu o pagamento.");
+}
+
+export async function recordShopPayment(session: {
+  id?: string;
+  payment_status?: string;
+  payment_intent?: string | { id?: string };
+  metadata?: Record<string, string>;
+  customer_details?: { email?: string | null };
+  customer_email?: string | null;
+}) {
+  const metadata = session.metadata ?? {};
+  if (session.payment_status !== "paid" || !session.id) return { paid: false as const, kind: metadata.kind || "" };
+  const intent = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id || "";
+  const sql = await getSql();
+  if (metadata.kind === "product" && metadata.user_id && metadata.product_id) {
+    await sql.query(
+      `insert into purchases (id, user_id, product_id, stripe_session_id, payment_intent, amount_cents, status, enabled)
+       values ($1, $2, $3, $4, $5, $6, 'paid', true)
+       on conflict (stripe_session_id) do nothing`,
+      [crypto.randomUUID(), metadata.user_id, metadata.product_id, session.id, intent || null, Number(metadata.amount_cents) || 0],
+    );
+  }
+  if (metadata.kind === "tip" && metadata.author_slug) {
+    await sql.query(
+      `insert into tips (id, user_id, author_slug, story_slug, amount_cents, message, message_status, stripe_session_id, payment_intent, status, author_share_percent)
+       values ($1, $2, $3, $4, $5, $6, 'oculta', $7, $8, 'paid', 80)
+       on conflict (stripe_session_id) do nothing`,
+      [
+        crypto.randomUUID(),
+        metadata.user_id || null,
+        metadata.author_slug,
+        metadata.story_slug || null,
+        Number(metadata.amount_cents) || 0,
+        (metadata.message || "").slice(0, 200) || null,
+        session.id,
+        intent || null,
+      ],
+    );
+  }
+  return { paid: true as const, kind: metadata.kind || "" };
+}
+
+export async function confirmShopSession(sessionId: string) {
+  const session = await stripeGet(`/checkout/sessions/${encodeURIComponent(sessionId)}`);
+  return recordShopPayment(session);
+}
+
 type PassRow = {
   plan: string;
   status: string;
@@ -490,6 +586,29 @@ export async function handleStripeWebhook(rawBody: string, signature: string | n
       }
       if (type === "checkout.session.async_payment_succeeded" || metadata.kind === "once") return { ok: true, type };
     }
+    if (metadata.kind === "product" || metadata.kind === "tip") {
+      if (object.payment_status === "paid" && typeof object.id === "string") {
+        await recordShopPayment({
+          id: object.id,
+          payment_status: "paid",
+          payment_intent: object.payment_intent as string | { id?: string } | undefined,
+          metadata,
+          customer_details: object.customer_details as { email?: string | null } | undefined,
+          customer_email: typeof object.customer_email === "string" ? object.customer_email : null,
+        });
+      }
+      return { ok: true, type };
+    }
+  }
+
+  if (type === "charge.refunded") {
+    const intent = typeof object.payment_intent === "string" ? object.payment_intent : "";
+    if (intent) {
+      const sql = await getSql();
+      await sql.query(`update purchases set status = 'refunded', enabled = false where payment_intent = $1`, [intent]);
+      await sql.query(`update tips set status = 'refunded' where payment_intent = $1`, [intent]);
+    }
+    return { ok: true, type };
   }
 
   if (type === "checkout.session.completed") {
