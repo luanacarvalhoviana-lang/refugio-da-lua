@@ -7,6 +7,11 @@ export const FREE_PUBLISHED_STORIES = 2;
  */
 export const STORY_BILLING_LIVE = true;
 
+export function paymentsOpen() {
+  if (process.env.PAYMENTS_ENABLED === "false") return false;
+  return Boolean(process.env.STRIPE_SECRET_KEY);
+}
+
 export function storyBillingLocks() {
-  return STORY_BILLING_LIVE && Boolean(process.env.STRIPE_SECRET_KEY);
+  return STORY_BILLING_LIVE && paymentsOpen();
 }

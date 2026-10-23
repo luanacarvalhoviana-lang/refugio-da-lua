@@ -40,6 +40,7 @@ import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as SelosRouteImport } from './routes/selos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as AdminAssinaturasRouteImport } from './routes/admin.assinaturas'
 import { Route as AdminLojaRouteImport } from './routes/admin.loja'
 import { Route as AdminModeracaoRouteImport } from './routes/admin.moderacao'
 import { Route as ApiBackupRouteImport } from './routes/api/backup'
@@ -57,6 +58,8 @@ import { Route as LojaCanceladoRouteImport } from './routes/loja.cancelado'
 import { Route as LojaObrigadaRouteImport } from './routes/loja.obrigada'
 import { Route as OnboardingPactoRouteImport } from './routes/onboarding.pacto'
 import { Route as OnboardingPerfilRouteImport } from './routes/onboarding.perfil'
+import { Route as PlanosCanceladoRouteImport } from './routes/planos.cancelado'
+import { Route as PlanosObrigadaRouteImport } from './routes/planos.obrigada'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
 import { Route as EsAutoraSlugRouteImport } from './routes/es.autora.$slug'
@@ -216,6 +219,11 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAssinaturasRoute = AdminAssinaturasRouteImport.update({
+  id: '/admin/assinaturas',
+  path: '/admin/assinaturas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLojaRoute = AdminLojaRouteImport.update({
   id: '/admin/loja',
   path: '/admin/loja',
@@ -301,6 +309,16 @@ const OnboardingPerfilRoute = OnboardingPerfilRouteImport.update({
   path: '/onboarding/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanosCanceladoRoute = PlanosCanceladoRouteImport.update({
+  id: '/cancelado',
+  path: '/cancelado',
+  getParentRoute: () => PlanosRoute,
+} as any)
+const PlanosObrigadaRoute = PlanosObrigadaRouteImport.update({
+  id: '/obrigada',
+  path: '/obrigada',
+  getParentRoute: () => PlanosRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -343,12 +361,13 @@ export interface FileRoutesByFullPath {
   '/obrigada': typeof ObrigadaRoute
   '/pacto': typeof PactoRoute
   '/perfil': typeof PerfilRoute
-  '/planos': typeof PlanosRoute
+  '/planos': typeof PlanosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/regras': typeof RegrasRoute
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
@@ -365,6 +384,8 @@ export interface FileRoutesByFullPath {
   '/loja/obrigada': typeof LojaObrigadaRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
+  '/planos/cancelado': typeof PlanosCanceladoRoute
+  '/planos/obrigada': typeof PlanosObrigadaRoute
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -395,12 +416,13 @@ export interface FileRoutesByTo {
   '/obrigada': typeof ObrigadaRoute
   '/pacto': typeof PactoRoute
   '/perfil': typeof PerfilRoute
-  '/planos': typeof PlanosRoute
+  '/planos': typeof PlanosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/regras': typeof RegrasRoute
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
@@ -417,6 +439,8 @@ export interface FileRoutesByTo {
   '/loja/obrigada': typeof LojaObrigadaRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
+  '/planos/cancelado': typeof PlanosCanceladoRoute
+  '/planos/obrigada': typeof PlanosObrigadaRoute
   '/es': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -449,12 +473,13 @@ export interface FileRoutesById {
   '/obrigada': typeof ObrigadaRoute
   '/pacto': typeof PactoRoute
   '/perfil': typeof PerfilRoute
-  '/planos': typeof PlanosRoute
+  '/planos': typeof PlanosRouteWithChildren
   '/privacidade': typeof PrivacidadeRoute
   '/regras': typeof RegrasRoute
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
@@ -471,6 +496,8 @@ export interface FileRoutesById {
   '/loja/obrigada': typeof LojaObrigadaRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
+  '/planos/cancelado': typeof PlanosCanceladoRoute
+  '/planos/obrigada': typeof PlanosObrigadaRoute
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -510,6 +537,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/assinaturas'
     | '/admin/loja'
     | '/admin/moderacao'
     | '/api/backup'
@@ -526,6 +554,8 @@ export interface FileRouteTypes {
     | '/loja/obrigada'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
+    | '/planos/cancelado'
+    | '/planos/obrigada'
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
@@ -562,6 +592,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/assinaturas'
     | '/admin/loja'
     | '/admin/moderacao'
     | '/api/backup'
@@ -578,6 +609,8 @@ export interface FileRouteTypes {
     | '/loja/obrigada'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
+    | '/planos/cancelado'
+    | '/planos/obrigada'
     | '/es'
     | '/api/auth/$'
     | '/api/stripe/webhook'
@@ -615,6 +648,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/assinaturas'
     | '/admin/loja'
     | '/admin/moderacao'
     | '/api/backup'
@@ -631,6 +665,8 @@ export interface FileRouteTypes {
     | '/loja/obrigada'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
+    | '/planos/cancelado'
+    | '/planos/obrigada'
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
@@ -663,12 +699,13 @@ export interface RootRouteChildren {
   ObrigadaRoute: typeof ObrigadaRoute
   PactoRoute: typeof PactoRoute
   PerfilRoute: typeof PerfilRoute
-  PlanosRoute: typeof PlanosRoute
+  PlanosRoute: typeof PlanosRouteWithChildren
   PrivacidadeRoute: typeof PrivacidadeRoute
   RegrasRoute: typeof RegrasRoute
   SelosRoute: typeof SelosRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  AdminAssinaturasRoute: typeof AdminAssinaturasRoute
   AdminLojaRoute: typeof AdminLojaRoute
   AdminModeracaoRoute: typeof AdminModeracaoRoute
   ApiBackupRoute: typeof ApiBackupRoute
@@ -901,6 +938,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/assinaturas': {
+      id: '/admin/assinaturas'
+      path: '/admin/assinaturas'
+      fullPath: '/admin/assinaturas'
+      preLoaderRoute: typeof AdminAssinaturasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/loja': {
       id: '/admin/loja'
       path: '/admin/loja'
@@ -1020,6 +1064,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingPerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/planos/cancelado': {
+      id: '/planos/cancelado'
+      path: '/cancelado'
+      fullPath: '/planos/cancelado'
+      preLoaderRoute: typeof PlanosCanceladoRouteImport
+      parentRoute: typeof PlanosRoute
+    }
+    '/planos/obrigada': {
+      id: '/planos/obrigada'
+      path: '/obrigada'
+      fullPath: '/planos/obrigada'
+      preLoaderRoute: typeof PlanosObrigadaRouteImport
+      parentRoute: typeof PlanosRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -1096,6 +1154,19 @@ const LojaRouteChildren: LojaRouteChildren = {
 
 const LojaRouteWithChildren = LojaRoute._addFileChildren(LojaRouteChildren)
 
+interface PlanosRouteChildren {
+  PlanosCanceladoRoute: typeof PlanosCanceladoRoute
+  PlanosObrigadaRoute: typeof PlanosObrigadaRoute
+}
+
+const PlanosRouteChildren: PlanosRouteChildren = {
+  PlanosCanceladoRoute: PlanosCanceladoRoute,
+  PlanosObrigadaRoute: PlanosObrigadaRoute,
+}
+
+const PlanosRouteWithChildren =
+  PlanosRoute._addFileChildren(PlanosRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApoioRoute: ApoioRoute,
@@ -1122,12 +1193,13 @@ const rootRouteChildren: RootRouteChildren = {
   ObrigadaRoute: ObrigadaRoute,
   PactoRoute: PactoRoute,
   PerfilRoute: PerfilRoute,
-  PlanosRoute: PlanosRoute,
+  PlanosRoute: PlanosRouteWithChildren,
   PrivacidadeRoute: PrivacidadeRoute,
   RegrasRoute: RegrasRoute,
   SelosRoute: SelosRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  AdminAssinaturasRoute: AdminAssinaturasRoute,
   AdminLojaRoute: AdminLojaRoute,
   AdminModeracaoRoute: AdminModeracaoRoute,
   ApiBackupRoute: ApiBackupRoute,

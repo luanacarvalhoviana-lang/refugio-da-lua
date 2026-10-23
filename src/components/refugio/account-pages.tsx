@@ -4,12 +4,13 @@ import { confirmPasswordReset, requestPasswordReset, signInEmail, signInGoogle, 
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { AuthorEditor } from "@/components/refugio/author-page";
 import { MemoryBox } from "@/components/refugio/shop-page";
-import { cancelStoryPlan, readOncePurchases, readStoryPass, refundOnceBuy, refundStoryPlan } from "@/lib/refugio/billing";
+import { cancelStoryPlan, openPlanPortal, readHousePlan, readOncePurchases, readStoryPass, refundOnceBuy, refundStoryPlan } from "@/lib/refugio/billing";
 
 function PassPanel() {
-  const { t } = useHouse();
+  const { lang, t } = useHouse();
   const { user } = useCurrentUserState();
   const [pass, setPass] = useState<{ plan: string; cancelAt: string | Date | null; refundable: boolean } | null>(null);
+  const [house, setHouse] = useState<{ plan: string; periodEnd: string | Date | null; redeemed: boolean } | null>(null);
   const [buys, setBuys] = useState<{ id: string; item: string; criado_em: string | Date }[]>([]);
   const [note, setNote] = useState("");
   const [pending, setPending] = useState(false);
@@ -18,6 +19,9 @@ function PassPanel() {
     void readStoryPass()
       .then((result) => setPass(result.pass))
       .catch(() => setPass(null));
+    void readHousePlan()
+      .then((result) => setHouse({ plan: result.plan, periodEnd: result.periodEnd, redeemed: result.redeemed }))
+      .catch(() => setHouse(null));
     void readOncePurchases()
       .then((result) => setBuys(result.items))
       .catch(() => setBuys([]));
@@ -28,6 +32,16 @@ function PassPanel() {
     <section className="house-block pass-panel">
       <h2>{t.passTitle}</h2>
       {name ? <p className="access-pill">{name}</p> : <p>{t.passNone}</p>}
+      {house?.periodEnd ? <p className="house-note">{t.planNext}: {new Date(house.periodEnd).toLocaleDateString(lang === "es" ? "es" : "pt-BR")}</p> : null}
+      {house && house.plan !== "lua_nova" ? <p className="house-note">{house.redeemed ? t.shopClaimed : t.shopClaim}</p> : null}
+      {house && house.plan !== "lua_nova" ? (
+        <button type="button" onClick={() => {
+          void openPlanPortal({ data: { origin: window.location.origin } }).then((result) => {
+            if (result.ok && result.url) window.location.assign(result.url);
+            else setNote(t.planFail);
+          });
+        }}>{t.planManage}</button>
+      ) : null}
       {pass?.cancelAt ? <p className="house-note">{t.passCanceled}</p> : null}
       {note ? <p className="house-note">{note}</p> : null}
       {pass && !pass.cancelAt ? (

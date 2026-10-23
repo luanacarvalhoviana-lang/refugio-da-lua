@@ -182,8 +182,51 @@ export const studioAccess = createServerFn({ method: "GET" })
       `select count(*)::int as n from stories where autora_id = $1 and status = 'publicada'`,
       [user.id],
     );
-    return { ok: true as const, nome: profile.nome_publico, published: Number(published[0]?.n) || 0, limit: FREE_PUBLISHED_STORIES };
+    const { getUserPlan } = await import("@/lib/refugio/plan-cloud");
+    const { hasBenefit } = await import("@/lib/refugio/plan-benefits");
+    const plan = await getUserPlan(user.id);
+    const unlimited = hasBenefit(plan, "unlimited_stories");
+    return {
+      ok: true as const,
+      nome: profile.nome_publico,
+      published: Number(published[0]?.n) || 0,
+      limit: unlimited ? null : FREE_PUBLISHED_STORIES,
+      plan,
+    };
   });
+
+export const authorSky = createServerFn({ method: "GET" }).handler(async () => {
+  const user = await sessionUser();
+  if (!user?.id) return { ok: false as const };
+  const { getUserPlan } = await import("@/lib/refugio/plan-cloud");
+  const { hasBenefit } = await import("@/lib/refugio/plan-benefits");
+  if (!hasBenefit(await getUserPlan(user.id), "author_stats")) return { ok: false as const };
+  const { getSql } = await import("@/lib/db");
+  const sql = await getSql();
+  const profile = await gate(sql, user.id);
+  if (!profile) return { ok: false as const };
+  const readers = await sql.query<{ n: number }>(
+    `select count(*)::int as n from reader_progress where story_slug in (select slug from stories where autora_id = $1)`,
+    [user.id],
+  );
+  const tips = await sql.query<{ n: number }>(
+    `select count(*)::int as n from tips where author_slug = $1 and status = 'paid'`,
+    [profile.slug],
+  );
+  return { ok: true as const, readers: Number(readers[0]?.n) || 0, tips: Number(tips[0]?.n) || 0 };
+});
+
+export const featuredAuthors = createServerFn({ method: "GET" }).handler(async () => {
+  const { getSql } = await import("@/lib/db");
+  const sql = await getSql();
+  return sql.query<{ slug: string; nome: string }>(
+    `select p.slug, p.nome_publico as nome from author_profiles p
+     join subscriptions s on s.user_id = p.user_id
+     where s.plan = 'constelacao' and s.status in ('active', 'trialing')
+       and (s.current_period_end is null or s.current_period_end > now())
+     order by s.updated_at desc limit 6`,
+  );
+});
 
 export const listMyStories = createServerFn({ method: "GET" })
   .handler(async () => {
@@ -410,8 +453,9 @@ export const decideStory = createServerFn({ method: "POST" })
     const rows = await sql.query<{ autora_id: string }>(`select autora_id from stories where id = $1 limit 1`, [data.id]);
     if (!rows[0]) return { ok: false as const, reason: "sumiu" as const };
     if (data.status === "publicada") {
-      const pass = await sql.query<{ plan: string }>(ACTIVE_PASS_SQL, [rows[0].autora_id]);
-      const unlimited = pass[0]?.plan === "constelacao";
+      const { getUserPlan } = await import("@/lib/refugio/plan-cloud");
+      const { hasBenefit } = await import("@/lib/refugio/plan-benefits");
+      const unlimited = hasBenefit(await getUserPlan(rows[0].autora_id), "unlimited_stories");
       const count = await sql.query<{ n: number }>(
         `select count(*)::int as n from stories where autora_id = $1 and status = 'publicada' and id <> $2`,
         [rows[0].autora_id, data.id],

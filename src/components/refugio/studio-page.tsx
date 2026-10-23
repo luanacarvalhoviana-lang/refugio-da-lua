@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { checkStory, type StudioIssue, type StudioScene } from "@/lib/refugio/studio-check";
-import { FREE_PUBLISHED_STORIES } from "@/lib/refugio/studio-limits";
 import { tracks } from "@/lib/refugio/music";
 import {
   authorChoiceStats,
+  authorSky,
   createStudioStory,
   listMyStories,
   loadStudioDraft,
@@ -16,7 +16,7 @@ import {
 
 type Mine = { id: string; slug: string; titulo: string; status: string; motivo: string | null };
 type StatScene = { sceneId: string; total: number; ready: boolean; choices: Array<{ choiceId: string; total: number; percent: number }> };
-type Access = { ok: false; reason: "conta" | "pacto" | "perfil" } | { ok: true; nome: string; published: number; limit: number };
+type Access = { ok: false; reason: "conta" | "pacto" | "perfil" } | { ok: true; nome: string; published: number; limit: number | null; plan: string };
 
 function StatsBlock({ title, wait, scenes }: { title: string; wait: string; scenes: StatScene[] }) {
   if (scenes.length === 0) return null;
@@ -132,7 +132,11 @@ export function StudioPage() {
       <section className="house-hero">
         <p className="soon-kicker">{access.nome}</p>
         <h1>{t.studioMine}</h1>
-        <p className="house-note">{t.studioLimit.replace("{n}", String(FREE_PUBLISHED_STORIES))} · {access.published}/{access.limit}</p>
+        <p className="house-note">
+          {access.limit === null ? t.passStar : access.published >= access.limit ? t.skyLimit : t.studioLimit.replace("{n}", String(access.limit))}
+          {access.limit !== null ? ` · ${access.published}/${access.limit}` : ""}
+        </p>
+        {access.plan === "constelacao" ? <SkyLine /> : null}
       </section>
       <section className="house-block">
         <ul className="story-list">
@@ -325,4 +329,16 @@ export function StudioPage() {
     setNote(t.studioSent);
     refresh();
   }
+}
+
+function SkyLine() {
+  const { t } = useHouse();
+  const [line, setLine] = useState("");
+  useEffect(() => {
+    void authorSky().then((result) => {
+      if (result.ok) setLine(`${result.readers} ${t.readersHere} · ✦ ${result.tips} ${t.shopMoons}`);
+    }).catch(() => undefined);
+  }, [t.readersHere, t.shopMoons]);
+  if (!line) return null;
+  return <p className="house-note">{line}</p>;
 }

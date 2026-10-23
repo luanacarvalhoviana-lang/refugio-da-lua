@@ -96,11 +96,15 @@ export const listComments = createServerFn({ method: "POST" })
       texto: string;
       criado_em: string;
       spoiler: boolean;
+      plan: string | null;
     }>(
-      `select id, user_id, texto, criado_em, spoiler
-       from comments
-       where story_slug = $1 and lang = $2 and scene_id = $3 and status = 'visivel'
-       order by criado_em desc
+      `select c.id, c.user_id, c.texto, c.criado_em, c.spoiler, s.plan
+       from comments c
+       left join subscriptions s on s.user_id = c.user_id
+         and s.status in ('active', 'trialing')
+         and (s.current_period_end is null or s.current_period_end > now())
+       where c.story_slug = $1 and c.lang = $2 and c.scene_id = $3 and c.status = 'visivel'
+       order by c.criado_em desc
        limit 40`,
       [data.slug, data.lang, data.sceneId],
     );
@@ -112,6 +116,7 @@ export const listComments = createServerFn({ method: "POST" })
         at: row.criado_em,
         spoiler: Boolean(row.spoiler),
         mine: user?.id === row.user_id,
+        plan: row.plan === "constelacao" || row.plan === "lua_cheia" ? row.plan : "",
       })),
     };
   });

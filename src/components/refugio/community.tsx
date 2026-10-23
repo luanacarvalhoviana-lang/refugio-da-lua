@@ -9,7 +9,7 @@ export function CommunityDesk({ slug, lang, sceneId }: { slug: string; lang: Lan
   const { t } = useHouse();
   const { user } = useCurrentUserState();
   const [open, setOpen] = useState(false);
-  const [comments, setComments] = useState<Array<{ id: string; texto: string; spoiler: boolean; mine: boolean }>>([]);
+  const [comments, setComments] = useState<Array<{ id: string; texto: string; spoiler: boolean; mine: boolean; plan?: string }>>([]);
   const [shown, setShown] = useState<Record<string, boolean>>({});
   const [texto, setTexto] = useState("");
   const [spoiler, setSpoiler] = useState(false);
@@ -45,6 +45,7 @@ export function CommunityDesk({ slug, lang, sceneId }: { slug: string; lang: Lan
                 ) : (
                   <p>{comment.texto}</p>
                 )}
+                {comment.plan === "constelacao" ? <p className="soon-kicker">{t.sealStar}</p> : comment.plan === "lua_cheia" ? <p className="soon-kicker">{t.sealCheia}</p> : null}
                 <p className="house-note">
                   <button type="button" onClick={() => void reportComment({ data: { id: comment.id } }).then(load)}>
                     {t.report}

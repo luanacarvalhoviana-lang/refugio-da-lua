@@ -212,6 +212,25 @@ export async function grantStoryPass(row: {
       row.stripeSubscriptionId || null,
     ],
   );
+  await sql.query(
+    `insert into subscriptions (id, user_id, plan, interval, status, stripe_customer_id, stripe_subscription_id, updated_at)
+     values ($1, $2, $3, $4, 'active', $5, $6, now())
+     on conflict (user_id) do update set
+       plan = excluded.plan,
+       interval = excluded.interval,
+       status = 'active',
+       stripe_customer_id = coalesce(excluded.stripe_customer_id, subscriptions.stripe_customer_id),
+       stripe_subscription_id = coalesce(excluded.stripe_subscription_id, subscriptions.stripe_subscription_id),
+       updated_at = now()`,
+    [
+      `sub-${row.userId}`,
+      row.userId,
+      row.plan,
+      row.intervalo,
+      row.stripeCustomerId || null,
+      row.stripeSubscriptionId || null,
+    ],
+  );
 }
 
 export async function createStoryCheckout(input: {
@@ -223,18 +242,23 @@ export async function createStoryCheckout(input: {
 }) {
   const details = STORY_PLANS[input.plan];
   const amount = input.interval === "year" ? details.year : details.month;
-  const envKey = input.plan === "lua_cheia"
-    ? input.interval === "year" ? "STRIPE_PRICE_CHEIA_YEAR" : "STRIPE_PRICE_CHEIA_MONTH"
-    : input.interval === "year" ? "STRIPE_PRICE_STAR_YEAR" : "STRIPE_PRICE_STAR_MONTH";
-  const priceId = process.env[envKey];
+  const names = input.plan === "lua_cheia"
+    ? input.interval === "year"
+      ? ["STRIPE_PRICE_LUA_CHEIA_ANNUAL", "STRIPE_PRICE_CHEIA_YEAR", "STRIPE_PRICE_ANNUAL"]
+      : ["STRIPE_PRICE_LUA_CHEIA_MONTHLY", "STRIPE_PRICE_CHEIA_MONTH", "STRIPE_PRICE_MONTHLY"]
+    : input.interval === "year"
+      ? ["STRIPE_PRICE_CONSTELACAO_ANNUAL", "STRIPE_PRICE_STAR_YEAR"]
+      : ["STRIPE_PRICE_CONSTELACAO_MONTHLY", "STRIPE_PRICE_STAR_MONTH"];
+  const priceId = names.map((name) => process.env[name]).find(Boolean);
   const body: Record<string, string> = {
     mode: "subscription",
-    success_url: `${input.origin}/planos?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${input.origin}/planos?checkout=cancelled`,
+    success_url: `${input.origin}/planos/obrigada?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${input.origin}/planos/cancelado`,
     customer_email: input.email,
     locale: "pt-BR",
     "line_items[0][quantity]": "1",
     "payment_method_types[0]": "card",
+    "allow_promotion_codes": "true",
     "metadata[kind]": "story",
     "metadata[plan]": input.plan,
     "metadata[interval]": input.interval,
@@ -258,6 +282,26 @@ export async function createStoryCheckout(input: {
   const session = await stripeForm("/checkout/sessions", body);
   if (!session.url) throw new Error("O Stripe não devolveu a página de pagamento.");
   return { url: session.url, id: session.id };
+}
+
+export async function openBillingPortal(userId: string, email: string, origin: string) {
+  const sql = await getSql();
+  const rows = await sql.query<{ stripe_customer_id: string | null }>(
+    `select stripe_customer_id from subscriptions where user_id = $1 and stripe_customer_id is not null
+     union
+     select stripe_customer_id from story_passes where user_id = $1 and stripe_customer_id is not null
+     limit 1`,
+    [userId],
+  );
+  let customer = rows[0]?.stripe_customer_id || "";
+  if (!customer) {
+    const created = await stripeForm("/customers", { email, "metadata[user_id]": userId });
+    customer = typeof created.id === "string" ? created.id : "";
+  }
+  if (!customer) return { ok: false as const, reason: "sem" as const };
+  const portal = await stripeForm("/billing_portal/sessions", { customer, return_url: `${origin}/planos` });
+  if (!portal.url) return { ok: false as const, reason: "stripe" as const };
+  return { ok: true as const, url: String(portal.url) };
 }
 
 export async function confirmStoryCheckout(sessionId: string) {
@@ -410,6 +454,7 @@ export async function createShopPayment(input: {
     body[`metadata[${key}]`] = value.slice(0, 500);
     body[`payment_intent_data[metadata][${key}]`] = value.slice(0, 500);
   }
+  if (input.metadata.coupon) body["discounts[0][coupon]"] = input.metadata.coupon;
   const attempts = [
     body,
     { ...body, "payment_method_types[0]": "card", "payment_method_types[1]": "pix" },
@@ -648,21 +693,48 @@ export async function handleStripeWebhook(rawBody: string, signature: string | n
     return { ok: true, type };
   }
 
-  if (type === "customer.subscription.updated" || type === "customer.subscription.deleted" || type === "invoice.paid") {
+  if (type === "customer.subscription.created" || type === "customer.subscription.updated" || type === "customer.subscription.deleted" || type === "invoice.paid" || type === "invoice.payment_failed") {
     const metadata = (object.metadata as Record<string, string> | undefined) ?? {};
     const nested = (object.subscription as Record<string, unknown> | undefined)?.metadata as Record<string, string> | undefined;
     if (metadata.kind === "story" || nested?.kind === "story") {
       const userId = metadata.user_id || nested?.user_id || "";
+      const plan = storyPlanOf(metadata.plan || nested?.plan);
       const ending = type === "customer.subscription.deleted" || object.status === "canceled" || object.status === "unpaid";
+      const pastDue = type === "invoice.payment_failed" || object.status === "past_due";
+      const nextStatus = ending ? "canceled" : pastDue ? "past_due" : object.status === "trialing" ? "trialing" : "active";
+      const periodEnd = typeof object.current_period_end === "number" ? new Date(object.current_period_end * 1000) : null;
       if (userId) {
         const sql = await getSql();
         if (ending) {
           await sql.query(`update story_passes set status = 'canceled', cancel_at = coalesce(cancel_at, now()) where user_id = $1 and status = 'active'`, [userId]);
-        } else if (object.cancel_at_period_end && typeof object.current_period_end === "number") {
-          await sql.query(`update story_passes set cancel_at = $2 where user_id = $1 and status = 'active'`, [
-            userId,
-            new Date(object.current_period_end * 1000),
-          ]);
+        } else if (object.cancel_at_period_end && periodEnd) {
+          await sql.query(`update story_passes set cancel_at = $2 where user_id = $1 and status = 'active'`, [userId, periodEnd]);
+        }
+        if (plan) {
+          await sql.query(
+            `insert into subscriptions (id, user_id, plan, interval, status, stripe_customer_id, stripe_subscription_id, current_period_end, updated_at)
+             values ($1, $2, $3, $4, $5, $6, $7, $8, now())
+             on conflict (user_id) do update set
+               plan = excluded.plan,
+               interval = excluded.interval,
+               status = excluded.status,
+               stripe_customer_id = coalesce(excluded.stripe_customer_id, subscriptions.stripe_customer_id),
+               stripe_subscription_id = coalesce(excluded.stripe_subscription_id, subscriptions.stripe_subscription_id),
+               current_period_end = coalesce(excluded.current_period_end, subscriptions.current_period_end),
+               updated_at = now()`,
+            [
+              `sub-${userId}`,
+              userId,
+              plan,
+              storyIntervalOf(metadata.interval || nested?.interval),
+              nextStatus,
+              idOf(object.customer as string | { id?: string }) || null,
+              idOf(object.id as string | { id?: string }) || idOf(object.subscription as string | { id?: string }) || null,
+              periodEnd,
+            ],
+          );
+        } else {
+          await sql.query(`update subscriptions set status = $2, current_period_end = coalesce($3, current_period_end), updated_at = now() where user_id = $1`, [userId, nextStatus, periodEnd]);
         }
       }
       return { ok: true, type };

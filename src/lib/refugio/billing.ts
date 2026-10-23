@@ -53,7 +53,8 @@ export const startStoryCheckout = createServerFn({ method: "POST" })
     const email = user?.email?.trim().toLowerCase() || "";
     if (!user?.id || !email) return { ok: false as const, reason: "conta" as const };
     const { isStripeConfigured, createStoryCheckout } = await import("./stripe.server");
-    if (!isStripeConfigured()) return { ok: false as const, reason: "stripe" as const };
+    const { paymentsOpen } = await import("./studio-limits");
+    if (!isStripeConfigured() || !paymentsOpen()) return { ok: false as const, reason: "stripe" as const };
     const session = await createStoryCheckout({
       plan: data.plan,
       interval: data.interval,
@@ -134,6 +135,36 @@ export const refundOnceBuy = createServerFn({ method: "POST" })
     const { refundOncePurchase } = await import("./stripe.server");
     return refundOncePurchase(user.id, data.id);
   });
+
+export const openPlanPortal = createServerFn({ method: "POST" })
+  .validator(z.object({ origin: z.string().url() }))
+  .handler(async ({ data }) => {
+    const { getSessionUser } = await import("@/lib/auth/verify.server");
+    const user = await getSessionUser();
+    const email = user?.email?.trim().toLowerCase() || "";
+    if (!user?.id || !email) return { ok: false as const, reason: "conta" as const };
+    const { openBillingPortal } = await import("./stripe.server");
+    return openBillingPortal(user.id, email, data.origin);
+  });
+
+export const readHousePlan = createServerFn({ method: "GET" }).handler(async () => {
+  const { getSessionUser } = await import("@/lib/auth/verify.server");
+  const user = await getSessionUser();
+  if (!user?.id) return { signedIn: false as const, plan: "lua_nova" as const, periodEnd: null, redeemed: false };
+  const { getUserPlan } = await import("./plan-cloud");
+  const { getSql } = await import("@/lib/db");
+  const sql = await getSql();
+  const plan = await getUserPlan(user.id);
+  const rows = await sql.query<{ current_period_end: string | Date | null }>(
+    `select current_period_end from subscriptions where user_id = $1 limit 1`,
+    [user.id],
+  );
+  const claimed = await sql.query<{ n: number }>(
+    `select count(*)::int as n from monthly_pack_claims where user_id = $1 and month = to_char(now(), 'YYYY-MM')`,
+    [user.id],
+  );
+  return { signedIn: true as const, plan, periodEnd: rows[0]?.current_period_end ?? null, redeemed: (Number(claimed[0]?.n) || 0) > 0 };
+});
 
 export const readVipSubscription = createServerFn({ method: "POST" })
   .validator(z.object({ email: z.email() }))

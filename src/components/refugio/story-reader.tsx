@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
+import { featuredAuthors } from "@/lib/refugio/studio-cloud";
 import { useShelf } from "@/components/refugio/use-shelf";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { loadBirth, loadReading, saveBirth, saveReading } from "@/lib/refugio/progress-cloud";
@@ -199,8 +200,8 @@ export function StoryReader({ slug }: { slug: string }) {
         <section className="house-hero">
           <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} />
           <h1>{story.title}</h1>
-          <p className="soon-lead">{story.synopsis}</p>
-          <p>{t.lockLead}</p>
+          <p className="soon-lead">{story.synopsis.split(". ").slice(0, 2).join(". ")}</p>
+          <p>{t.lockCheia}</p>
           <p><a className="house-primary" href="/planos">{t.navPlans}</a></p>
         </section>
       </StoryShell>
@@ -435,10 +436,22 @@ export function StoryPage({ slug }: { slug: string }) {
 export function StoryList() {
   const { lang, t } = useHouse();
   const shelf = useShelf(lang);
+  const [featured, setFeatured] = useState<Array<{ slug: string; nome: string }>>([]);
+  useEffect(() => {
+    void featuredAuthors().then(setFeatured).catch(() => setFeatured([]));
+  }, []);
   return (
     <StoryShell>
       <section className="house-block">
         <h1>{t.navStories}</h1>
+        {featured.length > 0 ? (
+          <p className="house-note">
+            {t.sealStar}{" "}
+            {featured.map((author) => (
+              <a key={author.slug} href={`/autora/${author.slug}`}>{author.nome}</a>
+            ))}
+          </p>
+        ) : null}
         <div className="story-list">
           {shelf.map((story) => (
             <a key={story.slug} className="story-card" href={`/historia/${story.slug}`}>

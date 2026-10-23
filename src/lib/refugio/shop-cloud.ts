@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { ACTIVE_PASS_SQL } from "@/lib/refugio/story-plans";
 import { BONUS_SCENES } from "@/lib/refugio/shop-bonus";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
@@ -27,9 +26,9 @@ function priceFor(cents: number, subscriber: boolean) {
 }
 
 async function isSubscriber(userId: string) {
-  const sql = await sqlOf();
-  const rows = await sql.query<{ plan: string }>(ACTIVE_PASS_SQL, [userId]);
-  return rows[0]?.plan === "lua_cheia" || rows[0]?.plan === "constelacao";
+  const { getUserPlan } = await import("@/lib/refugio/plan-cloud");
+  const { hasBenefit } = await import("@/lib/refugio/plan-benefits");
+  return hasBenefit(await getUserPlan(userId), "shop_discount");
 }
 
 type ProductRow = {
@@ -62,8 +61,11 @@ export const shopShelf = createServerFn({ method: "GET" }).handler(async () => {
     [user.id],
   );
   const month = await sql.query<{ n: number }>(
-    `select count(*)::int as n from purchases where user_id = $1 and amount_cents = 0 and status = 'paid'
-     and created_at >= date_trunc('month', now())`,
+    `select count(*)::int as n from (
+       select user_id from monthly_pack_claims where user_id = $1 and month = to_char(now(), 'YYYY-MM')
+       union
+       select user_id from purchases where user_id = $1 and amount_cents = 0 and status = 'paid' and created_at >= date_trunc('month', now())
+     ) claimed`,
     [user.id],
   );
   return {
@@ -92,7 +94,8 @@ export const buyProduct = createServerFn({ method: "POST" })
     );
     if (owned[0]) return { ok: false as const, reason: "tem" as const };
     const subscriber = await isSubscriber(user.id);
-    const amount = priceFor(product.price_cents, subscriber);
+    const coupon = subscriber ? process.env.STRIPE_COUPON_SUBSCRIBER || "" : "";
+    const amount = coupon ? product.price_cents : priceFor(product.price_cents, subscriber);
     const { createShopPayment } = await import("./stripe.server");
     const session = await createShopPayment({
       name: data.lang === "es" ? product.title_es : product.title_pt,
@@ -110,7 +113,8 @@ export const buyProduct = createServerFn({ method: "POST" })
         product_id: product.id,
         email,
         amount_cents: String(amount),
-        discounted: subscriber ? "1" : "0",
+        discounted: !coupon && subscriber ? "1" : "0",
+        coupon,
       },
     });
     return { ok: true as const, url: session.url };
@@ -125,8 +129,11 @@ export const claimMonthPack = createServerFn({ method: "POST" })
     if (!(await isSubscriber(user.id))) return { ok: false as const, reason: "plano" as const };
     const sql = await sqlOf();
     const month = await sql.query<{ n: number }>(
-      `select count(*)::int as n from purchases where user_id = $1 and amount_cents = 0 and status = 'paid'
-       and created_at >= date_trunc('month', now())`,
+      `select count(*)::int as n from (
+         select user_id from monthly_pack_claims where user_id = $1 and month = to_char(now(), 'YYYY-MM')
+         union
+         select user_id from purchases where user_id = $1 and amount_cents = 0 and status = 'paid' and created_at >= date_trunc('month', now())
+       ) claimed`,
       [user.id],
     );
     if ((Number(month[0]?.n) || 0) > 0) return { ok: false as const, reason: "mes" as const };
@@ -144,6 +151,11 @@ export const claimMonthPack = createServerFn({ method: "POST" })
     await sql.query(
       `insert into purchases (id, user_id, product_id, amount_cents, status, enabled) values ($1, $2, $3, 0, 'paid', true)`,
       [crypto.randomUUID(), user.id, product.id],
+    );
+    await sql.query(
+      `insert into monthly_pack_claims (user_id, month, product_id) values ($1, to_char(now(), 'YYYY-MM'), $2)
+       on conflict (user_id, month) do nothing`,
+      [user.id, product.id],
     );
     return { ok: true as const };
   });
