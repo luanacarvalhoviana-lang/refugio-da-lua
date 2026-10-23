@@ -1,8 +1,70 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { confirmPasswordReset, requestPasswordReset, signInEmail, signInGoogle, signUpEmail, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { AuthorEditor } from "@/components/refugio/author-page";
+import { cancelStoryPlan, readStoryPass, refundStoryPlan } from "@/lib/refugio/billing";
+
+function PassPanel() {
+  const { t } = useHouse();
+  const { user } = useCurrentUserState();
+  const [pass, setPass] = useState<{ plan: string; cancelAt: string | Date | null; refundable: boolean } | null>(null);
+  const [note, setNote] = useState("");
+  const [pending, setPending] = useState(false);
+  useEffect(() => {
+    if (!user || user.isDevFallback) return;
+    void readStoryPass()
+      .then((result) => setPass(result.pass))
+      .catch(() => setPass(null));
+  }, [user]);
+  if (!user || user.isDevFallback) return null;
+  const name = pass?.plan === "constelacao" ? t.passStar : pass?.plan === "lua_cheia" ? t.passCheia : "";
+  return (
+    <section className="house-block pass-panel">
+      <h2>{t.passTitle}</h2>
+      {name ? <p className="access-pill">{name}</p> : <p>{t.passNone}</p>}
+      {pass?.cancelAt ? <p className="house-note">{t.passCanceled}</p> : null}
+      {note ? <p className="house-note">{note}</p> : null}
+      {pass && !pass.cancelAt ? (
+        <div className="plan-actions">
+          <button
+            type="button"
+            disabled={pending}
+            onClick={() => {
+              setPending(true);
+              void cancelStoryPlan({ data: {} })
+                .then((result) => setNote(result.ok ? t.passCanceled : t.planFail))
+                .catch(() => setNote(t.planFail))
+                .finally(() => setPending(false));
+            }}
+          >
+            {pending ? t.passWorking : t.passCancel}
+          </button>
+          {pass.refundable ? (
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => {
+                setPending(true);
+                void refundStoryPlan({ data: {} })
+                  .then((result) => {
+                    if (result.ok) {
+                      setPass(null);
+                      setNote(t.passRefunded);
+                    } else setNote(result.reason === "prazo" ? t.passLate : t.planFail);
+                  })
+                  .catch(() => setNote(t.planFail))
+                  .finally(() => setPending(false));
+              }}
+            >
+              {t.passRefund}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+    </section>
+  );
+}
 
 export function Door({ heading = false }: { heading?: boolean }) {
   const { t } = useHouse();
@@ -85,6 +147,7 @@ export function AccountPage() {
       <section className="house-block">
         <h1>{t.accountTitle}</h1>
         <Door />
+        <PassPanel />
         <AuthorEditor />
       </section>
     </StoryShell>

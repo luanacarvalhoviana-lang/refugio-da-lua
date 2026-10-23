@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { PACTO_VERSION } from "@/lib/refugio/pacto";
-import { FREE_PUBLISHED_STORIES, STORY_BILLING_LIVE } from "@/lib/refugio/studio-limits";
+import { FREE_PUBLISHED_STORIES } from "@/lib/refugio/studio-limits";
+import { ACTIVE_PASS_SQL } from "@/lib/refugio/story-plans";
 import { checkStory, type StudioScene } from "@/lib/refugio/studio-check";
 import type { Story } from "@/lib/refugio/stories";
 
@@ -267,12 +268,13 @@ export const saveStudioDraft = createServerFn({ method: "POST" })
       [data.id, user.id],
     );
     if (!owned[0] || owned[0].status === "publicada") return { ok: false as const, reason: "sumiu" as const };
-    if (STORY_BILLING_LIVE) {
+    const { storyBillingLocks } = await import("@/lib/refugio/studio-limits");
+    if (storyBillingLocks()) {
       const premiumMusic = data.scenes.some((scene) => scene.musica === "templo" || scene.musica === "luar");
       const place = await sql.query<{ lugar: string }>(`select lugar from stories where id = $1 limit 1`, [data.id]);
       const premiumPlace = /templ|varanda|balc/i.test(place[0]?.lugar || "");
       if (premiumMusic || premiumPlace) {
-        const pass = await sql.query<{ plan: string }>(`select plan from story_passes where user_id = $1 limit 1`, [user.id]);
+        const pass = await sql.query<{ plan: string }>(ACTIVE_PASS_SQL, [user.id]);
         if (pass[0]?.plan !== "constelacao") return { ok: false as const, reason: "plano" as const };
       }
     }
@@ -404,10 +406,7 @@ export const decideStory = createServerFn({ method: "POST" })
     const rows = await sql.query<{ autora_id: string }>(`select autora_id from stories where id = $1 limit 1`, [data.id]);
     if (!rows[0]) return { ok: false as const, reason: "sumiu" as const };
     if (data.status === "publicada") {
-      const pass = await sql.query<{ plan: string }>(
-        `select plan from story_passes where user_id = $1 limit 1`,
-        [rows[0].autora_id],
-      );
+      const pass = await sql.query<{ plan: string }>(ACTIVE_PASS_SQL, [rows[0].autora_id]);
       const unlimited = pass[0]?.plan === "constelacao";
       const count = await sql.query<{ n: number }>(
         `select count(*)::int as n from stories where autora_id = $1 and status = 'publicada' and id <> $2`,

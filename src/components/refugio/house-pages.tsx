@@ -1,17 +1,50 @@
 import { useEffect, useState } from "react";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
+import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { confirmStoryCheckout, startStoryCheckout, storyCheckoutReady } from "@/lib/refugio/billing";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { loadGardenCloud } from "@/lib/refugio/progress-cloud";
 import { readEndings, type SavedEnding } from "@/lib/refugio/reading-local";
 
 export function PlansPage() {
   const { t } = useHouse();
+  const { user } = useCurrentUserState();
+  const [ready, setReady] = useState(false);
+  const [note, setNote] = useState("");
+  const [pending, setPending] = useState("");
+  const signedIn = Boolean(user && !user.isDevFallback);
+  useEffect(() => {
+    void storyCheckoutReady().then((result) => setReady(result.ready)).catch(() => setReady(false));
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    if (params.get("checkout") === "cancelled") setNote(t.planBack);
+    if (params.get("checkout") === "success" && sessionId) {
+      void confirmStoryCheckout({ data: { sessionId } })
+        .then((result) => setNote(result.paid ? t.planOpened : t.planFail))
+        .catch(() => setNote(t.planFail));
+    }
+  }, [t.planBack, t.planFail, t.planOpened]);
   const cards = [
-    [t.freeName, t.freePrice, "", t.freeItems],
-    [t.fullName, t.fullPrice, t.fullYear, t.fullItems],
-    [t.starName, t.starPrice, t.starYear, t.starItems],
-  ] as const;
+    [t.freeName, t.freePrice, "", t.freeItems, ""] as const,
+    [t.fullName, t.fullPrice, t.fullYear, t.fullItems, "lua_cheia"] as const,
+    [t.starName, t.starPrice, t.starYear, t.starItems, "constelacao"] as const,
+  ];
+  function subscribe(plan: "lua_cheia" | "constelacao", interval: "month" | "year") {
+    if (!ready) {
+      setNote(t.planWait);
+      return;
+    }
+    setPending(`${plan}-${interval}`);
+    setNote("");
+    void startStoryCheckout({ data: { plan, interval, origin: window.location.origin } })
+      .then((result) => {
+        if (result.ok && result.url) window.location.assign(result.url);
+        else setNote(result.reason === "conta" ? t.planEnter : t.planWait);
+      })
+      .catch(() => setNote(t.planFail))
+      .finally(() => setPending(""));
+  }
   return (
     <StoryShell>
       <section className="house-hero">
@@ -20,7 +53,7 @@ export function PlansPage() {
         <p className="soon-lead">{t.plansLead}</p>
       </section>
       <section className="plan-grid">
-        {cards.map(([name, price, year, items]) => (
+        {cards.map(([name, price, year, items, plan]) => (
           <article key={name} className={name === t.fullName ? "is-main" : ""}>
             <h2>{name}</h2>
             <p className="plan-price">{price}</p>
@@ -30,10 +63,27 @@ export function PlansPage() {
                 <li key={item}>{item}</li>
               ))}
             </ul>
+            {plan ? (
+              <div className="plan-actions">
+                {signedIn ? (
+                  <>
+                    <button type="button" disabled={pending !== ""} onClick={() => subscribe(plan, "month")}>
+                      {pending === `${plan}-month` ? t.passWorking : t.planMonth}
+                    </button>
+                    <button type="button" disabled={pending !== ""} onClick={() => subscribe(plan, "year")}>
+                      {pending === `${plan}-year` ? t.passWorking : t.planYear}
+                    </button>
+                  </>
+                ) : (
+                  <a className="house-primary" href="/conta">{t.planEnter}</a>
+                )}
+              </div>
+            ) : null}
           </article>
         ))}
       </section>
-      <p className="house-note plan-note">{t.plansNote}</p>
+      {note ? <p className="house-note plan-note">{note}</p> : null}
+      <p className="house-note plan-note">{ready ? t.plansOpen : t.plansNote}</p>
       <p className="house-note plan-note">{t.plansLater}</p>
     </StoryShell>
   );

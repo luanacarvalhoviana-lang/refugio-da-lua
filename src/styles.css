@@ -3637,6 +3637,13 @@ html.protect-on .diary-card::after {
 .plan-grid { padding: 10px 20px 20px; max-width: 980px; }
 .plan-grid .is-main { outline: 2px solid #f6d77a; }
 .plan-price { font-family: "Fraunces", Georgia, serif; font-size: 28px; margin: 0; }
+.plan-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.plan-actions button, .plan-actions a {
+  border: 0; border-radius: 999px; padding: 10px 14px; background: #0c3442; color: #f8f5ee;
+  font: inherit; text-decoration: none; cursor: pointer;
+}
+.plan-actions button:disabled { opacity: 0.6; cursor: wait; }
+.pass-panel { margin-top: 18px; }
 .plan-grid ul { margin: 12px 0 0; padding-left: 18px; }
 .plan-note { padding: 0 20px 24px; max-width: 62ch; }
 .house-luna { display: flex; gap: 14px; align-items: center; padding: 10px 20px 20px; max-width: 720px; }

@@ -2,7 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { PACTO_VERSION } from "@/lib/refugio/pacto";
 import { presentStory } from "@/lib/refugio/story-access";
-import { STORY_BILLING_LIVE } from "@/lib/refugio/studio-limits";
+import { ACTIVE_PASS_SQL } from "@/lib/refugio/story-plans";
+import { storyBillingLocks } from "@/lib/refugio/studio-limits";
 import type { Story } from "@/lib/refugio/stories";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
@@ -18,12 +19,12 @@ async function sessionUser() {
 }
 
 async function mayOpen(userId: string | undefined, email: string) {
-  if (!STORY_BILLING_LIVE) return true;
+  if (!storyBillingLocks()) return true;
   if (OWNERS.has(email)) return true;
   if (!userId) return false;
   const { getSql } = await import("@/lib/db");
   const sql = await getSql();
-  const rows = await sql.query<{ plan: string }>(`select plan from story_passes where user_id = $1 limit 1`, [userId]);
+  const rows = await sql.query<{ plan: string }>(ACTIVE_PASS_SQL, [userId]);
   return rows[0]?.plan === "lua_cheia" || rows[0]?.plan === "constelacao";
 }
 

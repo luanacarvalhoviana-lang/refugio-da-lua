@@ -33,6 +33,72 @@ export const confirmStripeCheckout = createServerFn({ method: "POST" })
     return confirmCheckoutSession(data.sessionId);
   });
 
+export const storyCheckoutReady = createServerFn({ method: "GET" }).handler(async () => {
+  const { isStripeConfigured } = await import("./stripe.server");
+  const { storyBillingLocks } = await import("./studio-limits");
+  return { ready: isStripeConfigured(), locks: storyBillingLocks() };
+});
+
+export const startStoryCheckout = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      plan: z.enum(["lua_cheia", "constelacao"]),
+      interval: z.enum(["month", "year"]),
+      origin: z.string().url(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const { getSessionUser } = await import("@/lib/auth/verify.server");
+    const user = await getSessionUser();
+    const email = user?.email?.trim().toLowerCase() || "";
+    if (!user?.id || !email) return { ok: false as const, reason: "conta" as const };
+    const { isStripeConfigured, createStoryCheckout } = await import("./stripe.server");
+    if (!isStripeConfigured()) return { ok: false as const, reason: "stripe" as const };
+    const session = await createStoryCheckout({
+      plan: data.plan,
+      interval: data.interval,
+      email,
+      userId: user.id,
+      origin: data.origin,
+    });
+    return { ok: true as const, url: session.url };
+  });
+
+export const confirmStoryCheckout = createServerFn({ method: "POST" })
+  .validator(z.object({ sessionId: z.string().min(4) }))
+  .handler(async ({ data }) => {
+    const { confirmStoryCheckout: confirm } = await import("./stripe.server");
+    return confirm(data.sessionId);
+  });
+
+export const readStoryPass = createServerFn({ method: "GET" }).handler(async () => {
+  const { getSessionUser } = await import("@/lib/auth/verify.server");
+  const user = await getSessionUser();
+  if (!user?.id) return { signedIn: false as const, pass: null };
+  const { readStoryPassRow } = await import("./stripe.server");
+  return { signedIn: true as const, pass: await readStoryPassRow(user.id) };
+});
+
+export const cancelStoryPlan = createServerFn({ method: "POST" })
+  .validator(z.object({}))
+  .handler(async () => {
+  const { getSessionUser } = await import("@/lib/auth/verify.server");
+  const user = await getSessionUser();
+  if (!user?.id) return { ok: false as const, reason: "conta" as const };
+  const { cancelStoryRenewal } = await import("./stripe.server");
+  return cancelStoryRenewal(user.id);
+});
+
+export const refundStoryPlan = createServerFn({ method: "POST" })
+  .validator(z.object({}))
+  .handler(async () => {
+  const { getSessionUser } = await import("@/lib/auth/verify.server");
+  const user = await getSessionUser();
+  if (!user?.id) return { ok: false as const, reason: "conta" as const };
+  const { refundStoryPass } = await import("./stripe.server");
+  return refundStoryPass(user.id);
+});
+
 export const readVipSubscription = createServerFn({ method: "POST" })
   .validator(z.object({ email: z.email() }))
   .handler(async ({ data }) => {

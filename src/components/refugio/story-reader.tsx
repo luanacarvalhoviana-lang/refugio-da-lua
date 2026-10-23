@@ -10,11 +10,9 @@ import { tallyChoice } from "@/lib/refugio/community-cloud";
 import { AccessMark } from "@/components/refugio/access-mark";
 import { saveKeepsake } from "@/lib/refugio/night-cloud";
 import { loadStudioStory } from "@/lib/refugio/studio-cloud";
-import { STORY_BILLING_LIVE } from "@/lib/refugio/studio-limits";
 import { CommunityDesk } from "@/components/refugio/community";
 import { artOf, authorSlug, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
-import { crossfade, isStoryPass, sourceForScene } from "@/lib/refugio/music";
-import { useRefugioStore } from "@/lib/refugio/store";
+import { crossfade, sourceForScene } from "@/lib/refugio/music";
 
 export function StoryReader({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
@@ -52,8 +50,7 @@ export function StoryReader({ slug }: { slug: string }) {
   const fadeFrame = useRef(0);
   const volumeRef = useRef(0.35);
   const soundRef = useRef(false);
-  const plan = useRefugioStore((state) => state.plan);
-  const premiumOn = !STORY_BILLING_LIVE || isStoryPass(plan);
+  const premiumOn = !story?.locked;
   const [boxNote, setBoxNote] = useState("");
 
   useEffect(() => {
