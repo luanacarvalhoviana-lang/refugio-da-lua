@@ -3,6 +3,7 @@ import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { checkStory, type StudioIssue, type StudioScene } from "@/lib/refugio/studio-check";
 import { tracks } from "@/lib/refugio/music";
+import { listAuthorTracks, removeAuthorTrack, saveAuthorTrack } from "@/lib/refugio/track-cloud";
 import {
   authorChoiceStats,
   authorSky,
@@ -61,6 +62,7 @@ export function StudioPage() {
   const [original, setOriginal] = useState(false);
   const [stats, setStats] = useState<StatScene[]>([]);
   const [house, setHouse] = useState<Array<{ slug: string; scenes: StatScene[] }>>([]);
+  const [ownTracks, setOwnTracks] = useState<Array<{ id: string; titulo: string }>>([]);
 
   function refresh() {
     void listMyStories().then(setMine).catch(() => setMine([]));
@@ -69,6 +71,7 @@ export function StudioPage() {
 
   useEffect(() => {
     if (!access?.ok) return;
+    void listAuthorTracks().then(setOwnTracks).catch(() => setOwnTracks([]));
     void Promise.all(
       ["o-bilhete", "a-chave", "a-mare"].map((slug) =>
         authorChoiceStats({ data: { slug, lang } }).then((result) => ({ slug, ok: result.ok, scenes: result.scenes })),
@@ -139,6 +142,7 @@ export function StudioPage() {
         {access.plan === "constelacao" ? <SkyLine /> : null}
       </section>
       <section className="house-block">
+        <AuthorTracks tracks={ownTracks} onChange={setOwnTracks} />
         <ul className="story-list">
           {mine.map((story) => (
             <li key={story.id} className="story-card">
@@ -191,6 +195,9 @@ export function StudioPage() {
                         <option key={track.id} value={track.id}>
                           {track.title[lang]}{track.premium ? " · premium" : ""}
                         </option>
+                      ))}
+                      {ownTracks.map((track) => (
+                        <option key={track.id} value={track.id}>{track.titulo}</option>
                       ))}
                     </select>
                   </label>
@@ -335,6 +342,83 @@ export function StudioPage() {
     setNote(t.studioSent);
     refresh();
   }
+}
+
+function AuthorTracks({ tracks: mine, onChange }: { tracks: Array<{ id: string; titulo: string }>; onChange: (next: Array<{ id: string; titulo: string }>) => void }) {
+  const { t } = useHouse();
+  const [titulo, setTitulo] = useState("");
+  const [direitos, setDireitos] = useState(false);
+  const [note, setNote] = useState("");
+
+  function send(file: File) {
+    if (!direitos) {
+      setNote(t.trackNeed);
+      return;
+    }
+    if (file.size > 2_500_000) {
+      setNote(t.trackBig);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const audio = String(reader.result || "");
+      void saveAuthorTrack({ data: { titulo, mime: file.type || "audio/mpeg", audio, direitos: true } })
+        .then((result) => {
+          if (!result.ok || !result.id) {
+            setNote(result.reason === "limite" ? t.trackFull : result.reason === "grande" || result.reason === "tipo" ? t.trackBig : t.trackNeed);
+            return;
+          }
+          onChange([{ id: result.id, titulo: result.titulo || titulo }, ...mine]);
+          setTitulo("");
+          setDireitos(false);
+          setNote("");
+        })
+        .catch(() => setNote(t.trackBig));
+    };
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <div className="house-block">
+      <h2>{t.trackMine}</h2>
+      <p className="house-note">{t.trackLead}</p>
+      <ul>
+        {mine.map((track) => (
+          <li key={track.id}>
+            {track.titulo}{" "}
+            <button type="button" onClick={() => {
+              void removeAuthorTrack({ data: { id: track.id } }).then(() => {
+                onChange(mine.filter((item) => item.id !== track.id));
+                setNote(t.trackGone);
+              });
+            }}>{t.commentDelete}</button>
+          </li>
+        ))}
+      </ul>
+      <label>
+        {t.trackName}
+        <input value={titulo} maxLength={40} onChange={(event) => setTitulo(event.target.value)} />
+      </label>
+      <label className="soon-check">
+        <input type="checkbox" checked={direitos} onChange={(event) => setDireitos(event.target.checked)} />
+        <span>{t.trackRights}</span>
+      </label>
+      <label>
+        {t.trackFile}
+        <input
+          type="file"
+          accept="audio/mpeg,audio/ogg,audio/wav,audio/mp4,.mp3,.ogg,.wav,.m4a"
+          disabled={titulo.trim().length < 2}
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (file) send(file);
+          }}
+        />
+      </label>
+      {note ? <p className="house-note">{note}</p> : null}
+    </div>
+  );
 }
 
 function SkyLine() {

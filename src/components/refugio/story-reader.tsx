@@ -329,6 +329,7 @@ export function StoryReader({ slug }: { slug: string }) {
           </aside>
           <div className="reader-sheet">
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
+            {scene.music?.startsWith("t") ? <p className="house-note">{t.trackCredit}</p> : null}
             <p className="reader-body">{scene.ending ? scene.ending.body : scene.body}</p>
             {arrived?.thought && !scene.ending ? (
               <aside className="diary-slip">

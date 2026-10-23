@@ -41,6 +41,10 @@ export function sourceForScene(story: Story, sceneIds: string[], premiumUnlocked
   for (const id of sceneIds) {
     const scene = story.scenes.find((item) => item.id === id);
     if (!scene?.music) continue;
+    if (scene.music.startsWith("t") && !tracks.some((item) => item.id === scene.music)) {
+      held = `/trilha/${scene.music}`;
+      continue;
+    }
     const track = resolveTrack(scene.music, premiumUnlocked);
     if (track) held = track.src;
   }

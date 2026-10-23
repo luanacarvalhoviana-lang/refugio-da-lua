@@ -60,6 +60,7 @@ import { Route as OnboardingPactoRouteImport } from './routes/onboarding.pacto'
 import { Route as OnboardingPerfilRouteImport } from './routes/onboarding.perfil'
 import { Route as PlanosCanceladoRouteImport } from './routes/planos.cancelado'
 import { Route as PlanosObrigadaRouteImport } from './routes/planos.obrigada'
+import { Route as TrilhaIdRouteImport } from './routes/trilha.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
 import { Route as EsAutoraSlugRouteImport } from './routes/es.autora.$slug'
@@ -319,6 +320,11 @@ const PlanosObrigadaRoute = PlanosObrigadaRouteImport.update({
   path: '/obrigada',
   getParentRoute: () => PlanosRoute,
 } as any)
+const TrilhaIdRoute = TrilhaIdRouteImport.update({
+  id: '/trilha/$id',
+  path: '/trilha/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -386,6 +392,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/planos/cancelado': typeof PlanosCanceladoRoute
   '/planos/obrigada': typeof PlanosObrigadaRoute
+  '/trilha/$id': typeof TrilhaIdRoute
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -441,6 +448,7 @@ export interface FileRoutesByTo {
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/planos/cancelado': typeof PlanosCanceladoRoute
   '/planos/obrigada': typeof PlanosObrigadaRoute
+  '/trilha/$id': typeof TrilhaIdRoute
   '/es': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -498,6 +506,7 @@ export interface FileRoutesById {
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/planos/cancelado': typeof PlanosCanceladoRoute
   '/planos/obrigada': typeof PlanosObrigadaRoute
+  '/trilha/$id': typeof TrilhaIdRoute
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -556,6 +565,7 @@ export interface FileRouteTypes {
     | '/onboarding/perfil'
     | '/planos/cancelado'
     | '/planos/obrigada'
+    | '/trilha/$id'
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
@@ -611,6 +621,7 @@ export interface FileRouteTypes {
     | '/onboarding/perfil'
     | '/planos/cancelado'
     | '/planos/obrigada'
+    | '/trilha/$id'
     | '/es'
     | '/api/auth/$'
     | '/api/stripe/webhook'
@@ -667,6 +678,7 @@ export interface FileRouteTypes {
     | '/onboarding/perfil'
     | '/planos/cancelado'
     | '/planos/obrigada'
+    | '/trilha/$id'
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
@@ -715,6 +727,7 @@ export interface RootRouteChildren {
   LerSlugRoute: typeof LerSlugRoute
   OnboardingPactoRoute: typeof OnboardingPactoRoute
   OnboardingPerfilRoute: typeof OnboardingPerfilRoute
+  TrilhaIdRoute: typeof TrilhaIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
 }
@@ -1078,6 +1091,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosObrigadaRouteImport
       parentRoute: typeof PlanosRoute
     }
+    '/trilha/$id': {
+      id: '/trilha/$id'
+      path: '/trilha/$id'
+      fullPath: '/trilha/$id'
+      preLoaderRoute: typeof TrilhaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -1209,6 +1229,7 @@ const rootRouteChildren: RootRouteChildren = {
   LerSlugRoute: LerSlugRoute,
   OnboardingPactoRoute: OnboardingPactoRoute,
   OnboardingPerfilRoute: OnboardingPerfilRoute,
+  TrilhaIdRoute: TrilhaIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
 }

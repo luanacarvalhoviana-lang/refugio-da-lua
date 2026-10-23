@@ -23,7 +23,7 @@ const sceneSchema = z.object({
   id: z.string().trim().min(2).max(40),
   quem: z.string().trim().max(40),
   texto: z.string().trim().max(4000),
-  musica: z.string().trim().max(40),
+  musica: z.string().trim().max(20),
   final: z.boolean(),
   endingTitle: z.string().trim().max(80),
   endingBody: z.string().trim().max(2000),
@@ -324,6 +324,12 @@ export const saveStudioDraft = createServerFn({ method: "POST" })
       [data.id, user.id],
     );
     if (!owned[0] || owned[0].status === "publicada") return { ok: false as const, reason: "sumiu" as const };
+    const ownTracks = new Set(
+      (await sql.query<{ id: string }>(`select id from author_tracks where user_id = $1`, [user.id])).map((row) => row.id),
+    );
+    for (const scene of data.scenes) {
+      if (scene.musica.startsWith("t") && !ownTracks.has(scene.musica)) scene.musica = "";
+    }
     const { storyBillingLocks } = await import("@/lib/refugio/studio-limits");
     if (storyBillingLocks()) {
       const premiumMusic = data.scenes.some((scene) => scene.musica === "templo" || scene.musica === "luar");
