@@ -12,6 +12,7 @@ export type StudioScene = {
   quem: string;
   texto: string;
   musica: string;
+  musicaSegundos: number;
   final: boolean;
   endingTitle: string;
   endingBody: string;

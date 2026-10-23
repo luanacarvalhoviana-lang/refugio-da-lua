@@ -35,18 +35,22 @@ export function resolveTrack(id: string, premiumUnlocked: boolean): Track | null
   return tracks.find((item) => item.mood === track.mood && !item.premium) ?? null;
 }
 
-/** Last scene with a track wins. If none did, the story ambient sound plays. */
+function cueOf(story: Story, sceneId: string, premiumUnlocked: boolean) {
+  const scene = story.scenes.find((item) => item.id === sceneId);
+  if (!scene?.music) return null;
+  if (scene.music.startsWith("t") && !tracks.some((item) => item.id === scene.music)) return `/trilha/${scene.music}`;
+  return resolveTrack(scene.music, premiumUnlocked)?.src ?? null;
+}
+
+/** Last scene with a track wins. A clip of a few seconds does not follow into the next scene. */
 export function sourceForScene(story: Story, sceneIds: string[], premiumUnlocked: boolean) {
   let held: string | null = null;
+  const last = sceneIds[sceneIds.length - 1];
   for (const id of sceneIds) {
     const scene = story.scenes.find((item) => item.id === id);
-    if (!scene?.music) continue;
-    if (scene.music.startsWith("t") && !tracks.some((item) => item.id === scene.music)) {
-      held = `/trilha/${scene.music}`;
-      continue;
-    }
-    const track = resolveTrack(scene.music, premiumUnlocked);
-    if (track) held = track.src;
+    if (scene?.musicFor && id !== last) continue;
+    const cue = cueOf(story, id, premiumUnlocked);
+    if (cue) held = cue;
   }
   return held || story.sound || "/sounds/rain.mp3";
 }
@@ -57,6 +61,7 @@ export function crossfade(
   toSrc: string,
   volume: number,
   frame: { current: number },
+  once = false,
 ) {
   const nextI = active.current === 0 ? 1 : 0;
   if (!slots[nextI]) {
@@ -68,14 +73,16 @@ export function crossfade(
   const next = slots[nextI];
   const prev = slots[active.current];
   if (!next) return;
-  if (prev && prev.src.endsWith(toSrc) && !prev.paused) {
+  if (prev && prev.src.endsWith(toSrc) && !prev.paused && !once) {
+    prev.loop = true;
     prev.volume = volume;
     return;
   }
-  next.loop = true;
-  if (!next.src.endsWith(toSrc)) {
+  next.loop = !once;
+  if (!next.src.endsWith(toSrc) || once) {
     next.src = toSrc;
     next.load();
+    if (once) next.currentTime = 0;
   }
   next.volume = 0;
   const failed = () => {

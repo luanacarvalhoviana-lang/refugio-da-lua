@@ -57,6 +57,7 @@ export function StoryReader({ slug }: { slug: string }) {
   const slots = useRef<Array<HTMLAudioElement | null>>([null, null]);
   const activeSlot = useRef(0);
   const fadeFrame = useRef(0);
+  const clipTimer = useRef(0);
   const volumeRef = useRef(0.35);
   const soundRef = useRef(false);
   const dressRef = useRef("");
@@ -225,9 +226,7 @@ export function StoryReader({ slug }: { slug: string }) {
     setSamePercent(null);
     setSceneId(choice.to);
     persist(story!, choice.to, nextAffinity, nextClues);
-    if (soundRef.current) {
-      playSource(track([...trail.map((step) => step.sceneId), sceneId, choice.to]));
-    }
+    if (soundRef.current) playScene([...trail.map((step) => step.sceneId), sceneId, choice.to]);
     const key = readerKey();
     const chosenScene = sceneId;
     void tallyChoice({
@@ -247,24 +246,34 @@ export function StoryReader({ slug }: { slug: string }) {
     setAffinity(previous.affinity);
     setClues(previous.clues);
     persist(story, previous.sceneId, previous.affinity, previous.clues);
-    if (soundRef.current) {
-      const ids = trail.slice(0, -1).map((step) => step.sceneId);
-      ids.push(previous.sceneId);
-      playSource(track(ids));
-    }
+    if (soundRef.current) playScene([...trail.slice(0, -1).map((step) => step.sceneId), previous.sceneId]);
   }
 
   function track(ids: string[]) {
     return dressRef.current || sourceForScene(story!, ids, premiumOn);
   }
 
-  function playSource(src: string) {
-    crossfade(slots.current, activeSlot, src, volumeRef.current, fadeFrame);
+  function playSource(src: string, once = false) {
+    crossfade(slots.current, activeSlot, src, volumeRef.current, fadeFrame, once);
+  }
+
+  function playScene(ids: string[]) {
+    const currentId = ids[ids.length - 1] || "";
+    const current = story?.scenes.find((item) => item.id === currentId);
+    const seconds = !dressRef.current && current?.music && current.musicFor && current.musicFor > 0 ? current.musicFor : 0;
+    window.clearTimeout(clipTimer.current);
+    playSource(track(ids), seconds > 0);
+    if (!seconds) return;
+    clipTimer.current = window.setTimeout(() => {
+      if (!soundRef.current) return;
+      playSource(story?.sound || "/sounds/rain.mp3");
+    }, seconds * 1000);
   }
 
   function toggleSound() {
     if (soundRef.current) {
       cancelAnimationFrame(fadeFrame.current);
+      window.clearTimeout(clipTimer.current);
       for (const el of slots.current) el?.pause();
       soundRef.current = false;
       localStorage.setItem("refugio-sound", "off");
@@ -276,7 +285,7 @@ export function StoryReader({ slug }: { slug: string }) {
     setSound(true);
     if (!story) return;
     const ids = [...trail.map((step) => step.sceneId), scene.id];
-    playSource(track(ids));
+    playScene(ids);
   }
 
   function changeVolume(value: number) {
@@ -385,7 +394,7 @@ export function StoryReader({ slug }: { slug: string }) {
                     setAffinity(0);
                     setClues([]);
                     persist(story, story.start, 0, []);
-                    if (soundRef.current) playSource(track([story.start]));
+                    if (soundRef.current) playScene([story.start]);
                   }}
                 >
                   {t.replay}

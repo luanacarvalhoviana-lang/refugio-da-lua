@@ -36,7 +36,7 @@ function StatsBlock({ title, wait, scenes }: { title: string; wait: string; scen
 }
 
 function blankScene(): StudioScene {
-  return { id: crypto.randomUUID(), quem: "", texto: "", musica: "", final: false, endingTitle: "", endingBody: "", flower: "", carta: "", cartaDe: "", choices: [] };
+  return { id: crypto.randomUUID(), quem: "", texto: "", musica: "", musicaSegundos: 0, final: false, endingTitle: "", endingBody: "", flower: "", carta: "", cartaDe: "", choices: [] };
 }
 
 function issueText(issue: StudioIssue, t: ReturnType<typeof useHouse>["t"]) {
@@ -201,6 +201,19 @@ export function StudioPage() {
                       ))}
                     </select>
                   </label>
+                  {scene.musica ? (
+                    <label>
+                      {t.musicSeconds}
+                      <select value={scene.musicaSegundos || 0} onChange={(event) => patchScene(index, { musicaSegundos: Number(event.target.value) })}>
+                        <option value={0}>{t.musicWhole}</option>
+                        <option value={5}>5</option>
+                        <option value={8}>8</option>
+                        <option value={12}>12</option>
+                        <option value={20}>20</option>
+                        <option value={30}>30</option>
+                      </select>
+                    </label>
+                  ) : null}
                   {scene.choices.map((choice, choiceIndex) => (
                     <div key={choice.id} className="studio-choice">
                       <label>

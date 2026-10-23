@@ -25,6 +25,8 @@ export type Scene = {
   choices?: Choice[];
   ending?: Ending;
   music?: string;
+  /** Se houver, a música toca só esses segundos e o som ambiente volta. */
+  musicFor?: number;
 };
 
 export type Story = {

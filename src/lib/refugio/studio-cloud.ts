@@ -24,6 +24,7 @@ const sceneSchema = z.object({
   quem: z.string().trim().max(40),
   texto: z.string().trim().max(4000),
   musica: z.string().trim().max(20),
+  musicaSegundos: z.union([z.literal(0), z.literal(5), z.literal(8), z.literal(12), z.literal(20), z.literal(30)]).optional().default(0),
   final: z.boolean(),
   endingTitle: z.string().trim().max(80),
   endingBody: z.string().trim().max(2000),
@@ -78,8 +79,8 @@ async function authorName(sql: { query: <T>(q: string, p?: unknown[]) => Promise
 }
 
 async function scenesOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T[]> }, storyId: string): Promise<StudioScene[]> {
-  const scenes = await sql.query<{ id: string; quem_fala: string | null; texto: string; musica: string | null; ordem: number }>(
-    `select id, quem_fala, texto, musica, ordem from scenes where story_id = $1 order by ordem`,
+  const scenes = await sql.query<{ id: string; quem_fala: string | null; texto: string; musica: string | null; musica_segundos: number | null; ordem: number }>(
+    `select id, quem_fala, texto, musica, musica_segundos, ordem from scenes where story_id = $1 order by ordem`,
     [storyId],
   );
   const endings = await sql.query<{ scene_id: string; titulo: string; texto: string; flor: string; carta: string | null; carta_de: string | null }>(
@@ -102,6 +103,7 @@ async function scenesOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T
       quem: scene.quem_fala || "",
       texto: scene.texto,
       musica: scene.musica || "",
+      musicaSegundos: scene.musica_segundos || 0,
       final: Boolean(ending),
       endingTitle: ending?.titulo || "",
       endingBody: ending?.texto || "",
@@ -141,6 +143,7 @@ function toStory(row: StoryRow, author: string, scenes: StudioScene[]): Story {
       speaker: scene.quem || undefined,
       body: scene.final ? undefined : scene.texto,
       music: scene.musica || undefined,
+      musicFor: scene.musicaSegundos > 0 ? scene.musicaSegundos : undefined,
       choices: scene.final
         ? undefined
         : scene.choices.map((choice) => ({
@@ -352,8 +355,8 @@ export const saveStudioDraft = createServerFn({ method: "POST" })
     for (let index = 0; index < data.scenes.length; index += 1) {
       const scene = data.scenes[index];
       await sql.query(
-        `insert into scenes (id, story_id, ordem, quem_fala, texto, musica) values ($1, $2, $3, $4, $5, $6)`,
-        [scene.id, data.id, index, scene.quem || null, scene.final ? scene.endingBody : scene.texto, scene.musica || null],
+        `insert into scenes (id, story_id, ordem, quem_fala, texto, musica, musica_segundos) values ($1, $2, $3, $4, $5, $6, $7)`,
+        [scene.id, data.id, index, scene.quem || null, scene.final ? scene.endingBody : scene.texto, scene.musica || null, scene.musicaSegundos || null],
       );
       if (scene.final) {
         await sql.query(
