@@ -25,6 +25,7 @@ import { Route as InstalarRouteImport } from './routes/instalar'
 import { Route as JardimRouteImport } from './routes/jardim'
 import { Route as LembrancasRouteImport } from './routes/lembrancas'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LojaRouteImport } from './routes/loja'
 import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as MemoriasRouteImport } from './routes/memorias'
 import { Route as MuralRouteImport } from './routes/mural'
@@ -39,6 +40,7 @@ import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as SelosRouteImport } from './routes/selos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as AdminLojaRouteImport } from './routes/admin.loja'
 import { Route as AdminModeracaoRouteImport } from './routes/admin.moderacao'
 import { Route as ApiBackupRouteImport } from './routes/api/backup'
 import { Route as AutoraSlugRouteImport } from './routes/autora.$slug'
@@ -51,6 +53,8 @@ import { Route as EsPactoRouteImport } from './routes/es.pacto'
 import { Route as EscreverConfirmacaoRouteImport } from './routes/escrever.confirmacao'
 import { Route as HistoriaSlugRouteImport } from './routes/historia.$slug'
 import { Route as LerSlugRouteImport } from './routes/ler.$slug'
+import { Route as LojaCanceladoRouteImport } from './routes/loja.cancelado'
+import { Route as LojaObrigadaRouteImport } from './routes/loja.obrigada'
 import { Route as OnboardingPactoRouteImport } from './routes/onboarding.pacto'
 import { Route as OnboardingPerfilRouteImport } from './routes/onboarding.perfil'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -137,6 +141,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LojaRoute = LojaRouteImport.update({
+  id: '/loja',
+  path: '/loja',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MapaRoute = MapaRouteImport.update({
   id: '/mapa',
   path: '/mapa',
@@ -207,6 +216,11 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLojaRoute = AdminLojaRouteImport.update({
+  id: '/admin/loja',
+  path: '/admin/loja',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminModeracaoRoute = AdminModeracaoRouteImport.update({
   id: '/admin/moderacao',
   path: '/admin/moderacao',
@@ -267,6 +281,16 @@ const LerSlugRoute = LerSlugRouteImport.update({
   path: '/ler/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LojaCanceladoRoute = LojaCanceladoRouteImport.update({
+  id: '/cancelado',
+  path: '/cancelado',
+  getParentRoute: () => LojaRoute,
+} as any)
+const LojaObrigadaRoute = LojaObrigadaRouteImport.update({
+  id: '/obrigada',
+  path: '/obrigada',
+  getParentRoute: () => LojaRoute,
+} as any)
 const OnboardingPactoRoute = OnboardingPactoRouteImport.update({
   id: '/onboarding/pacto',
   path: '/onboarding/pacto',
@@ -310,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/jardim': typeof JardimRoute
   '/lembrancas': typeof LembrancasRoute
   '/login': typeof LoginRoute
+  '/loja': typeof LojaRouteWithChildren
   '/mapa': typeof MapaRoute
   '/memorias': typeof MemoriasRoute
   '/mural': typeof MuralRoute
@@ -324,6 +349,7 @@ export interface FileRoutesByFullPath {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
   '/autora/$slug': typeof AutoraSlugRoute
@@ -335,6 +361,8 @@ export interface FileRoutesByFullPath {
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
+  '/loja/cancelado': typeof LojaCanceladoRoute
+  '/loja/obrigada': typeof LojaObrigadaRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/es/': typeof EsIndexRoute
@@ -358,6 +386,7 @@ export interface FileRoutesByTo {
   '/jardim': typeof JardimRoute
   '/lembrancas': typeof LembrancasRoute
   '/login': typeof LoginRoute
+  '/loja': typeof LojaRouteWithChildren
   '/mapa': typeof MapaRoute
   '/memorias': typeof MemoriasRoute
   '/mural': typeof MuralRoute
@@ -372,6 +401,7 @@ export interface FileRoutesByTo {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
   '/autora/$slug': typeof AutoraSlugRoute
@@ -383,6 +413,8 @@ export interface FileRoutesByTo {
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
+  '/loja/cancelado': typeof LojaCanceladoRoute
+  '/loja/obrigada': typeof LojaObrigadaRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/es': typeof EsIndexRoute
@@ -408,6 +440,7 @@ export interface FileRoutesById {
   '/jardim': typeof JardimRoute
   '/lembrancas': typeof LembrancasRoute
   '/login': typeof LoginRoute
+  '/loja': typeof LojaRouteWithChildren
   '/mapa': typeof MapaRoute
   '/memorias': typeof MemoriasRoute
   '/mural': typeof MuralRoute
@@ -422,6 +455,7 @@ export interface FileRoutesById {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
   '/api/backup': typeof ApiBackupRoute
   '/autora/$slug': typeof AutoraSlugRoute
@@ -433,6 +467,8 @@ export interface FileRoutesById {
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
+  '/loja/cancelado': typeof LojaCanceladoRoute
+  '/loja/obrigada': typeof LojaObrigadaRoute
   '/onboarding/pacto': typeof OnboardingPactoRoute
   '/onboarding/perfil': typeof OnboardingPerfilRoute
   '/es/': typeof EsIndexRoute
@@ -459,6 +495,7 @@ export interface FileRouteTypes {
     | '/jardim'
     | '/lembrancas'
     | '/login'
+    | '/loja'
     | '/mapa'
     | '/memorias'
     | '/mural'
@@ -473,6 +510,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/loja'
     | '/admin/moderacao'
     | '/api/backup'
     | '/autora/$slug'
@@ -484,6 +522,8 @@ export interface FileRouteTypes {
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
+    | '/loja/cancelado'
+    | '/loja/obrigada'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
     | '/es/'
@@ -507,6 +547,7 @@ export interface FileRouteTypes {
     | '/jardim'
     | '/lembrancas'
     | '/login'
+    | '/loja'
     | '/mapa'
     | '/memorias'
     | '/mural'
@@ -521,6 +562,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/loja'
     | '/admin/moderacao'
     | '/api/backup'
     | '/autora/$slug'
@@ -532,6 +574,8 @@ export interface FileRouteTypes {
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
+    | '/loja/cancelado'
+    | '/loja/obrigada'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
     | '/es'
@@ -556,6 +600,7 @@ export interface FileRouteTypes {
     | '/jardim'
     | '/lembrancas'
     | '/login'
+    | '/loja'
     | '/mapa'
     | '/memorias'
     | '/mural'
@@ -570,6 +615,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/admin/loja'
     | '/admin/moderacao'
     | '/api/backup'
     | '/autora/$slug'
@@ -581,6 +627,8 @@ export interface FileRouteTypes {
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
+    | '/loja/cancelado'
+    | '/loja/obrigada'
     | '/onboarding/pacto'
     | '/onboarding/perfil'
     | '/es/'
@@ -606,6 +654,7 @@ export interface RootRouteChildren {
   JardimRoute: typeof JardimRoute
   LembrancasRoute: typeof LembrancasRoute
   LoginRoute: typeof LoginRoute
+  LojaRoute: typeof LojaRouteWithChildren
   MapaRoute: typeof MapaRoute
   MemoriasRoute: typeof MemoriasRoute
   MuralRoute: typeof MuralRoute
@@ -620,6 +669,7 @@ export interface RootRouteChildren {
   SelosRoute: typeof SelosRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  AdminLojaRoute: typeof AdminLojaRoute
   AdminModeracaoRoute: typeof AdminModeracaoRoute
   ApiBackupRoute: typeof ApiBackupRoute
   AutoraSlugRoute: typeof AutoraSlugRoute
@@ -746,6 +796,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/loja': {
+      id: '/loja'
+      path: '/loja'
+      fullPath: '/loja'
+      preLoaderRoute: typeof LojaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mapa': {
       id: '/mapa'
       path: '/mapa'
@@ -844,6 +901,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/loja': {
+      id: '/admin/loja'
+      path: '/admin/loja'
+      fullPath: '/admin/loja'
+      preLoaderRoute: typeof AdminLojaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/moderacao': {
       id: '/admin/moderacao'
       path: '/admin/moderacao'
@@ -928,6 +992,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LerSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/loja/cancelado': {
+      id: '/loja/cancelado'
+      path: '/cancelado'
+      fullPath: '/loja/cancelado'
+      preLoaderRoute: typeof LojaCanceladoRouteImport
+      parentRoute: typeof LojaRoute
+    }
+    '/loja/obrigada': {
+      id: '/loja/obrigada'
+      path: '/obrigada'
+      fullPath: '/loja/obrigada'
+      preLoaderRoute: typeof LojaObrigadaRouteImport
+      parentRoute: typeof LojaRoute
+    }
     '/onboarding/pacto': {
       id: '/onboarding/pacto'
       path: '/onboarding/pacto'
@@ -1006,6 +1084,18 @@ const EscreverRouteWithChildren = EscreverRoute._addFileChildren(
   EscreverRouteChildren,
 )
 
+interface LojaRouteChildren {
+  LojaCanceladoRoute: typeof LojaCanceladoRoute
+  LojaObrigadaRoute: typeof LojaObrigadaRoute
+}
+
+const LojaRouteChildren: LojaRouteChildren = {
+  LojaCanceladoRoute: LojaCanceladoRoute,
+  LojaObrigadaRoute: LojaObrigadaRoute,
+}
+
+const LojaRouteWithChildren = LojaRoute._addFileChildren(LojaRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApoioRoute: ApoioRoute,
@@ -1023,6 +1113,7 @@ const rootRouteChildren: RootRouteChildren = {
   JardimRoute: JardimRoute,
   LembrancasRoute: LembrancasRoute,
   LoginRoute: LoginRoute,
+  LojaRoute: LojaRouteWithChildren,
   MapaRoute: MapaRoute,
   MemoriasRoute: MemoriasRoute,
   MuralRoute: MuralRoute,
@@ -1037,6 +1128,7 @@ const rootRouteChildren: RootRouteChildren = {
   SelosRoute: SelosRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  AdminLojaRoute: AdminLojaRoute,
   AdminModeracaoRoute: AdminModeracaoRoute,
   ApiBackupRoute: ApiBackupRoute,
   AutoraSlugRoute: AutoraSlugRoute,
