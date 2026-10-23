@@ -3,8 +3,8 @@ import { z } from "zod";
 import { PACTO_VERSION } from "@/lib/refugio/pacto";
 
 const DECLARACAO = {
-  pt: "Confirmo que esta música é sintética, que eu fiz, e que os direitos são meus. Não é música de outra pessoa. A responsabilidade pelo que publico, inclusive a música, é toda minha.",
-  es: "Confirmo que esta música es sintética, que yo la hice, y que los derechos son míos. No es música de otra persona. La responsabilidad de lo que publico, incluso la música, es toda mía.",
+  pt: "Confirmo que esta música fui eu quem fez, sem inteligência artificial, e que os direitos são meus. Não é música de outra pessoa nem de uma ferramenta. A responsabilidade pelo que publico, inclusive a música, é toda minha.",
+  es: "Confirmo que esta música la hice yo, sin inteligencia artificial, y que los derechos son míos. No es música de otra persona ni de una herramienta. La responsabilidad de lo que publico, incluso la música, es toda mía.",
 } as const;
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);

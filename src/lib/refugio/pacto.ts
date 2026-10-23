@@ -1,6 +1,6 @@
 import { ageFromBirth, readBirth, writeBirth } from "@/lib/refugio/reading-local";
 
-export const PACTO_VERSION = 2;
+export const PACTO_VERSION = 3;
 const KEY = "refugio-pacto";
 const NEXT = "refugio-pacto-next";
 
