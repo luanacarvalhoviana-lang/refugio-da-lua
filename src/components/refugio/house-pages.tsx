@@ -4,6 +4,8 @@ import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { confirmStoryCheckout, openPlanPortal, readHousePlan, startStoryCheckout, storyCheckoutReady } from "@/lib/refugio/billing";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
+import { listStoryLetters } from "@/lib/refugio/letter-cloud";
+import { readLetters, type KeptLetter } from "@/lib/refugio/kept-letters";
 import { loadGardenCloud } from "@/lib/refugio/progress-cloud";
 import { readEndings, type SavedEnding } from "@/lib/refugio/reading-local";
 
@@ -195,9 +197,11 @@ export function HelpPage() {
 export function GardenPage() {
   const { t } = useHouse();
   const [endings, setEndings] = useState<SavedEnding[]>([]);
+  const [letters, setLetters] = useState<KeptLetter[]>([]);
   useEffect(() => {
     const local = readEndings();
     setEndings(local);
+    setLetters(readLetters());
     void loadGardenCloud()
       .then((result) => {
         if (!result.signedIn) return;
@@ -205,6 +209,15 @@ export function GardenPage() {
         for (const item of result.endings) merged.set(`${item.lang}:${item.slug}:${item.key}`, item);
         for (const item of local) merged.set(`${item.lang}:${item.slug}:${item.key}`, item);
         setEndings([...merged.values()]);
+      })
+      .catch(() => undefined);
+    void listStoryLetters()
+      .then((result) => {
+        if (!result.signedIn) return;
+        const merged = new Map<string, KeptLetter>();
+        for (const item of result.letters) merged.set(`${item.lang}:${item.slug}:${item.key}`, item);
+        for (const item of readLetters()) merged.set(`${item.lang}:${item.slug}:${item.key}`, item);
+        setLetters([...merged.values()]);
       })
       .catch(() => undefined);
   }, []);
@@ -228,6 +241,17 @@ export function GardenPage() {
             ))}
           </div>
         )}
+        {letters.length > 0 ? (
+          <div className="flower-grid">
+            {letters.map((letter) => (
+              <article key={`${letter.slug}-${letter.key}`} className="letter-sheet">
+                <span>{t.letterFrom.replace("{name}", letter.from)}</span>
+                <strong>{letter.story}</strong>
+                <p>{letter.text}</p>
+              </article>
+            ))}
+          </div>
+        ) : null}
       </section>
     </StoryShell>
   );

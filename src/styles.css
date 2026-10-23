@@ -3729,6 +3729,16 @@ html.protect-on .diary-card::after {
 }
 .reader-choices button small { color: #f6d77a; font-size: 12px; letter-spacing: .02em; }
 .reader-end { display: grid; gap: 10px; justify-items: start; }
+.diary-slip, .letter-sheet {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(246, 215, 122, 0.16);
+  border: 1px solid rgba(246, 215, 122, 0.4);
+}
+.letter-sheet p { margin: 0; }
 .path-notes { margin-top: 18px; display: grid; gap: 10px; }
 .path-notes ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .path-notes li {

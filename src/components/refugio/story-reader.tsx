@@ -12,6 +12,10 @@ import { AccessMark } from "@/components/refugio/access-mark";
 import { saveKeepsake } from "@/lib/refugio/night-cloud";
 import { loadStudioStory } from "@/lib/refugio/studio-cloud";
 import { CommunityDesk } from "@/components/refugio/community";
+import { letterFor, thoughtFor } from "@/lib/refugio/inner-life";
+import { keepLetter } from "@/lib/refugio/kept-letters";
+import { keepStoryLetter } from "@/lib/refugio/letter-cloud";
+import { MoonNightNote } from "@/components/refugio/moon-night";
 import { artOf, authorSlug, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
 import { crossfade, sourceForScene } from "@/lib/refugio/music";
 import { HiddenPath, StoryExtras, TipBox } from "@/components/refugio/shop-page";
@@ -45,7 +49,9 @@ export function StoryReader({ slug }: { slug: string }) {
   const [ageReady, setAgeReady] = useState(false);
   const [kept, setKept] = useState(false);
   const [trail, setTrail] = useState<Array<{ sceneId: string; affinity: number; clues: string[] }>>([]);
-  const [arrived, setArrived] = useState<{ from: string; choiceId: string } | null>(null);
+  const [arrived, setArrived] = useState<{ from: string; choiceId: string; thought: string } | null>(null);
+  const [letterKept, setLetterKept] = useState(false);
+  useEffect(() => { setLetterKept(false); }, [sceneId]);
   const [samePercent, setSamePercent] = useState<number | null>(null);
   const [volume, setVolume] = useState(0.35);
   const slots = useRef<Array<HTMLAudioElement | null>>([null, null]);
@@ -198,10 +204,11 @@ export function StoryReader({ slug }: { slug: string }) {
     return (
       <StoryShell>
         <section className="house-hero">
-          <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} />
+          <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} />
           <h1>{story.title}</h1>
           <p className="soon-lead">{story.synopsis.split(". ").slice(0, 2).join(". ")}</p>
           <p>{t.lockCheia}</p>
+          <MoonNightNote />
           <p><a className="house-primary" href="/planos">{t.navPlans}</a></p>
         </section>
       </StoryShell>
@@ -214,7 +221,7 @@ export function StoryReader({ slug }: { slug: string }) {
     if (choice.clue) setClues(nextClues);
     setAffinity(nextAffinity);
     setTrail((current) => [...current, { sceneId, affinity, clues }]);
-    setArrived({ from: sceneId, choiceId: choice.id });
+    setArrived({ from: sceneId, choiceId: choice.id, thought: choice.thought || thoughtFor(story!.slug, lang, sceneId, choice.id) });
     setSamePercent(null);
     setSceneId(choice.to);
     persist(story!, choice.to, nextAffinity, nextClues);
@@ -309,6 +316,7 @@ export function StoryReader({ slug }: { slug: string }) {
           </div>
         </header>
         <p className="house-note reader-keep">{kept ? t.savedAccount : t.savedDevice}</p>
+        {story.moonNight ? <MoonNightNote /> : null}
         <div className="reader-layout">
           <aside className="reader-side">
             <p className="soon-kicker">{t.affinity}</p>
@@ -322,6 +330,12 @@ export function StoryReader({ slug }: { slug: string }) {
           <div className="reader-sheet">
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
             <p className="reader-body">{scene.ending ? scene.ending.body : scene.body}</p>
+            {arrived?.thought && !scene.ending ? (
+              <aside className="diary-slip">
+                <p className="soon-kicker">{t.diary}</p>
+                <p>{arrived.thought}</p>
+              </aside>
+            ) : null}
             <p className="house-note">
               <button
                 type="button"
@@ -346,6 +360,15 @@ export function StoryReader({ slug }: { slug: string }) {
                 <p className="soon-kicker">{t.found}</p>
                 <h2>{scene.ending.title}</h2>
                 <p>{scene.ending.flower}</p>
+                <EndingLetter
+                  slug={story.slug}
+                  lang={lang}
+                  story={story.title}
+                  endingKey={scene.ending.key}
+                  letter={scene.ending.letter || letterFor(story.slug, lang, scene.ending.key)}
+                  kept={letterKept}
+                  onKept={() => setLetterKept(true)}
+                />
                 {trail.length > 0 ? (
                   <button type="button" onClick={stepBack}>
                     {t.backPath}
@@ -391,6 +414,43 @@ export function StoryReader({ slug }: { slug: string }) {
   );
 }
 
+function EndingLetter({
+  slug,
+  lang,
+  story,
+  endingKey,
+  letter,
+  kept,
+  onKept,
+}: {
+  slug: string;
+  lang: Lang;
+  story: string;
+  endingKey: string;
+  letter: { from: string; text: string } | null;
+  kept: boolean;
+  onKept: () => void;
+}) {
+  const { t } = useHouse();
+  if (!letter) return null;
+  return (
+    <article className="letter-sheet">
+      <p className="soon-kicker">{t.letterFrom.replace("{name}", letter.from)}</p>
+      <p>{letter.text}</p>
+      <button
+        type="button"
+        onClick={() => {
+          keepLetter({ slug, lang, key: endingKey, story, from: letter.from, text: letter.text });
+          void keepStoryLetter({ data: { slug, lang, key: endingKey, story, from: letter.from, text: letter.text } }).catch(() => undefined);
+          onKept();
+        }}
+      >
+        {kept ? t.letterKept : t.letterKeep}
+      </button>
+    </article>
+  );
+}
+
 export function StoryPage({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
   const shelf = useShelf(lang);
@@ -410,7 +470,7 @@ export function StoryPage({ slug }: { slug: string }) {
         <p className="soon-kicker">
           {story.place} · {t.rating} {story.rating}
         </p>
-        <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} />
+        <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} />
         <h1>{story.title}</h1>
         <p className="soon-lead">{story.synopsis}</p>
         <p className="house-note">
@@ -444,6 +504,7 @@ export function StoryList() {
     <StoryShell>
       <section className="house-block">
         <h1>{t.navStories}</h1>
+        <MoonNightNote />
         {featured.length > 0 ? (
           <p className="house-note">
             {t.sealStar}{" "}
@@ -455,7 +516,7 @@ export function StoryList() {
         <div className="story-list">
           {shelf.map((story) => (
             <a key={story.slug} className="story-card" href={`/historia/${story.slug}`}>
-              <span className="soon-kicker">{story.place} <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} /></span>
+              <span className="soon-kicker">{story.place} <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} /></span>
               <strong>{story.title}</strong>
               <em>
                 {story.rating} · {story.minutes} {t.minutes}

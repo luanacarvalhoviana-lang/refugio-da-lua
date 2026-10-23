@@ -35,7 +35,7 @@ function StatsBlock({ title, wait, scenes }: { title: string; wait: string; scen
 }
 
 function blankScene(): StudioScene {
-  return { id: crypto.randomUUID(), quem: "", texto: "", musica: "", final: false, endingTitle: "", endingBody: "", flower: "", choices: [] };
+  return { id: crypto.randomUUID(), quem: "", texto: "", musica: "", final: false, endingTitle: "", endingBody: "", flower: "", carta: "", cartaDe: "", choices: [] };
 }
 
 function issueText(issue: StudioIssue, t: ReturnType<typeof useHouse>["t"]) {
@@ -177,6 +177,8 @@ export function StudioPage() {
                   <label>{t.studioEndTitle}<input value={scene.endingTitle} onChange={(event) => patchScene(index, { endingTitle: event.target.value })} /></label>
                   <label>{t.studioEndBody}<textarea rows={4} value={scene.endingBody} onChange={(event) => patchScene(index, { endingBody: event.target.value })} /></label>
                   <label>{t.studioFlower}<input value={scene.flower} onChange={(event) => patchScene(index, { flower: event.target.value })} /></label>
+                  <label>{t.studioLetterFrom}<input value={scene.cartaDe} onChange={(event) => patchScene(index, { cartaDe: event.target.value })} /></label>
+                  <label>{t.studioLetter}<textarea rows={3} value={scene.carta} onChange={(event) => patchScene(index, { carta: event.target.value })} /></label>
                 </>
               ) : (
                 <>
@@ -220,10 +222,14 @@ export function StudioPage() {
                         {t.studioClue}
                         <input value={choice.pista} onChange={(event) => patchChoice(index, choiceIndex, { pista: event.target.value })} />
                       </label>
+                      <label>
+                        {t.studioDiary}
+                        <input value={choice.diario} onChange={(event) => patchChoice(index, choiceIndex, { diario: event.target.value })} />
+                      </label>
                     </div>
                   ))}
                   {scene.choices.length < 3 ? (
-                    <button type="button" onClick={() => patchScene(index, { choices: [...scene.choices, { id: crypto.randomUUID(), texto: "", vai: "", afinidade: 0, pista: "" }] })}>
+                    <button type="button" onClick={() => patchScene(index, { choices: [...scene.choices, { id: crypto.randomUUID(), texto: "", vai: "", afinidade: 0, pista: "", diario: "" }] })}>
                       {t.studioAddChoice}
                     </button>
                   ) : null}

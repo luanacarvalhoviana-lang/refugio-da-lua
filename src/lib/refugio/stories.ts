@@ -7,6 +7,7 @@ export type Choice = {
   to: string;
   affinity?: number;
   clue?: string;
+  thought?: string;
 };
 
 export type Ending = {
@@ -14,6 +15,7 @@ export type Ending = {
   title: string;
   body: string;
   flower: string;
+  letter?: { from: string; text: string };
 };
 
 export type Scene = {
@@ -41,6 +43,7 @@ export type Story = {
   access?: "aberta" | "cheia" | "antecipada";
   opensOn?: string;
   locked?: boolean;
+  moonNight?: boolean;
 };
 
 const pt: Story = {

@@ -16,6 +16,7 @@ const choiceSchema = z.object({
   vai: z.string().trim().max(40),
   afinidade: z.number().int().min(-1).max(2),
   pista: z.string().trim().max(80),
+  diario: z.string().trim().max(280).optional().default(""),
 });
 
 const sceneSchema = z.object({
@@ -27,6 +28,8 @@ const sceneSchema = z.object({
   endingTitle: z.string().trim().max(80),
   endingBody: z.string().trim().max(2000),
   flower: z.string().trim().max(80),
+  carta: z.string().trim().max(600).optional().default(""),
+  cartaDe: z.string().trim().max(40).optional().default(""),
   choices: z.array(choiceSchema).max(3),
 });
 
@@ -79,12 +82,12 @@ async function scenesOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T
     `select id, quem_fala, texto, musica, ordem from scenes where story_id = $1 order by ordem`,
     [storyId],
   );
-  const endings = await sql.query<{ scene_id: string; titulo: string; texto: string; flor: string }>(
-    `select scene_id, titulo, texto, flor from endings where story_id = $1`,
+  const endings = await sql.query<{ scene_id: string; titulo: string; texto: string; flor: string; carta: string | null; carta_de: string | null }>(
+    `select scene_id, titulo, texto, flor, carta, carta_de from endings where story_id = $1`,
     [storyId],
   );
-  const choices = await sql.query<{ id: string; scene_id: string; texto: string; vai_para_cena: string | null; afinidade: number; pista: string | null; ordem: number }>(
-    `select c.id, c.scene_id, c.texto, c.vai_para_cena, c.afinidade, c.pista, c.ordem
+  const choices = await sql.query<{ id: string; scene_id: string; texto: string; vai_para_cena: string | null; afinidade: number; pista: string | null; diario: string | null; ordem: number }>(
+    `select c.id, c.scene_id, c.texto, c.vai_para_cena, c.afinidade, c.pista, c.diario, c.ordem
      from choices c
      join scenes s on s.id = c.scene_id
      where s.story_id = $1
@@ -103,6 +106,8 @@ async function scenesOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T
       endingTitle: ending?.titulo || "",
       endingBody: ending?.texto || "",
       flower: ending?.flor || "",
+      carta: ending?.carta || "",
+      cartaDe: ending?.carta_de || "",
       choices: ending
         ? []
         : choices
@@ -113,6 +118,7 @@ async function scenesOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T
               vai: choice.vai_para_cena || "",
               afinidade: choice.afinidade,
               pista: choice.pista || "",
+              diario: choice.diario || "",
             })),
     };
   });
@@ -143,9 +149,16 @@ function toStory(row: StoryRow, author: string, scenes: StudioScene[]): Story {
             to: choice.vai,
             affinity: choice.afinidade,
             clue: choice.pista || undefined,
+            thought: choice.diario || undefined,
           })),
       ending: scene.final
-        ? { key: scene.id, title: scene.endingTitle, body: scene.endingBody, flower: scene.flower }
+        ? {
+            key: scene.id,
+            title: scene.endingTitle,
+            body: scene.endingBody,
+            flower: scene.flower,
+            letter: scene.carta.trim() ? { from: scene.cartaDe || author, text: scene.carta } : undefined,
+          }
         : undefined,
     })),
   };
@@ -338,16 +351,16 @@ export const saveStudioDraft = createServerFn({ method: "POST" })
       );
       if (scene.final) {
         await sql.query(
-          `insert into endings (id, story_id, scene_id, titulo, texto, flor) values ($1, $2, $3, $4, $5, $6)`,
-          [crypto.randomUUID(), data.id, scene.id, scene.endingTitle, scene.endingBody, scene.flower],
+          `insert into endings (id, story_id, scene_id, titulo, texto, flor, carta, carta_de) values ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [crypto.randomUUID(), data.id, scene.id, scene.endingTitle, scene.endingBody, scene.flower, scene.carta || null, scene.cartaDe || null],
         );
       } else {
         for (let choiceIndex = 0; choiceIndex < scene.choices.length; choiceIndex += 1) {
           const choice = scene.choices[choiceIndex];
           await sql.query(
-            `insert into choices (id, scene_id, texto, vai_para_cena, afinidade, pista, ordem)
-             values ($1, $2, $3, $4, $5, $6, $7)`,
-            [choice.id, scene.id, choice.texto, choice.vai, choice.afinidade, choice.pista || null, choiceIndex],
+            `insert into choices (id, scene_id, texto, vai_para_cena, afinidade, pista, diario, ordem)
+             values ($1, $2, $3, $4, $5, $6, $7, $8)`,
+            [choice.id, scene.id, choice.texto, choice.vai, choice.afinidade, choice.pista || null, choice.diario || null, choiceIndex],
           );
         }
       }

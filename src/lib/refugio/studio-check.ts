@@ -4,6 +4,7 @@ export type StudioChoice = {
   vai: string;
   afinidade: number;
   pista: string;
+  diario: string;
 };
 
 export type StudioScene = {
@@ -15,6 +16,8 @@ export type StudioScene = {
   endingTitle: string;
   endingBody: string;
   flower: string;
+  carta: string;
+  cartaDe: string;
   choices: StudioChoice[];
 };
 

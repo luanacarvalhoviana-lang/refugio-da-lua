@@ -3,6 +3,7 @@ import { z } from "zod";
 import { PACTO_VERSION } from "@/lib/refugio/pacto";
 import { presentStory } from "@/lib/refugio/story-access";
 import { ACTIVE_PASS_SQL } from "@/lib/refugio/story-plans";
+import { moonStatus } from "@/lib/refugio/full-moon";
 import { storyBillingLocks } from "@/lib/refugio/studio-limits";
 import type { Story } from "@/lib/refugio/stories";
 
@@ -48,7 +49,8 @@ export const listNightStories = createServerFn({ method: "POST" })
       );
       bought = new Set(rows.map((row) => row.item));
     }
-    return nightStories[data.lang].map((story: Story) => presentStory(story, allowed || bought.has(story.slug), todayISO()));
+    const moonOpen = moonStatus().open;
+    return nightStories[data.lang].map((story: Story) => presentStory(story, allowed || bought.has(story.slug), todayISO(), moonOpen));
   });
 
 export const listKeepsakes = createServerFn({ method: "GET" })
