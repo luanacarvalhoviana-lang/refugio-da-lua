@@ -12,6 +12,7 @@ import { AccessMark } from "@/components/refugio/access-mark";
 import { saveKeepsake } from "@/lib/refugio/night-cloud";
 import { loadStudioStory } from "@/lib/refugio/studio-cloud";
 import { CommunityDesk } from "@/components/refugio/community";
+import { reportTrack } from "@/lib/refugio/track-cloud";
 import { letterFor, thoughtFor } from "@/lib/refugio/inner-life";
 import { keepLetter } from "@/lib/refugio/kept-letters";
 import { keepStoryLetter } from "@/lib/refugio/letter-cloud";
@@ -338,7 +339,22 @@ export function StoryReader({ slug }: { slug: string }) {
           </aside>
           <div className="reader-sheet">
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
-            {scene.music?.startsWith("t") ? <p className="house-note">{t.trackCredit}</p> : null}
+            {scene.music?.startsWith("t") ? (
+              <p className="house-note">
+                {t.trackCredit}
+                {" · "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    void reportTrack({ data: { id: scene.music || "" } })
+                      .then((result) => setBoxNote(result.ok ? t.trackReported : result.reason === "pacto" ? t.keepPact : t.keepNeed))
+                      .catch(() => setBoxNote(t.keepNeed));
+                  }}
+                >
+                  {t.trackReport}
+                </button>
+              </p>
+            ) : null}
             <p className="reader-body">{scene.ending ? scene.ending.body : scene.body}</p>
             {arrived?.thought && !scene.ending ? (
               <aside className="diary-slip">

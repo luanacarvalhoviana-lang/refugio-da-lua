@@ -7,7 +7,7 @@ export const Route = createFileRoute("/trilha/$id")({
       GET: async ({ params }) => {
         const { getSessionUser } = await import("@/lib/auth/verify.server");
         const user = await getSessionUser();
-        const track = await readPublicTrack(params.id, user?.id);
+        const track = await readPublicTrack(params.id, user);
         if (!track) return new Response(null, { status: 404 });
         const bytes = Buffer.from(track.audio, "base64");
         return new Response(bytes, {

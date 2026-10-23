@@ -358,7 +358,7 @@ export function StudioPage() {
 }
 
 function AuthorTracks({ tracks: mine, onChange }: { tracks: Array<{ id: string; titulo: string }>; onChange: (next: Array<{ id: string; titulo: string }>) => void }) {
-  const { t } = useHouse();
+  const { lang, t } = useHouse();
   const [titulo, setTitulo] = useState("");
   const [direitos, setDireitos] = useState(false);
   const [note, setNote] = useState("");
@@ -375,7 +375,7 @@ function AuthorTracks({ tracks: mine, onChange }: { tracks: Array<{ id: string; 
     const reader = new FileReader();
     reader.onload = () => {
       const audio = String(reader.result || "");
-      void saveAuthorTrack({ data: { titulo, mime: file.type || "audio/mpeg", audio, direitos: true } })
+      void saveAuthorTrack({ data: { titulo, mime: file.type || "audio/mpeg", audio, direitos: true, lang } })
         .then((result) => {
           if (!result.ok || !result.id) {
             setNote(result.reason === "limite" ? t.trackFull : result.reason === "grande" || result.reason === "tipo" ? t.trackBig : t.trackNeed);
@@ -395,6 +395,7 @@ function AuthorTracks({ tracks: mine, onChange }: { tracks: Array<{ id: string; 
     <div className="house-block">
       <h2>{t.trackMine}</h2>
       <p className="house-note">{t.trackLead}</p>
+      <p className="house-note">{t.trackKept}</p>
       <ul>
         {mine.map((track) => (
           <li key={track.id}>
