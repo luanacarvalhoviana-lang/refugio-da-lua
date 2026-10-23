@@ -2,34 +2,44 @@ import { useEffect, useState } from "react";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { confirmStoryCheckout, startStoryCheckout, storyCheckoutReady } from "@/lib/refugio/billing";
+import { confirmStoryCheckout, readOncePurchases, startOnceCheckout, startStoryCheckout, storyCheckoutReady } from "@/lib/refugio/billing";
 import { sendContactNote } from "@/lib/refugio/contact-cloud";
 import { loadGardenCloud } from "@/lib/refugio/progress-cloud";
 import { readEndings, type SavedEnding } from "@/lib/refugio/reading-local";
 
 export function PlansPage() {
-  const { t } = useHouse();
+  const { lang, t } = useHouse();
   const { user } = useCurrentUserState();
   const [ready, setReady] = useState(false);
+  const [owned, setOwned] = useState<string[]>([]);
   const [note, setNote] = useState("");
   const [pending, setPending] = useState("");
   const signedIn = Boolean(user && !user.isDevFallback);
   useEffect(() => {
     void storyCheckoutReady().then((result) => setReady(result.ready)).catch(() => setReady(false));
+    if (signedIn) {
+      void readOncePurchases().then((result) => setOwned(result.items.map((item) => item.item))).catch(() => setOwned([]));
+    }
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id");
     if (params.get("checkout") === "cancelled") setNote(t.planBack);
     if (params.get("checkout") === "success" && sessionId) {
       void confirmStoryCheckout({ data: { sessionId } })
-        .then((result) => setNote(result.paid ? t.planOpened : t.planFail))
+        .then((result) => setNote(result.paid ? (result.item ? t.onceDone : t.planOpened) : result.item ? t.oncePending : t.planFail))
         .catch(() => setNote(t.planFail));
     }
-  }, [t.planBack, t.planFail, t.planOpened]);
+  }, [signedIn, t.onceDone, t.oncePending, t.planBack, t.planFail, t.planOpened]);
   const cards = [
     [t.freeName, t.freePrice, "", t.freeItems, ""] as const,
     [t.fullName, t.fullPrice, t.fullYear, t.fullItems, "lua_cheia"] as const,
     [t.starName, t.starPrice, t.starYear, t.starItems, "constelacao"] as const,
   ];
+  const singles = [
+    ["pack-noite", t.oncePack, t.oncePackPrice, t.oncePackBody],
+    ["a-lampada", t.onceLamp, t.onceLampPrice, t.onceLampBody],
+    ["antes-da-lua", t.onceMoon, t.onceMoonPrice, t.onceMoonBody],
+    ["gorjeta", t.onceTip, t.onceTipPrice, t.onceTipBody],
+  ] as const;
   function subscribe(plan: "lua_cheia" | "constelacao", interval: "month" | "year") {
     if (!ready) {
       setNote(t.planWait);
@@ -41,6 +51,21 @@ export function PlansPage() {
       .then((result) => {
         if (result.ok && result.url) window.location.assign(result.url);
         else setNote(result.reason === "conta" ? t.planEnter : t.planWait);
+      })
+      .catch(() => setNote(t.planFail))
+      .finally(() => setPending(""));
+  }
+  function buy(item: "pack-noite" | "a-lampada" | "antes-da-lua" | "gorjeta") {
+    if (!ready) {
+      setNote(t.planWait);
+      return;
+    }
+    setPending(item);
+    setNote("");
+    void startOnceCheckout({ data: { item, origin: window.location.origin, lang } })
+      .then((result) => {
+        if (result.ok && result.url) window.location.assign(result.url);
+        else setNote(result.reason === "tem" ? t.onceOwned : result.reason === "conta" ? t.planEnter : t.planWait);
       })
       .catch(() => setNote(t.planFail))
       .finally(() => setPending(""));
@@ -81,6 +106,32 @@ export function PlansPage() {
             ) : null}
           </article>
         ))}
+      </section>
+      <section className="house-block">
+        <h2>{t.onceTitle}</h2>
+        <p className="soon-lead">{t.onceLead}</p>
+        <div className="plan-grid once-grid">
+          {singles.map(([item, name, price, body]) => (
+            <article key={item}>
+              <h2>{name}</h2>
+              <p className="plan-price">{price}</p>
+              <p>{body}</p>
+              <div className="plan-actions">
+                {signedIn ? (
+                  item !== "gorjeta" && owned.includes(item) ? (
+                    <p className="house-note">{t.onceOwned}</p>
+                  ) : (
+                    <button type="button" disabled={pending !== ""} onClick={() => buy(item)}>
+                      {pending === item ? t.passWorking : t.onceBuy}
+                    </button>
+                  )
+                ) : (
+                  <a className="house-primary" href="/conta">{t.planEnter}</a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
       {note ? <p className="house-note plan-note">{note}</p> : null}
       <p className="house-note plan-note">{ready ? t.plansOpen : t.plansNote}</p>

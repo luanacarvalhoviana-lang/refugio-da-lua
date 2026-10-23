@@ -275,7 +275,11 @@ export const saveStudioDraft = createServerFn({ method: "POST" })
       const premiumPlace = /templ|varanda|balc/i.test(place[0]?.lugar || "");
       if (premiumMusic || premiumPlace) {
         const pass = await sql.query<{ plan: string }>(ACTIVE_PASS_SQL, [user.id]);
-        if (pass[0]?.plan !== "constelacao") return { ok: false as const, reason: "plano" as const };
+        const pack = await sql.query<{ id: string }>(
+          `select id from story_purchases where user_id = $1 and item = 'pack-noite' and status = 'paid' limit 1`,
+          [user.id],
+        );
+        if (pass[0]?.plan !== "constelacao" && !pack[0]) return { ok: false as const, reason: "plano" as const };
       }
     }
     const ids = data.scenes.map((scene) => scene.id);

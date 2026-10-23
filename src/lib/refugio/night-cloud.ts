@@ -35,7 +35,17 @@ export const listNightStories = createServerFn({ method: "POST" })
     const user = await sessionUser();
     const email = user?.email?.trim().toLowerCase() || "";
     const allowed = await mayOpen(user?.id, email);
-    return nightStories[data.lang].map((story: Story) => presentStory(story, allowed, todayISO()));
+    let bought = new Set<string>();
+    if (!allowed && user?.id && storyBillingLocks()) {
+      const { getSql } = await import("@/lib/db");
+      const sql = await getSql();
+      const rows = await sql.query<{ item: string }>(
+        `select item from story_purchases where user_id = $1 and status = 'paid' and item in ('a-lampada', 'antes-da-lua')`,
+        [user.id],
+      );
+      bought = new Set(rows.map((row) => row.item));
+    }
+    return nightStories[data.lang].map((story: Story) => presentStory(story, allowed || bought.has(story.slug), todayISO()));
   });
 
 export const listKeepsakes = createServerFn({ method: "GET" })

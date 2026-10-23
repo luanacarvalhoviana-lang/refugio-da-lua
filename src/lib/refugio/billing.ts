@@ -99,6 +99,42 @@ export const refundStoryPlan = createServerFn({ method: "POST" })
   return refundStoryPass(user.id);
 });
 
+export const startOnceCheckout = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      item: z.enum(["pack-noite", "a-lampada", "antes-da-lua", "gorjeta"]),
+      origin: z.string().url(),
+      lang: z.enum(["pt", "es"]),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const { getSessionUser } = await import("@/lib/auth/verify.server");
+    const user = await getSessionUser();
+    const email = user?.email?.trim().toLowerCase() || "";
+    if (!user?.id || !email) return { ok: false as const, reason: "conta" as const };
+    const { isStripeConfigured, createOnceCheckout } = await import("./stripe.server");
+    if (!isStripeConfigured()) return { ok: false as const, reason: "stripe" as const };
+    return createOnceCheckout({ item: data.item, email, userId: user.id, origin: data.origin, lang: data.lang });
+  });
+
+export const readOncePurchases = createServerFn({ method: "GET" }).handler(async () => {
+  const { getSessionUser } = await import("@/lib/auth/verify.server");
+  const user = await getSessionUser();
+  if (!user?.id) return { signedIn: false as const, items: [] as { id: string; item: string; amount: number; criado_em: string | Date }[] };
+  const { listOncePurchases } = await import("./stripe.server");
+  return { signedIn: true as const, items: await listOncePurchases(user.id) };
+});
+
+export const refundOnceBuy = createServerFn({ method: "POST" })
+  .validator(z.object({ id: z.string().min(8) }))
+  .handler(async ({ data }) => {
+    const { getSessionUser } = await import("@/lib/auth/verify.server");
+    const user = await getSessionUser();
+    if (!user?.id) return { ok: false as const, reason: "conta" as const };
+    const { refundOncePurchase } = await import("./stripe.server");
+    return refundOncePurchase(user.id, data.id);
+  });
+
 export const readVipSubscription = createServerFn({ method: "POST" })
   .validator(z.object({ email: z.email() }))
   .handler(async ({ data }) => {

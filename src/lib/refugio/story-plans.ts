@@ -12,6 +12,20 @@ export const STORY_PLANS: Record<
 
 export const REFUND_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
+export const ONCE_ITEMS = {
+  "pack-noite": { amount: 690, name: "Pacote da noite" },
+  "a-lampada": { amount: 690, name: "A lâmpada que não devia acender" },
+  "antes-da-lua": { amount: 490, name: "Um dia antes da lua" },
+  gorjeta: { amount: 690, name: "Um café para a casa" },
+} as const;
+
+export type OnceKey = keyof typeof ONCE_ITEMS;
+
+export function onceKey(value: string | undefined): OnceKey | null {
+  if (!value || !(value in ONCE_ITEMS)) return null;
+  return value as OnceKey;
+}
+
 export function withinRefundWindow(startedAt: string | Date, now = Date.now()) {
   const start = new Date(startedAt).getTime();
   if (!Number.isFinite(start)) return false;

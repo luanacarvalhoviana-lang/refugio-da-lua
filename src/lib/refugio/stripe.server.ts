@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { getSql } from "@/lib/db";
 import { vipPlanCatalog, type VipPlanKey, type VipSubscriptionStatus } from "@/lib/refugio/vip";
-import { STORY_PLANS, type StoryInterval, type StoryPlanKey, withinRefundWindow } from "@/lib/refugio/story-plans";
+import { STORY_PLANS, onceKey, type OnceKey, type StoryInterval, type StoryPlanKey, withinRefundWindow, ONCE_ITEMS } from "@/lib/refugio/story-plans";
 
 const STRIPE_API = "https://api.stripe.com/v1";
 
@@ -266,6 +266,19 @@ export async function confirmStoryCheckout(sessionId: string) {
   const paid = session.payment_status === "paid" || session.status === "complete";
   const plan = storyPlanOf(metadata.plan);
   const userId = metadata.user_id || "";
+  if (metadata.kind === "once") {
+    const item = onceKey(metadata.item);
+    if (session.payment_status === "paid" && item && userId) {
+      await grantOncePurchase({
+        userId,
+        email: (session.customer_details?.email || session.customer_email || metadata.email || "").toLowerCase(),
+        item,
+        sessionId,
+      });
+      return { paid: true, plan: null, item };
+    }
+    return { paid: false, plan: null, item };
+  }
   if (metadata.kind === "story" && paid && plan && userId) {
     await grantStoryPass({
       userId,
@@ -276,7 +289,92 @@ export async function confirmStoryCheckout(sessionId: string) {
       stripeSubscriptionId: idOf(session.subscription),
     });
   }
-  return { paid: Boolean(paid && plan), plan };
+  return { paid: Boolean(paid && plan), plan, item: null as string | null };
+}
+
+export async function grantOncePurchase(row: { userId: string; email: string; item: OnceKey; sessionId: string }) {
+  if (!row.userId || !row.sessionId) return;
+  const sql = await getSql();
+  await sql.query(
+    `insert into story_purchases (id, user_id, item, amount, status, stripe_session_id, email)
+     values ($1, $2, $3, $4, 'paid', $5, $6)
+     on conflict (stripe_session_id) do nothing`,
+    [crypto.randomUUID(), row.userId, row.item, ONCE_ITEMS[row.item].amount, row.sessionId, row.email || null],
+  );
+}
+
+export async function createOnceCheckout(input: {
+  item: OnceKey;
+  email: string;
+  userId: string;
+  origin: string;
+  lang: "pt" | "es";
+}) {
+  const details = ONCE_ITEMS[input.item];
+  const sql = await getSql();
+  if (input.item !== "gorjeta") {
+    const owned = await sql.query<{ id: string }>(
+      `select id from story_purchases where user_id = $1 and item = $2 and status = 'paid' limit 1`,
+      [input.userId, input.item],
+    );
+    if (owned[0]) return { ok: false as const, reason: "tem" as const };
+  }
+  const body: Record<string, string> = {
+    mode: "payment",
+    success_url: `${input.origin}/planos?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${input.origin}/planos?checkout=cancelled`,
+    customer_email: input.email,
+    locale: input.lang === "es" ? "es" : "pt-BR",
+    "line_items[0][quantity]": "1",
+    "line_items[0][price_data][currency]": "brl",
+    "line_items[0][price_data][unit_amount]": String(details.amount),
+    "line_items[0][price_data][product_data][name]": `Refúgio da Lua — ${details.name}`,
+    "line_items[0][price_data][product_data][description]": "Compra única em real. Cartão ou Pix. 7 dias para o dinheiro voltar.",
+    "metadata[kind]": "once",
+    "metadata[item]": input.item,
+    "metadata[user_id]": input.userId,
+    "metadata[email]": input.email,
+    "payment_intent_data[metadata][kind]": "once",
+    "payment_intent_data[metadata][item]": input.item,
+    "payment_intent_data[metadata][user_id]": input.userId,
+  };
+  let session: { url?: string };
+  try {
+    session = await stripeForm("/checkout/sessions", { ...body, "payment_method_types[0]": "card", "payment_method_types[1]": "pix" });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (!/pix/i.test(message)) throw error;
+    session = await stripeForm("/checkout/sessions", { ...body, "payment_method_types[0]": "card" });
+  }
+  if (!session.url) throw new Error("O Stripe não devolveu a página de pagamento.");
+  return { ok: true as const, url: session.url };
+}
+
+export async function listOncePurchases(userId: string) {
+  const sql = await getSql();
+  return sql.query<{ id: string; item: string; amount: number; criado_em: string | Date }>(
+    `select id, item, amount, criado_em from story_purchases
+     where user_id = $1 and status = 'paid' order by criado_em desc limit 20`,
+    [userId],
+  );
+}
+
+export async function refundOncePurchase(userId: string, purchaseId: string) {
+  const sql = await getSql();
+  const rows = await sql.query<{ id: string; criado_em: string | Date; stripe_session_id: string | null }>(
+    `select id, criado_em, stripe_session_id from story_purchases
+     where id = $1 and user_id = $2 and status = 'paid' limit 1`,
+    [purchaseId, userId],
+  );
+  const row = rows[0];
+  if (!row?.stripe_session_id) return { ok: false as const, reason: "sem" as const };
+  if (!withinRefundWindow(row.criado_em)) return { ok: false as const, reason: "prazo" as const };
+  const session = await stripeGet(`/checkout/sessions/${encodeURIComponent(row.stripe_session_id)}`);
+  const payment = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id || "";
+  if (!payment) return { ok: false as const, reason: "stripe" as const };
+  await stripeForm("/refunds", { payment_intent: payment });
+  await sql.query(`update story_purchases set status = 'refunded' where id = $1`, [row.id]);
+  return { ok: true as const };
 }
 
 type PassRow = {
@@ -376,6 +474,23 @@ export async function handleStripeWebhook(rawBody: string, signature: string | n
   };
   const object = event.data?.object ?? {};
   const type = event.type || "";
+  if (type === "checkout.session.completed" || type === "checkout.session.async_payment_succeeded") {
+    const metadata = (object.metadata as Record<string, string> | undefined) ?? {};
+    const item = onceKey(metadata.item);
+    if (metadata.kind === "once") {
+      if (object.payment_status === "paid" && item && metadata.user_id && typeof object.id === "string") {
+        await grantOncePurchase({
+          userId: metadata.user_id,
+          email: String(
+            (object.customer_details as { email?: string } | undefined)?.email || object.customer_email || metadata.email || "",
+          ).toLowerCase(),
+          item,
+          sessionId: object.id,
+        });
+      }
+      if (type === "checkout.session.async_payment_succeeded" || metadata.kind === "once") return { ok: true, type };
+    }
+  }
 
   if (type === "checkout.session.completed") {
     const metadata = (object.metadata as Record<string, string> | undefined) ?? {};

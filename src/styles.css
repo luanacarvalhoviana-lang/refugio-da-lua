@@ -3612,6 +3612,7 @@ html.protect-on .diary-card::after {
 .house-steps, .plan-grid, .story-list, .flower-grid { display: grid; gap: 12px; }
 @media (min-width: 800px) {
   .house-steps, .plan-grid { grid-template-columns: repeat(3, 1fr); }
+  .plan-grid.once-grid { grid-template-columns: 1fr 1fr; }
   .reader-layout { grid-template-columns: 1.4fr .7fr; }
 }
 .house-steps article, .plan-grid article, .story-card, .flower-grid article, .reader-sheet, .reader-side {
@@ -3644,6 +3645,9 @@ html.protect-on .diary-card::after {
 }
 .plan-actions button:disabled { opacity: 0.6; cursor: wait; }
 .pass-panel { margin-top: 18px; }
+.once-owned { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.once-owned li { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.once-owned button { border: 0; background: transparent; color: inherit; text-decoration: underline; cursor: pointer; font: inherit; }
 .plan-grid ul { margin: 12px 0 0; padding-left: 18px; }
 .plan-note { padding: 0 20px 24px; max-width: 62ch; }
 .house-luna { display: flex; gap: 14px; align-items: center; padding: 10px 20px 20px; max-width: 720px; }

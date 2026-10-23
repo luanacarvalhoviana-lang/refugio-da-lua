@@ -3,12 +3,13 @@ import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { confirmPasswordReset, requestPasswordReset, signInEmail, signInGoogle, signUpEmail, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { AuthorEditor } from "@/components/refugio/author-page";
-import { cancelStoryPlan, readStoryPass, refundStoryPlan } from "@/lib/refugio/billing";
+import { cancelStoryPlan, readOncePurchases, readStoryPass, refundOnceBuy, refundStoryPlan } from "@/lib/refugio/billing";
 
 function PassPanel() {
   const { t } = useHouse();
   const { user } = useCurrentUserState();
   const [pass, setPass] = useState<{ plan: string; cancelAt: string | Date | null; refundable: boolean } | null>(null);
+  const [buys, setBuys] = useState<{ id: string; item: string; criado_em: string | Date }[]>([]);
   const [note, setNote] = useState("");
   const [pending, setPending] = useState(false);
   useEffect(() => {
@@ -16,6 +17,9 @@ function PassPanel() {
     void readStoryPass()
       .then((result) => setPass(result.pass))
       .catch(() => setPass(null));
+    void readOncePurchases()
+      .then((result) => setBuys(result.items))
+      .catch(() => setBuys([]));
   }, [user]);
   if (!user || user.isDevFallback) return null;
   const name = pass?.plan === "constelacao" ? t.passStar : pass?.plan === "lua_cheia" ? t.passCheia : "";
@@ -61,6 +65,33 @@ function PassPanel() {
             </button>
           ) : null}
         </div>
+      ) : null}
+      {buys.length > 0 ? (
+        <ul className="once-owned">
+          {buys.map((buy) => (
+            <li key={buy.id}>
+              <span>{buy.item === "pack-noite" ? t.oncePack : buy.item === "a-lampada" ? t.onceLamp : buy.item === "antes-da-lua" ? t.onceMoon : t.onceTip}</span>
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => {
+                  setPending(true);
+                  void refundOnceBuy({ data: { id: buy.id } })
+                    .then((result) => {
+                      if (result.ok) {
+                        setBuys((list) => list.filter((item) => item.id !== buy.id));
+                        setNote(t.passRefunded);
+                      } else setNote(result.reason === "prazo" ? t.passLate : t.planFail);
+                    })
+                    .catch(() => setNote(t.planFail))
+                    .finally(() => setPending(false));
+                }}
+              >
+                {t.onceRefund}
+              </button>
+            </li>
+          ))}
+        </ul>
       ) : null}
     </section>
   );
