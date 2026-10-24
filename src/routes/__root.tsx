@@ -13,7 +13,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Refúgio da Lua — histórias que acontecem à noite" },
+      { title: "Refúgio da Lua — romance e mistério" },
       { name: "theme-color", content: "#0c3442" },
       { name: "description", content: "Histórias interativas sáficas de romance e mistério, em português e espanhol. A escolha é sempre de graça." },
       { name: "robots", content: "index, follow" },
