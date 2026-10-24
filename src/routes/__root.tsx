@@ -27,6 +27,7 @@ export const Route = createRootRoute({
       { rel: "alternate", hrefLang: "pt-BR", href: "https://www.refugiodalua.com.br/" },
       { rel: "alternate", hrefLang: "es-419", href: "https://www.refugiodalua.com.br/es" },
       { rel: "alternate", hrefLang: "x-default", href: "https://www.refugiodalua.com.br/" },
+      { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/brand-v5-192.png" },
       { rel: "stylesheet", href: appCss },
