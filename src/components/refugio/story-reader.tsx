@@ -530,15 +530,24 @@ export function StoryPage({ slug }: { slug: string }) {
 export function StoryList() {
   const { lang, t } = useHouse();
   const shelf = useShelf(lang);
+  const [query, setQuery] = useState("");
   const [featured, setFeatured] = useState<Array<{ slug: string; nome: string }>>([]);
   useEffect(() => {
     void featuredAuthors().then(setFeatured).catch(() => setFeatured([]));
   }, []);
+  const needle = foldName(query);
+  const visible = needle
+    ? shelf.filter((story) => foldName(story.title).includes(needle) || foldName(story.author).includes(needle))
+    : shelf;
   return (
     <StoryShell>
       <section className="house-block">
         <h1>{t.navStories}</h1>
         <MoonNightNote />
+        <label className="house-search">
+          {t.searchName}
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.searchHint} />
+        </label>
         {featured.length > 0 ? (
           <p className="house-note">
             {t.sealStar}{" "}
@@ -547,8 +556,9 @@ export function StoryList() {
             ))}
           </p>
         ) : null}
+        {visible.length === 0 ? <p className="house-note">{t.searchEmpty}</p> : null}
         <div className="story-list">
-          {shelf.map((story) => (
+          {visible.map((story) => (
             <a key={story.slug} className="story-card" href={`/historia/${story.slug}`}>
               <span className="soon-kicker">{story.place} <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} /></span>
               <strong>{story.title}</strong>
@@ -565,6 +575,10 @@ export function StoryList() {
       </section>
     </StoryShell>
   );
+}
+
+function foldName(value: string) {
+  return value.toLocaleLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
 }
 
 function AgeGate({ birth, tooYoung, onSave }: { birth: string | null; tooYoung: boolean; onSave: (value: string) => void }) {

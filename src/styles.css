@@ -3610,6 +3610,8 @@ html.protect-on .diary-card::after {
 .house.is-night .house-primary { background: #f6d77a; color: #0c3442; }
 .house-quiet { background: transparent; color: inherit; border: 1px solid currentColor !important; }
 .house-steps, .plan-grid, .story-list, .flower-grid { display: grid; gap: 12px; }
+.house-search { display: grid; gap: 6px; margin: 18px 0; font-size: 13px; }
+.house-search input { width: 100%; border: 1px solid rgba(23, 75, 89, .25); border-radius: 12px; padding: 12px 14px; background: rgba(255, 253, 248, .92); color: #142d36; }
 @media (min-width: 800px) {
   .house-steps, .plan-grid { grid-template-columns: repeat(3, 1fr); }
   .plan-grid.once-grid { grid-template-columns: 1fr 1fr; }

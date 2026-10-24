@@ -15,6 +15,7 @@ type ShelfItem = {
 export function LibraryPage() {
   const { lang, t } = useHouse();
   const [items, setItems] = useState<ShelfItem[]>([]);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const local = readShelf()
@@ -36,8 +37,12 @@ export function LibraryPage() {
       .catch(() => undefined);
   }, [lang]);
 
-  const open = items.filter((item) => !item.ended);
-  const done = items.filter((item) => item.ended);
+  const needle = query.trim().toLocaleLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
+  const named = needle
+    ? items.filter((item) => item.title.toLocaleLowerCase().normalize("NFD").replace(/\p{M}/gu, "").includes(needle))
+    : items;
+  const open = named.filter((item) => !item.ended);
+  const done = named.filter((item) => item.ended);
 
   return (
     <StoryShell>
@@ -45,7 +50,12 @@ export function LibraryPage() {
         <p className="soon-kicker">{t.navLibrary}</p>
         <h1>{t.libraryTitle}</h1>
         <p>{t.libraryLead}</p>
+        <label className="house-search">
+          {t.searchName}
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.searchHint} />
+        </label>
         {items.length === 0 ? <p className="house-note">{t.libraryEmpty}</p> : null}
+        {items.length > 0 && named.length === 0 ? <p className="house-note">{t.searchEmpty}</p> : null}
         {open.length > 0 ? (
           <>
             <h2>{t.libraryContinue}</h2>
