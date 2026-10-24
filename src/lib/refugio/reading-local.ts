@@ -20,6 +20,8 @@ export type LocalProgress = {
   sceneId: string;
   affinity: number;
   clues: string[];
+  title?: string;
+  ended?: boolean;
 };
 
 export function readEndings(): SavedEnding[] {
@@ -82,6 +84,10 @@ function readAllProgress(): LocalProgress[] {
 
 export function readProgress(slug: string, lang: "pt" | "es") {
   return readAllProgress().find((item) => item.slug === slug && item.lang === lang) ?? null;
+}
+
+export function readShelf() {
+  return readAllProgress();
 }
 
 export function writeProgress(progress: LocalProgress) {

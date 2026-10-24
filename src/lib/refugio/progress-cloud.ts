@@ -93,6 +93,38 @@ export const saveReading = createServerFn({ method: "POST" })
     return { signedIn: true as const };
   });
 
+export const listReadings = createServerFn({ method: "GET" }).handler(async () => {
+  const id = await userId();
+  if (!id) return { signedIn: false as const, readings: [] as const };
+  const { getSql } = await import("@/lib/db");
+  const sql = await getSql();
+  const rows = await sql.query<{
+    story_slug: string;
+    lang: string;
+    story_title: string | null;
+    scene_id: string;
+    ending_key: string | null;
+    ending_title: string | null;
+  }>(
+    `select story_slug, lang, story_title, scene_id, ending_key, ending_title
+     from reader_progress
+     where user_id = $1
+     order by updated_at desc`,
+    [id],
+  );
+  return {
+    signedIn: true as const,
+    readings: rows.map((row) => ({
+      slug: row.story_slug,
+      lang: row.lang === "es" ? ("es" as const) : ("pt" as const),
+      title: row.story_title || row.story_slug,
+      sceneId: row.scene_id,
+      ended: Boolean(row.ending_key),
+      endingTitle: row.ending_title,
+    })),
+  };
+});
+
 export const loadGardenCloud = createServerFn({ method: "POST" }).handler(async () => {
   const id = await userId();
   if (!id) return { signedIn: false as const, endings: [] as const };

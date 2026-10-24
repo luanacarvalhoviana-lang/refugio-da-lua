@@ -195,6 +195,7 @@ export function AccountPage() {
       <section className="house-block">
         <h1>{t.accountTitle}</h1>
         <Door />
+        <p><a href="/biblioteca">{t.accountLibrary}</a></p>
         <PassPanel />
         <AuthorEditor />
       </section>

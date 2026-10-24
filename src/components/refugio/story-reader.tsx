@@ -157,7 +157,15 @@ export function StoryReader({ slug }: { slug: string }) {
     nextClues: string[],
     ending?: { key: string; title: string; flower: string },
   ) {
-    writeProgress({ slug: current.slug, lang, sceneId: nextScene, affinity: nextAffinity, clues: nextClues });
+    writeProgress({
+      slug: current.slug,
+      lang,
+      sceneId: nextScene,
+      affinity: nextAffinity,
+      clues: nextClues,
+      title: current.title,
+      ended: Boolean(ending),
+    });
     void saveReading({
       data: {
         slug: current.slug,

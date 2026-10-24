@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApoioRouteImport } from './routes/apoio'
+import { Route as BibliotecaRouteImport } from './routes/biblioteca'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as ContaRouteImport } from './routes/conta'
 import { Route as ContatoRouteImport } from './routes/contato'
@@ -73,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
 const ApoioRoute = ApoioRouteImport.update({
   id: '/apoio',
   path: '/apoio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliotecaRoute = BibliotecaRouteImport.update({
+  id: '/biblioteca',
+  path: '/biblioteca',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
@@ -344,6 +350,7 @@ const EsAutoraSlugRoute = EsAutoraSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/apoio': typeof ApoioRoute
+  '/biblioteca': typeof BibliotecaRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
   '/contato': typeof ContatoRoute
@@ -401,6 +408,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/apoio': typeof ApoioRoute
+  '/biblioteca': typeof BibliotecaRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
   '/contato': typeof ContatoRoute
@@ -458,6 +466,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/apoio': typeof ApoioRoute
+  '/biblioteca': typeof BibliotecaRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/conta': typeof ContaRouteWithChildren
   '/contato': typeof ContatoRoute
@@ -517,6 +526,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/apoio'
+    | '/biblioteca'
     | '/configuracoes'
     | '/conta'
     | '/contato'
@@ -574,6 +584,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/apoio'
+    | '/biblioteca'
     | '/configuracoes'
     | '/conta'
     | '/contato'
@@ -630,6 +641,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/apoio'
+    | '/biblioteca'
     | '/configuracoes'
     | '/conta'
     | '/contato'
@@ -688,6 +700,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApoioRoute: typeof ApoioRoute
+  BibliotecaRoute: typeof BibliotecaRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   ContaRoute: typeof ContaRouteWithChildren
   ContatoRoute: typeof ContatoRoute
@@ -746,6 +759,13 @@ declare module '@tanstack/react-router' {
       path: '/apoio'
       fullPath: '/apoio'
       preLoaderRoute: typeof ApoioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biblioteca': {
+      id: '/biblioteca'
+      path: '/biblioteca'
+      fullPath: '/biblioteca'
+      preLoaderRoute: typeof BibliotecaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/configuracoes': {
@@ -1190,6 +1210,7 @@ const PlanosRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApoioRoute: ApoioRoute,
+  BibliotecaRoute: BibliotecaRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   ContaRoute: ContaRouteWithChildren,
   ContatoRoute: ContatoRoute,
