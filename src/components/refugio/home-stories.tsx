@@ -4,6 +4,7 @@ import { Door } from "@/components/refugio/account-pages";
 import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { saveStoryAlert } from "@/lib/refugio/alert-cloud";
+import { authorSlug, type Lang } from "@/lib/refugio/stories";
 import { useShelf } from "@/components/refugio/use-shelf";
 import { MoonNightNote } from "@/components/refugio/moon-night";
 
