@@ -531,14 +531,24 @@ export function StoryList() {
   const { lang, t } = useHouse();
   const shelf = useShelf(lang);
   const [query, setQuery] = useState("");
+  const [genre, setGenre] = useState("");
+  const [place, setPlace] = useState("");
+  const [rating, setRating] = useState("");
   const [featured, setFeatured] = useState<Array<{ slug: string; nome: string }>>([]);
   useEffect(() => {
     void featuredAuthors().then(setFeatured).catch(() => setFeatured([]));
   }, []);
+  const genres = [...new Set(shelf.flatMap((story) => story.genres))].sort((a, b) => a.localeCompare(b, lang === "es" ? "es" : "pt"));
+  const places = [...new Set(shelf.map((story) => story.place))].sort((a, b) => a.localeCompare(b, lang === "es" ? "es" : "pt"));
   const needle = foldName(query);
-  const visible = needle
-    ? shelf.filter((story) => foldName(story.title).includes(needle) || foldName(story.author).includes(needle))
-    : shelf;
+  const visible = shelf.filter((story) => {
+    if (needle && !foldName(story.title).includes(needle) && !foldName(story.author).includes(needle)) return false;
+    if (genre && !story.genres.some((item) => foldName(item) === foldName(genre))) return false;
+    if (place && foldName(story.place) !== foldName(place)) return false;
+    if (rating && story.rating !== rating) return false;
+    return true;
+  });
+  const filtering = Boolean(query || genre || place || rating);
   return (
     <StoryShell>
       <section className="house-block">
@@ -548,6 +558,38 @@ export function StoryList() {
           {t.searchName}
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.searchHint} />
         </label>
+        <div className="house-filters">
+          <div>
+            <p>{t.filterGenre}</p>
+            <div>
+              <button type="button" className={genre === "" ? "is-on" : ""} onClick={() => setGenre("")}>{t.filterAll}</button>
+              {genres.map((item) => (
+                <button type="button" key={item} className={genre === item ? "is-on" : ""} onClick={() => setGenre(item)}>{item}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p>{t.filterPlace}</p>
+            <div>
+              <button type="button" className={place === "" ? "is-on" : ""} onClick={() => setPlace("")}>{t.filterAll}</button>
+              {places.map((item) => (
+                <button type="button" key={item} className={place === item ? "is-on" : ""} onClick={() => setPlace(item)}>{item}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p>{t.filterRating}</p>
+            <div>
+              <button type="button" className={rating === "" ? "is-on" : ""} onClick={() => setRating("")}>{t.filterAll}</button>
+              {(["livre", "14", "16"] as const).map((item) => (
+                <button type="button" key={item} className={rating === item ? "is-on" : ""} onClick={() => setRating(item)}>
+                  {item === "livre" ? t.ratingLivre : item}
+                </button>
+              ))}
+            </div>
+          </div>
+          {filtering ? <button type="button" className="house-quiet" onClick={() => { setQuery(""); setGenre(""); setPlace(""); setRating(""); }}>{t.filterClear}</button> : null}
+        </div>
         {featured.length > 0 ? (
           <p className="house-note">
             {t.sealStar}{" "}
