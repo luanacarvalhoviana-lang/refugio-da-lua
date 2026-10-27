@@ -1,5 +1,8 @@
 import { moreStories } from "@/lib/refugio/stories-more";
 import { ticketEn } from "@/lib/refugio/stories-en";
+import { sharpPt } from "@/lib/refugio/stories-sharp";
+import { sharpEs } from "@/lib/refugio/stories-sharp-es";
+import { sharpEn } from "@/lib/refugio/stories-sharp-en";
 
 export type Lang = "pt" | "es" | "en";
 
@@ -241,9 +244,9 @@ const es: Story = {
 };
 
 export const stories: Record<Lang, Story[]> = {
-  pt: [pt, ...moreStories.pt],
-  es: [es, ...moreStories.es],
-  en: [ticketEn, ...moreStories.en],
+  pt: [...sharpPt, pt, ...moreStories.pt],
+  es: [...sharpEs, es, ...moreStories.es],
+  en: [...sharpEn, ticketEn, ...moreStories.en],
 };
 
 export function getStory(lang: Lang, slug: string) {
