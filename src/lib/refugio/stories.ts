@@ -39,6 +39,8 @@ export type Scene = {
   after?: Array<{ if: string; line: string }>;
   /** Still for this place. Changes when the scene changes. */
   art?: string;
+  /** A different still when an earlier choice was taken. */
+  artIf?: Array<{ if: string; art: string; where?: string }>;
   /** Short name of the place, shown under the still. */
   where?: string;
 };

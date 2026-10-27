@@ -1,51 +1,68 @@
 import type { Lang, Story } from "@/lib/refugio/stories";
 
-const frames: Record<string, Record<string, { art: string; where: Record<Lang, string> }>> = {
+const frames: Record<string, Record<string, {
+  art: string;
+  where: Record<Lang, string>;
+  artIf?: Array<{ if: string; art: string; where: Record<Lang, string> }>;
+}>> = {
   passageira: {
-    banco: { art: "/scenes/passageira-banco.jpg", where: { pt: "Dentro do carro", es: "Dentro del coche", en: "Inside the car" } },
+    banco: { art: "/scenes/passageira-banco.jpg", where: { pt: "Dentro do carro — Renata", es: "Dentro del coche — Renata", en: "Inside the car — Renata" } },
     tras: { art: "/scenes/passageira-tras.jpg", where: { pt: "O banco de trás", es: "El asiento de atrás", en: "The back seat" } },
-    marginal: { art: "/scenes/passageira-marginal.jpg", where: { pt: "Na marginal", es: "En la avenida", en: "On the overpass" } },
-    posto: { art: "/scenes/passageira-posto.jpg", where: { pt: "Posto fechado", es: "Estación cerrada", en: "Closed station" } },
-    farol: { art: "/scenes/passageira-farol.jpg", where: { pt: "Debaixo do farol", es: "Bajo el farol", en: "Under the light" } },
-    "fim-curva": { art: "/scenes/passageira-curva.jpg", where: { pt: "A curva", es: "La curva", en: "The curve" } },
+    marginal: { art: "/scenes/passageira-marginal.jpg", where: { pt: "Na marginal — Renata", es: "En la avenida — Renata", en: "On the overpass — Renata" } },
+    posto: { art: "/scenes/passageira-posto.jpg", where: { pt: "Posto fechado — Renata", es: "Estación cerrada — Renata", en: "Closed station — Renata" } },
+    farol: {
+      art: "/scenes/passageira-farol.jpg",
+      where: { pt: "Debaixo do farol — Marina", es: "Bajo el farol — Marina", en: "Under the light — Marina" },
+      artIf: [
+        { if: "posto:atender", art: "/scenes/passageira-farol-atender.jpg", where: { pt: "Debaixo do farol — Marina", es: "Bajo el farol — Marina", en: "Under the light — Marina" } },
+        { if: "posto:viva", art: "/scenes/passageira-farol-viva.jpg", where: { pt: "No carro — Renata e Marina", es: "En el coche — Renata y Marina", en: "In the car — Renata and Marina" } },
+      ],
+    },
+    "fim-curva": { art: "/scenes/passageira-curva.jpg", where: { pt: "A curva — Renata e Marina", es: "La curva — Renata y Marina", en: "The curve — Renata and Marina" } },
     "fim-casaco": { art: "/scenes/passageira-casaco.jpg", where: { pt: "O que ficou no banco", es: "Lo que quedó en el asiento", en: "What stayed on the seat" } },
-    "fim-porta": { art: "/scenes/passageira-porta.jpg", where: { pt: "A porta fechada", es: "La puerta cerrada", en: "The closed door" } },
+    "fim-porta": { art: "/scenes/passageira-porta.jpg", where: { pt: "A porta fechada — Renata e Marina", es: "La puerta cerrada — Renata y Marina", en: "The closed door — Renata and Marina" } },
   },
   correspondencia: {
     caixa: { art: "/scenes/correspondencia-caixa.jpg", where: { pt: "A caixa de correio", es: "El buzón", en: "The mailbox" } },
     leitura: { art: "/scenes/correspondencia-leitura.jpg", where: { pt: "A carta", es: "La carta", en: "The letter" } },
-    escada: { art: "/scenes/correspondencia-escada.jpg", where: { pt: "O último lance", es: "El último tramo", en: "The last flight" } },
+    escada: { art: "/scenes/correspondencia-escada.jpg", where: { pt: "O último lance — Helena", es: "El último tramo — Helena", en: "The last flight — Helena" } },
     portaria: { art: "/scenes/correspondencia-portaria.jpg", where: { pt: "A portaria", es: "La portería", en: "The lobby desk" } },
-    mesa: { art: "/scenes/correspondencia-mesa.jpg", where: { pt: "No chão", es: "En el suelo", en: "On the floor" } },
-    "fim-resposta": { art: "/scenes/correspondencia-resposta.jpg", where: { pt: "Debaixo da marquise", es: "Bajo la marquesina", en: "Under the awning" } },
+    mesa: { art: "/scenes/correspondencia-mesa.jpg", where: { pt: "Na janela — Helena", es: "En la ventana — Helena", en: "At the window — Helena" } },
+    "fim-resposta": { art: "/scenes/correspondencia-resposta.jpg", where: { pt: "Debaixo da marquise — Helena", es: "Bajo la marquesina — Helena", en: "Under the awning — Helena" } },
     "fim-escada": { art: "/scenes/correspondencia-escada-fim.jpg", where: { pt: "O copo", es: "El vaso", en: "The glass" } },
     "fim-nome": { art: "/scenes/correspondencia-nome.jpg", where: { pt: "A carta que amarela", es: "La carta que amarillea", en: "The letter that yellows" } },
   },
   sobremesa: {
-    forno: { art: "/scenes/sobremesa-forno.jpg", where: { pt: "A cozinha de serviço", es: "La cocina de servicio", en: "The service kitchen" } },
-    gelo: { art: "/scenes/sobremesa-gelo.jpg", where: { pt: "A despensa", es: "La despensa", en: "The pantry" } },
-    sala: { art: "/scenes/sobremesa-sala.jpg", where: { pt: "A sala", es: "El comedor", en: "The dining room" } },
+    forno: { art: "/scenes/sobremesa-forno.jpg", where: { pt: "A cozinha — Clara e Nanda", es: "La cocina — Clara y Nanda", en: "The kitchen — Clara and Nanda" } },
+    gelo: { art: "/scenes/sobremesa-gelo.jpg", where: { pt: "A despensa — Nanda", es: "La despensa — Nanda", en: "The pantry — Nanda" } },
+    sala: { art: "/scenes/sobremesa-sala.jpg", where: { pt: "A sala — Clara e Nanda", es: "El comedor — Clara y Nanda", en: "The dining room — Clara and Nanda" } },
     sal: { art: "/scenes/sobremesa-sal.jpg", where: { pt: "A porta da despensa", es: "La puerta de la despensa", en: "The pantry door" } },
-    "fim-conta": { art: "/scenes/sobremesa-conta.jpg", where: { pt: "O beco", es: "El callejón", en: "The alley" } },
+    "fim-conta": { art: "/scenes/sobremesa-conta.jpg", where: { pt: "O beco — Nanda", es: "El callejón — Nanda", en: "The alley — Nanda" } },
     "fim-prato": { art: "/scenes/sobremesa-prato.jpg", where: { pt: "Debaixo do prato", es: "Debajo del plato", en: "Under the plate" } },
     "fim-cozinha": { art: "/scenes/sobremesa-cozinha.jpg", where: { pt: "Depois da sobremesa", es: "Después del postre", en: "After dessert" } },
   },
   corredor: {
-    porta714: { art: "/scenes/corredor-porta.jpg", where: { pt: "A porta", es: "La puerta", en: "The door" } },
-    corredor: { art: "/scenes/corredor-corredor.jpg", where: { pt: "O corredor", es: "El pasillo", en: "The corridor" } },
-    elevador: { art: "/scenes/corredor-elevador.jpg", where: { pt: "O elevador", es: "El ascensor", en: "The elevator" } },
-    "fim-saguao": { art: "/scenes/corredor-saguao.jpg", where: { pt: "O saguão", es: "El vestíbulo", en: "The lobby" } },
+    porta714: { art: "/scenes/corredor-porta.jpg", where: { pt: "A porta — Iara", es: "La puerta — Iara", en: "The door — Iara" } },
+    corredor: { art: "/scenes/corredor-corredor.jpg", where: { pt: "O corredor — Iara", es: "El pasillo — Iara", en: "The corridor — Iara" } },
+    elevador: { art: "/scenes/corredor-elevador.jpg", where: { pt: "O elevador — Iara", es: "El ascensor — Iara", en: "The elevator — Iara" } },
+    "fim-saguao": { art: "/scenes/corredor-saguao.jpg", where: { pt: "O saguão — Iara", es: "El vestíbulo — Iara", en: "The lobby — Iara" } },
     "fim-virar": { art: "/scenes/corredor-virar.jpg", where: { pt: "O quarto", es: "La habitación", en: "The room" } },
     "fim-batida": { art: "/scenes/corredor-batida.jpg", where: { pt: "Debaixo da porta", es: "Debajo de la puerta", en: "Under the door" } },
   },
   depoimento: {
-    sala: { art: "/scenes/depoimento-sala.jpg", where: { pt: "A sala", es: "La sala", en: "The room" } },
-    frase: { art: "/scenes/depoimento-frase.jpg", where: { pt: "O gravador", es: "La grabadora", en: "The recorder" } },
-    del: { art: "/scenes/depoimento-del.jpg", where: { pt: "O corredor", es: "El pasillo", en: "The corridor" } },
-    hospital: { art: "/scenes/depoimento-hospital.jpg", where: { pt: "O hospital", es: "El hospital", en: "The hospital" } },
+    sala: { art: "/scenes/depoimento-sala.jpg", where: { pt: "A sala — Elisa", es: "La sala — Elisa", en: "The room — Elisa" } },
+    frase: {
+      art: "/scenes/depoimento-frase.jpg",
+      where: { pt: "O gravador — Elisa", es: "La grabadora — Elisa", en: "The recorder — Elisa" },
+      artIf: [
+        { if: "sala:pulo", art: "/scenes/depoimento-frase-pulo.jpg", where: { pt: "O gravador — Elisa", es: "La grabadora — Elisa", en: "The recorder — Elisa" } },
+      ],
+    },
+    del: { art: "/scenes/depoimento-del.jpg", where: { pt: "O corredor — Duda", es: "El pasillo — Duda", en: "The corridor — Duda" } },
+    hospital: { art: "/scenes/depoimento-hospital.jpg", where: { pt: "O hospital — Soraia", es: "El hospital — Soraia", en: "The hospital — Soraia" } },
     "fim-versao": { art: "/scenes/depoimento-versao.jpg", where: { pt: "O arquivo", es: "El archivo", en: "The file" } },
     "fim-nome": { art: "/scenes/depoimento-nome.jpg", where: { pt: "A cadeira", es: "La silla", en: "The chair" } },
-    "fim-silencio": { art: "/scenes/depoimento-silencio.jpg", where: { pt: "A porta de casa", es: "La puerta de casa", en: "The door at home" } },
+    "fim-silencio": { art: "/scenes/depoimento-silencio.jpg", where: { pt: "A porta de casa — Soraia", es: "La puerta de casa — Soraia", en: "The door at home — Soraia" } },
   },
 };
 
@@ -59,6 +76,7 @@ export function applyFrames(book: Record<Lang, Story[]>) {
         if (!frame) continue;
         scene.art = frame.art;
         scene.where = frame.where[lang];
+        scene.artIf = frame.artIf?.map((item) => ({ if: item.if, art: item.art, where: item.where[lang] }));
       }
       const opening = pack[story.start];
       if (opening) story.art = opening.art;

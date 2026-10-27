@@ -325,8 +325,10 @@ export function StoryReader({ slug }: { slug: string }) {
       ? t.sameStingLow.replace("{n}", String(samePercent))
       : null;
   const visibleClues = shownClues(clues);
-  const backdrop = dress || scene.art || artOf(story);
-  const frameCaption = showMorning && morning ? morning.title : scene.where || "";
+  const shot = remembered(scene.artIf, picks);
+  const still = shot?.art || scene.art;
+  const backdrop = dress || still || artOf(story);
+  const frameCaption = showMorning && morning ? morning.title : shot?.where || scene.where || "";
 
   return (
     <StoryShell>
@@ -371,7 +373,7 @@ export function StoryReader({ slug }: { slug: string }) {
             {visibleClues.length === 0 ? <p>{t.noClue}</p> : <ul>{visibleClues.map((clue) => <li key={clue}>{clue}</li>)}</ul>}
           </aside>
           <div className="reader-sheet">
-            {scene.art ? <SceneFrame src={scene.art} caption={frameCaption} morning={Boolean(showMorning && morning)} /> : null}
+            {still ? <SceneFrame src={still} caption={frameCaption} morning={Boolean(showMorning && morning)} /> : null}
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
             {scene.music?.startsWith("t") ? (
               <p className="house-note">
