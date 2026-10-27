@@ -1,4 +1,5 @@
 import type { Lang, Story } from "@/lib/refugio/stories";
+import { applyFrames } from "@/lib/refugio/scene-frames";
 
 type Line = { if: string; line: string };
 type Morning = { title: string; body: string };
@@ -1122,5 +1123,6 @@ export function applyMemory(book: Record<Lang, Story[]>) {
       if (beat.morningIf && scene.ending) scene.ending.morningIf = beat.morningIf;
     }
   }
+  applyFrames(book);
   return book;
 }

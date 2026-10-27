@@ -37,6 +37,10 @@ export type Scene = {
   musicFor?: number;
   /** A paragraph that appears only if that earlier choice was taken. */
   after?: Array<{ if: string; line: string }>;
+  /** Still for this place. Changes when the scene changes. */
+  art?: string;
+  /** Short name of the place, shown under the still. */
+  where?: string;
 };
 
 export type Story = {

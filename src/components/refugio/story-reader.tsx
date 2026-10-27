@@ -325,13 +325,19 @@ export function StoryReader({ slug }: { slug: string }) {
       ? t.sameStingLow.replace("{n}", String(samePercent))
       : null;
   const visibleClues = shownClues(clues);
+  const backdrop = dress || scene.art || artOf(story);
+  const frameCaption = showMorning && morning ? morning.title : scene.where || "";
 
   return (
     <StoryShell>
-      <article
-        className={story.art || artOf(story) ? "reader has-art" : "reader"}
-        style={{ backgroundImage: `linear-gradient(180deg, rgba(12,52,66,.45), rgba(12,52,66,.62)), url(${dress || artOf(story)})` }}
-      >
+      <article className={backdrop ? "reader has-art" : "reader"}>
+        {backdrop ? (
+          <div
+            key={backdrop}
+            className="reader-bg"
+            style={{ backgroundImage: `linear-gradient(180deg, rgba(12,52,66,.4), rgba(12,52,66,.66)), url(${backdrop})` }}
+          />
+        ) : null}
         <header className="reader-top">
           <a href={`/historia/${story.slug}`}>{story.title}</a>
           <div className="reader-sound">
@@ -365,6 +371,7 @@ export function StoryReader({ slug }: { slug: string }) {
             {visibleClues.length === 0 ? <p>{t.noClue}</p> : <ul>{visibleClues.map((clue) => <li key={clue}>{clue}</li>)}</ul>}
           </aside>
           <div className="reader-sheet">
+            {scene.art ? <SceneFrame src={scene.art} caption={frameCaption} morning={Boolean(showMorning && morning)} /> : null}
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
             {scene.music?.startsWith("t") ? (
               <p className="house-note">
@@ -480,6 +487,29 @@ export function StoryReader({ slug }: { slug: string }) {
         </div>
       </article>
     </StoryShell>
+  );
+}
+
+function SceneFrame({ src, caption, morning }: { src: string; caption: string; morning: boolean }) {
+  const [current, setCurrent] = useState(src);
+  const [previous, setPrevious] = useState<string | null>(null);
+  const seen = useRef(src);
+  useEffect(() => {
+    if (seen.current === src) return;
+    setPrevious(seen.current);
+    seen.current = src;
+    setCurrent(src);
+    const id = window.setTimeout(() => setPrevious(null), 700);
+    return () => window.clearTimeout(id);
+  }, [src]);
+  return (
+    <figure className={morning ? "scene-frame is-morning" : "scene-frame"}>
+      <div className="scene-frame-stack">
+        {previous ? <img className="scene-frame-old" src={previous} alt="" /> : null}
+        <img key={current} className="scene-frame-now" src={current} alt={caption} />
+      </div>
+      {caption ? <figcaption>{caption}</figcaption> : null}
+    </figure>
   );
 }
 

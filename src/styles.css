@@ -3722,9 +3722,51 @@ html.protect-on .diary-card::after {
 
 .reader.has-art {
   color: #f8f5ee;
+  background-color: #0c3442;
+  position: relative;
+  overflow: hidden;
+  min-height: 70vh;
+}
+.reader-bg {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
-  min-height: 70vh;
+  animation: scene-in .7s ease;
+}
+.reader.has-art > :not(.reader-bg) { position: relative; z-index: 1; }
+.scene-frame { margin: 0 0 14px; }
+.scene-frame-stack {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #0c3442;
+}
+.scene-frame-stack img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.scene-frame-now { animation: scene-in .65s ease; }
+.scene-frame.is-morning .scene-frame-now {
+  filter: brightness(1.12) saturate(.88) sepia(.14);
+}
+.scene-frame figcaption {
+  margin: 8px 2px 0;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: #174b59;
+}
+@keyframes scene-in {
+  from { opacity: 0; transform: scale(1.045); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reader-bg, .scene-frame-now { animation: none; }
 }
 .reader-sound { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .reader-volume { display: flex; align-items: center; gap: 6px; font-size: 12px; }
