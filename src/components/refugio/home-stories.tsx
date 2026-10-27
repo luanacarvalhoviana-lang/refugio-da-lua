@@ -23,7 +23,7 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
           <h1>{t.heroTitle}</h1>
           <p className="soon-lead">{t.heroLead}</p>
           <div className="house-cta">
-            <a className="house-primary" href={`/ler/${story?.slug ?? "o-bilhete"}`}>
+            <a className="house-primary" href={`/ler/${story?.slug ?? "passageira"}`}>
               {t.read}
             </a>
             <a className="house-quiet" href="#entrar">

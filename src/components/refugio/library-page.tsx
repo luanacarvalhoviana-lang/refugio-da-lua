@@ -12,6 +12,8 @@ type ShelfItem = {
   endingTitle?: string | null;
 };
 
+const retired = new Set(["o-bilhete", "a-chave", "a-mare", "a-lampada", "antes-da-lua"]);
+
 export function LibraryPage() {
   const { lang, t } = useHouse();
   const [items, setItems] = useState<ShelfItem[]>([]);
@@ -19,7 +21,7 @@ export function LibraryPage() {
 
   useEffect(() => {
     const local = readShelf()
-      .filter((item) => item.lang === lang)
+      .filter((item) => item.lang === lang && !retired.has(item.slug))
       .map((item) => ({
         slug: item.slug,
         lang: item.lang,
@@ -30,7 +32,7 @@ export function LibraryPage() {
     void listReadings()
       .then((result) => {
         if (!result.signedIn) return;
-        const cloud = result.readings.filter((item) => item.lang === lang);
+        const cloud = result.readings.filter((item) => item.lang === lang && !retired.has(item.slug));
         const seen = new Set(cloud.map((item) => item.slug));
         setItems([...cloud, ...local.filter((item) => !seen.has(item.slug))]);
       })

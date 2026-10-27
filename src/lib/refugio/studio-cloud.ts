@@ -7,7 +7,8 @@ import { checkStory, type StudioScene } from "@/lib/refugio/studio-check";
 import type { Story } from "@/lib/refugio/stories";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
-const RESERVED = new Set(["o-bilhete", "a-chave", "a-mare"]);
+const HOUSE = ["passageira", "correspondencia", "sobremesa", "corredor", "depoimento"];
+const RESERVED = new Set([...HOUSE, "o-bilhete", "a-chave", "a-mare", "a-lampada", "antes-da-lua"]);
 const lang = z.enum(["pt", "es", "en"]);
 
 const choiceSchema = z.object({
@@ -490,8 +491,6 @@ export const decideStory = createServerFn({ method: "POST" })
     await sql.query(`update stories set status = 'recusada', motivo = $2 where id = $1`, [data.id, data.motivo]);
     return { ok: true as const };
   });
-
-const HOUSE = ["o-bilhete", "a-chave", "a-mare"];
 
 export const authorChoiceStats = createServerFn({ method: "POST" })
   .validator(z.object({ slug: z.string().trim().min(2).max(48), lang }))

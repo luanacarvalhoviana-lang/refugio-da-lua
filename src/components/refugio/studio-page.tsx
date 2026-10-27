@@ -73,7 +73,7 @@ export function StudioPage() {
     if (!access?.ok) return;
     void listAuthorTracks().then(setOwnTracks).catch(() => setOwnTracks([]));
     void Promise.all(
-      ["o-bilhete", "a-chave", "a-mare"].map((slug) =>
+      ["passageira", "correspondencia", "sobremesa", "corredor", "depoimento"].map((slug) =>
         authorChoiceStats({ data: { slug, lang } }).then((result) => ({ slug, ok: result.ok, scenes: result.scenes })),
       ),
     ).then((rows) => {
