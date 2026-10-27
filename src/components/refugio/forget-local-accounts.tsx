@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { htmlLang } from "@/lib/refugio/lang";
 import { useRefugioStore } from "@/lib/refugio/store";
 
 export function ForgetLocalAccounts() {
@@ -11,7 +12,7 @@ export function ForgetLocalAccounts() {
     }
   }, []);
   useEffect(() => {
-    document.documentElement.lang = lang === "es" ? "es-419" : "pt-BR";
+    document.documentElement.lang = htmlLang(lang);
   }, [lang]);
   return null;
 }

@@ -4,7 +4,7 @@ import { z } from "zod";
 const joinInput = z.object({
   email: z.string().trim().email().max(160),
   name: z.string().trim().max(80).optional(),
-  lang: z.enum(["pt", "es"]),
+  lang: z.enum(["pt", "es", "en"]),
   role: z.enum(["leitora", "autora", "ambas"]),
   country: z.string().trim().max(12).optional(),
   ref: z.string().trim().max(16).optional(),
@@ -46,7 +46,7 @@ export const joinWaitlist = createServerFn({ method: "POST" })
       where ip_hash = ${ipHash} and created_at > now() - interval '1 hour'
     `;
     if (Number(recent[0]?.n ?? 0) >= 5) {
-      throw new Error(data.lang === "es" ? "Espera un poco e inténtalo de nuevo." : "Espera um pouco e tenta de novo.");
+      throw new Error(data.lang === "en" ? "Wait a moment and try again." : data.lang === "es" ? "Espera un poco e inténtalo de nuevo." : "Espera um pouco e tenta de novo.");
     }
 
     const ref = data.ref?.trim().toLowerCase() || "";
@@ -86,7 +86,7 @@ export const joinWaitlist = createServerFn({ method: "POST" })
           if (again[0]?.referral_code) return { ok: true as const, code: again[0].referral_code, already: true };
         }
         code = codeOf();
-        if (attempt === 4) throw new Error(data.lang === "es" ? "No pude guardar tu correo ahora." : "Não consegui guardar seu e-mail agora.");
+        if (attempt === 4) throw new Error(data.lang === "en" ? "I could not save your email now." : data.lang === "es" ? "No pude guardar tu correo ahora." : "Não consegui guardar seu e-mail agora.");
       }
     }
 

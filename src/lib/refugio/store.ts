@@ -214,7 +214,7 @@ type RefugioState = {
   letterWeek: string;
   lettersThisWeek: number;
   theme: "day" | "night";
-  lang: "pt" | "es";
+  lang: "pt" | "es" | "en";
   protectScreen: boolean;
   liveNotices: boolean;
   notices: GardenNotice[];
@@ -264,7 +264,7 @@ type RefugioState = {
   setEnvelope: (key: string) => void;
   setLetterFont: (key: string) => void;
   setTheme: (theme: "day" | "night") => void;
-  setLang: (lang: "pt" | "es") => void;
+  setLang: (lang: "pt" | "es" | "en") => void;
   setLiveNotices: (on: boolean) => void;
   receiveEnergy: (n?: number) => void;
   pushNotice: (notice: Omit<GardenNotice, "id" | "time" | "read">) => void;

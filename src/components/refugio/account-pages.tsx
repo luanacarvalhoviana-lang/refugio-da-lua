@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
+import { dateLocale } from "@/lib/refugio/lang";
 import { confirmPasswordReset, requestPasswordReset, signInEmail, signInGoogle, signUpEmail, authEnabled } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { AuthorEditor } from "@/components/refugio/author-page";
@@ -32,7 +33,7 @@ function PassPanel() {
     <section className="house-block pass-panel">
       <h2>{t.passTitle}</h2>
       {name ? <p className="access-pill">{name}</p> : <p>{t.passNone}</p>}
-      {house?.periodEnd ? <p className="house-note">{t.planNext}: {new Date(house.periodEnd).toLocaleDateString(lang === "es" ? "es" : "pt-BR")}</p> : null}
+      {house?.periodEnd ? <p className="house-note">{t.planNext}: {new Date(house.periodEnd).toLocaleDateString(dateLocale(lang))}</p> : null}
       {house && house.plan !== "lua_nova" ? <p className="house-note">{house.redeemed ? t.shopClaimed : t.shopClaim}</p> : null}
       {house && house.plan !== "lua_nova" ? (
         <button type="button" onClick={() => {

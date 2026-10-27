@@ -8,7 +8,7 @@ import { storyBillingLocks } from "@/lib/refugio/studio-limits";
 import type { Story } from "@/lib/refugio/stories";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
-const lang = z.enum(["pt", "es"]);
+const lang = z.enum(["pt", "es", "en"]);
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);

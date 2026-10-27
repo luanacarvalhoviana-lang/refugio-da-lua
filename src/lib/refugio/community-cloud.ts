@@ -3,7 +3,7 @@ import { z } from "zod";
 import { PACTO_VERSION } from "@/lib/refugio/pacto";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
-const lang = z.enum(["pt", "es"]);
+const lang = z.enum(["pt", "es", "en"]);
 
 const sceneInput = z.object({
   slug: z.string().trim().min(2).max(80),

@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { getSql } from "@/lib/db";
+import { dateLocale } from "@/lib/refugio/lang";
 import { vipPlanCatalog, type VipPlanKey, type VipSubscriptionStatus } from "@/lib/refugio/vip";
 import { STORY_PLANS, onceKey, type OnceKey, type StoryInterval, type StoryPlanKey, withinRefundWindow, ONCE_ITEMS } from "@/lib/refugio/story-plans";
 
@@ -239,6 +240,7 @@ export async function createStoryCheckout(input: {
   email: string;
   userId: string;
   origin: string;
+  lang?: "pt" | "es" | "en";
 }) {
   const details = STORY_PLANS[input.plan];
   const amount = input.interval === "year" ? details.year : details.month;
@@ -255,7 +257,7 @@ export async function createStoryCheckout(input: {
     success_url: `${input.origin}/planos/obrigada?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${input.origin}/planos/cancelado`,
     customer_email: input.email,
-    locale: "pt-BR",
+    locale: dateLocale(input.lang ?? "pt"),
     "line_items[0][quantity]": "1",
     "payment_method_types[0]": "card",
     "allow_promotion_codes": "true",
@@ -352,7 +354,7 @@ export async function createOnceCheckout(input: {
   email: string;
   userId: string;
   origin: string;
-  lang: "pt" | "es";
+  lang: "pt" | "es" | "en";
 }) {
   const details = ONCE_ITEMS[input.item];
   const sql = await getSql();
@@ -368,7 +370,7 @@ export async function createOnceCheckout(input: {
     success_url: `${input.origin}/planos?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${input.origin}/planos?checkout=cancelled`,
     customer_email: input.email,
-    locale: input.lang === "es" ? "es" : "pt-BR",
+    locale: dateLocale(input.lang),
     "line_items[0][quantity]": "1",
     "line_items[0][price_data][currency]": "brl",
     "line_items[0][price_data][unit_amount]": String(details.amount),
@@ -430,7 +432,7 @@ export async function createShopPayment(input: {
   origin: string;
   successPath: string;
   cancelPath: string;
-  lang: "pt" | "es";
+  lang: "pt" | "es" | "en";
   metadata: Record<string, string>;
 }) {
   const body: Record<string, string> = {
@@ -438,7 +440,7 @@ export async function createShopPayment(input: {
     success_url: `${input.origin}${input.successPath}`,
     cancel_url: `${input.origin}${input.cancelPath}`,
     customer_email: input.email,
-    locale: input.lang === "es" ? "es" : "pt-BR",
+    locale: dateLocale(input.lang),
     "line_items[0][quantity]": "1",
   };
   if (input.priceId && input.metadata.discounted !== "1") {

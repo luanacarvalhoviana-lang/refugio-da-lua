@@ -1,10 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { asLang } from "@/lib/refugio/lang";
 import { ageFromBirth } from "@/lib/refugio/reading-local";
 
 const progressInput = z.object({
   slug: z.string().trim().min(2).max(80),
-  lang: z.enum(["pt", "es"]),
+  lang: z.enum(["pt", "es", "en"]),
   sceneId: z.string().trim().min(1).max(40),
   affinity: z.number().int().min(-30).max(30),
   clues: z.array(z.string().trim().min(1).max(180)).max(12),
@@ -21,7 +22,7 @@ async function userId() {
 }
 
 export const loadReading = createServerFn({ method: "POST" })
-  .validator(z.object({ slug: z.string().min(2).max(80), lang: z.enum(["pt", "es"]) }))
+  .validator(z.object({ slug: z.string().min(2).max(80), lang: z.enum(["pt", "es", "en"]) }))
   .handler(async ({ data }) => {
     const id = await userId();
     if (!id) return { signedIn: false as const, progress: null };
@@ -116,7 +117,7 @@ export const listReadings = createServerFn({ method: "GET" }).handler(async () =
     signedIn: true as const,
     readings: rows.map((row) => ({
       slug: row.story_slug,
-      lang: row.lang === "es" ? ("es" as const) : ("pt" as const),
+      lang: asLang(row.lang),
       title: row.story_title || row.story_slug,
       sceneId: row.scene_id,
       ended: Boolean(row.ending_key),
@@ -149,7 +150,7 @@ export const loadGardenCloud = createServerFn({ method: "POST" }).handler(async 
     signedIn: true as const,
     endings: rows.map((row) => ({
       slug: row.story_slug,
-      lang: row.lang === "es" ? ("es" as const) : ("pt" as const),
+      lang: asLang(row.lang),
       key: row.ending_key,
       title: row.ending_title,
       flower: row.flower,

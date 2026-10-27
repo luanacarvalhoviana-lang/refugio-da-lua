@@ -1,4 +1,5 @@
 import type { Story } from "@/lib/refugio/stories";
+import { cafeEn, tideEn } from "@/lib/refugio/stories-en";
 
 const cafePt: Story = {
   slug: "a-chave",
@@ -321,4 +322,5 @@ const tideEs: Story = {
 export const moreStories = {
   pt: [cafePt, tidePt],
   es: [cafeEs, tideEs],
+  en: [cafeEn, tideEn],
 };

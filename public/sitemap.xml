@@ -4,11 +4,19 @@
     <loc>https://www.refugiodalua.com.br/</loc>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
     <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.refugiodalua.com.br/en"/>
   </url>
   <url>
     <loc>https://www.refugiodalua.com.br/es</loc>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
     <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.refugiodalua.com.br/en"/>
+  </url>
+  <url>
+    <loc>https://www.refugiodalua.com.br/en</loc>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
+    <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.refugiodalua.com.br/en"/>
   </url>
   <url><loc>https://www.refugiodalua.com.br/sobre</loc></url>
   <url><loc>https://www.refugiodalua.com.br/planos</loc></url>

@@ -2,7 +2,7 @@ import type { Ending } from "@/lib/refugio/stories";
 
 export type SavedEnding = {
   slug: string;
-  lang: "pt" | "es";
+  lang: "pt" | "es" | "en";
   title: string;
   story: string;
   flower: string;
@@ -16,7 +16,7 @@ const BIRTH = "refugio-birth";
 
 export type LocalProgress = {
   slug: string;
-  lang: "pt" | "es";
+  lang: "pt" | "es" | "en";
   sceneId: string;
   affinity: number;
   clues: string[];
@@ -35,7 +35,7 @@ export function readEndings(): SavedEnding[] {
   }
 }
 
-export function saveEnding(input: { slug: string; lang: "pt" | "es"; story: string; ending: Ending }) {
+export function saveEnding(input: { slug: string; lang: "pt" | "es" | "en"; story: string; ending: Ending }) {
   const list = readEndings().filter((item) => !(item.slug === input.slug && item.key === input.ending.key && item.lang === input.lang));
   list.unshift({
     slug: input.slug,
@@ -82,7 +82,7 @@ function readAllProgress(): LocalProgress[] {
   }
 }
 
-export function readProgress(slug: string, lang: "pt" | "es") {
+export function readProgress(slug: string, lang: "pt" | "es" | "en") {
   return readAllProgress().find((item) => item.slug === slug && item.lang === lang) ?? null;
 }
 

@@ -54,7 +54,7 @@ export const saveAuthorTrack = createServerFn({ method: "POST" })
     mime: z.string().trim().max(40),
     audio: z.string().min(32).max(3_500_000),
     direitos: z.literal(true),
-    lang: z.enum(["pt", "es"]),
+    lang: z.enum(["pt", "es", "en"]),
   }))
   .handler(async ({ data }) => {
     const author = await authorId();

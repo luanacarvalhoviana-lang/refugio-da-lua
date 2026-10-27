@@ -4,7 +4,7 @@ import { z } from "zod";
 export const saveStoryAlert = createServerFn({ method: "POST" })
   .validator(z.object({
     email: z.string().trim().email().max(160),
-    lang: z.enum(["pt", "es"]),
+    lang: z.enum(["pt", "es", "en"]),
   }))
   .handler(async ({ data }) => {
     const { getSql } = await import("@/lib/db");

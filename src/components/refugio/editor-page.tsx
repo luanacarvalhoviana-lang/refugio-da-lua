@@ -69,7 +69,7 @@ export function EditorPage() {
       return;
     }
     if (result.error) {
-      setError(lang === "es" ? "No se pudo publicar. Prueba otro título." : "Não deu para publicar. Tente outro título.");
+      setError(lang === "en" ? "Could not publish. Try another title." : lang === "es" ? "No se pudo publicar. Prueba otro título." : "Não deu para publicar. Tente outro título.");
       return;
     }
     if (result.slug) setSlug(result.slug);

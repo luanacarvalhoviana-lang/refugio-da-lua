@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useHouse } from "@/components/refugio/story-shell";
+import { pactoPath } from "@/lib/refugio/lang";
 import { readPact, rememberPactNext } from "@/lib/refugio/pacto";
 
 export function PactGuard({ children }: { children: ReactNode }) {
@@ -11,7 +12,7 @@ export function PactGuard({ children }: { children: ReactNode }) {
       return;
     }
     rememberPactNext(`${window.location.pathname}${window.location.search}`);
-    window.location.replace(lang === "es" ? "/es/pacto" : "/pacto");
+    window.location.replace(pactoPath(lang));
   }, [lang]);
   if (!open) return null;
   return children;

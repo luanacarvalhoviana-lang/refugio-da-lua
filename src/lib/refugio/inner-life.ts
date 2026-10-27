@@ -85,6 +85,47 @@ const thoughts: Record<string, Record<string, string>> = {
     "frase:mar": "Quedarme hasta que el agua se lleve el nombre es quedarme con ella en lo que duele.",
     "frase:ir": "Hay frases que ninguna arena arregla. Lo sé, y aun así quería.",
   },
+  "en:o-bilhete": {
+    "mesa:abrir": "If I open it now, I can no longer pretend I did not see it.",
+    "mesa:ir": "The light at the end of the hall looks like an invitation, not a warning.",
+    "mesa:apagar": "Turning off the light is easier than asking who called me.",
+    "corredor:guardar": "The flower fits in a pocket. Her name does not, not yet.",
+    "corredor:chamar": "Saying the name out loud makes the room smaller.",
+    "helena:porque": "I want to know if I was chosen or if I only arrived too early.",
+    "helena:medo": "My body steps back, but my feet stay.",
+    "helena:devolver": "Returning the book is a way of owing nothing.",
+    "margem:ficar": "Staying is not courage. It is not wanting to leave her.",
+    "margem:nome": "If I know the name, the absence becomes solid.",
+    "margem:ir": "I say it is late. What I have is fear that it is not.",
+    "porta:sair": "The rain does not scare me. Leaving without her does.",
+    "porta:amanha": "Tomorrow gives me time to want this for real.",
+    "porta:fechar": "The lock makes a small and final sound.",
+  },
+  "en:a-chave": {
+    "balcao:devolver": "Telling the truth puts me on her side, not on the key’s.",
+    "balcao:quem": "I want the name before the story. A name fits better in the rain.",
+    "balcao:sair": "The street is cold, but it does not ask for an explanation.",
+    "nome:ficar": "If I stay, I become part of the night she wanted with no witness.",
+    "nome:medo": "This is too big. I stay anyway, one step back.",
+    "gaveta:verdade": "Being recognized is a choice. I want to know if she wants it.",
+    "gaveta:foto": "The photo is safer than the right question.",
+    "gaveta:fechar": "Closing the drawer also closes my part.",
+    "porta:olhar": "Looking without calling is the gentlest way not to decide for her.",
+    "porta:amanha": "Tomorrow the café opens. We can too.",
+    "porta:ir": "Each of us to her own side. It hurts less if I say it first.",
+  },
+  "en:a-mare": {
+    "areia:perto": "If I read it, I can no longer pretend it is a drawing.",
+    "areia:ajudar": "Holding the light is a way to stay without invading the name.",
+    "areia:voltar": "The sidewalk is dry. It is also far from her.",
+    "luz:ouvir": "I want the whole sentence, without fixing anything yet.",
+    "luz:escrever": "Kneeling in the water is accepting that the name matters.",
+    "nome:ouvir": "I stay. Listening costs less than leaving now.",
+    "nome:apagar": "The tide finishes what I do not have the courage to erase.",
+    "frase:mensagem": "The signal comes back on the street. The courage, maybe too.",
+    "frase:mar": "Staying until the water takes the name is staying with her in what hurts.",
+    "frase:ir": "Some sentences no sand can fix. I know that, and I wanted to anyway.",
+  },
 };
 
 const letters: Record<string, Record<string, Letter>> = {
@@ -170,6 +211,48 @@ const letters: Record<string, Record<string, Letter>> = {
     sozinha: {
       from: "Nara",
       text: "Volviste a la vereda, o dijiste que la arena no arregla una frase. Está bien. El nombre se fue con la marea. Yo sigo en la playa, con la luz débil, por si miras atrás y quieres el resto de la historia.",
+    },
+  },
+  "en:o-bilhete": {
+    chuva: {
+      from: "Helena",
+      text: "You left with me and the book stayed dry between us. I still have not told everything. It does not have to be today. If the rain passes and you are still close, I finish the name that did not fit on the note.",
+    },
+    espera: {
+      from: "Helena",
+      text: "I left the novel on your desk, with the flower you did not return. Tomorrow the last shelf lights up again. If you come, I understand that you stayed. If you do not come, I understand that too. Both things are honest.",
+    },
+    fechado: {
+      from: "Helena",
+      text: "The light went out and I did not follow you. Not every secret wants the first night. If the book ever comes back to your hand, know that I was still on the last shelf when you left.",
+    },
+  },
+  "en:a-chave": {
+    junto: {
+      from: "Lia",
+      text: "We crossed and I did not say her name. Thank you for not calling it for me. The key stays in your hand if you want to return it tomorrow. Or sit by the window. The café opens. So do I.",
+    },
+    amanha: {
+      from: "Lia",
+      text: "I will open on time. The photo stays in the drawer, and the note too, until I know what to do with both. If you come by for the usual coffee, I will know this night was not only rain.",
+    },
+    sozinha: {
+      from: "Lia",
+      text: "You left and I closed the drawer. I am not angry. Some nights the witness has to leave so the story can go on from this side. If the key shows up on the counter, you can leave it. I will find it.",
+    },
+  },
+  "en:a-mare": {
+    mensagem: {
+      from: "Nara",
+      text: "The signal came back on the corner and I sent the message. I did not tell what you heard. I only said I was wrong, and that loving her was never a phase. If she answers, I will tell you. If she does not, thank you for walking this far.",
+    },
+    mare: {
+      from: "Nara",
+      text: "The water took the name and you stayed. I did not ask for that. I am glad it happened. In the morning the sand will be smooth. What I said last week will not. But this night was less alone.",
+    },
+    sozinha: {
+      from: "Nara",
+      text: "You went back to the sidewalk, or you said sand does not fix a sentence. That is all right. The name went with the tide. I am still on the beach, with the weak light, in case you look back and want the rest of the story.",
     },
   },
 };

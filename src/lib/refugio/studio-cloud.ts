@@ -8,7 +8,7 @@ import type { Story } from "@/lib/refugio/stories";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
 const RESERVED = new Set(["o-bilhete", "a-chave", "a-mare"]);
-const lang = z.enum(["pt", "es"]);
+const lang = z.enum(["pt", "es", "en"]);
 
 const choiceSchema = z.object({
   id: z.string().trim().min(2).max(40),
@@ -61,7 +61,7 @@ type StoryRow = {
   slug: string;
   titulo: string;
   sinopse: string;
-  idioma: "pt" | "es";
+  idioma: "pt" | "es" | "en";
   classificacao: "livre" | "14" | "16";
   generos: string;
   lugar: string;

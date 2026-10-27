@@ -21,7 +21,7 @@ type ProfileRow = {
   slug: string;
   bio: string;
   foto: string | null;
-  idioma: "pt" | "es";
+  idioma: "pt" | "es" | "en";
   selo_fundadora: boolean;
 };
 
@@ -121,7 +121,7 @@ export const saveAuthorProfile = createServerFn({ method: "POST" })
     nome: z.string().trim().min(2).max(40),
     bio: z.string().trim().max(300),
     foto: z.string().max(2_800_000).nullable(),
-    idioma: z.enum(["pt", "es"]),
+    idioma: z.enum(["pt", "es", "en"]),
   }))
   .handler(async ({ data }) => {
     if (!photoOk(data.foto)) return { ok: false as const, reason: "foto" as const };

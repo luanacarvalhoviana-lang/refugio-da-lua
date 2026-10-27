@@ -1,5 +1,7 @@
 import { moreStories } from "@/lib/refugio/stories-more";
-export type Lang = "pt" | "es";
+import { ticketEn } from "@/lib/refugio/stories-en";
+
+export type Lang = "pt" | "es" | "en";
 
 export type Choice = {
   id: string;
@@ -241,6 +243,7 @@ const es: Story = {
 export const stories: Record<Lang, Story[]> = {
   pt: [pt, ...moreStories.pt],
   es: [es, ...moreStories.es],
+  en: [ticketEn, ...moreStories.en],
 };
 
 export function getStory(lang: Lang, slug: string) {
@@ -257,7 +260,7 @@ export function artOf(story: Story) {
   if (place.includes("templ")) return "/scenes/templo.jpg";
   if (place.includes("varanda") || place.includes("balc")) return "/scenes/varanda.jpg";
   if (place.includes("caf")) return "/scenes/cafe.jpg";
-  if (place.includes("praia") || place.includes("playa")) return "/scenes/praia.jpg";
+  if (place.includes("praia") || place.includes("playa") || place.includes("beach")) return "/scenes/praia.jpg";
   return "/scenes/biblioteca.jpg";
 }
 

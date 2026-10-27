@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const letter = z.object({
   slug: z.string().trim().min(2).max(48),
-  lang: z.enum(["pt", "es"]),
+  lang: z.enum(["pt", "es", "en"]),
   key: z.string().trim().min(1).max(40),
   story: z.string().trim().min(1).max(80),
   from: z.string().trim().min(1).max(40),

@@ -1,4 +1,5 @@
 import type { Lang } from "@/lib/refugio/stories";
+import { en } from "@/lib/refugio/site-copy-en";
 
 const pt = {
   brand: "Refúgio da Lua",
@@ -842,6 +843,10 @@ const es: typeof pt = {
   alertFail: "No se pudo anotar ahora. Inténtalo de nuevo.",
 };
 
+const english: typeof pt = en;
+
 export function copy(lang: Lang) {
-  return lang === "es" ? es : pt;
+  if (lang === "es") return es;
+  if (lang === "en") return english;
+  return pt;
 }

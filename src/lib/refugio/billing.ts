@@ -45,6 +45,7 @@ export const startStoryCheckout = createServerFn({ method: "POST" })
       plan: z.enum(["lua_cheia", "constelacao"]),
       interval: z.enum(["month", "year"]),
       origin: z.string().url(),
+      lang: z.enum(["pt", "es", "en"]).optional(),
     }),
   )
   .handler(async ({ data }) => {
@@ -61,6 +62,7 @@ export const startStoryCheckout = createServerFn({ method: "POST" })
       email,
       userId: user.id,
       origin: data.origin,
+      lang: data.lang,
     });
     return { ok: true as const, url: session.url };
   });
@@ -105,7 +107,7 @@ export const startOnceCheckout = createServerFn({ method: "POST" })
     z.object({
       item: z.enum(["pack-noite", "a-lampada", "antes-da-lua", "gorjeta"]),
       origin: z.string().url(),
-      lang: z.enum(["pt", "es"]),
+      lang: z.enum(["pt", "es", "en"]),
     }),
   )
   .handler(async ({ data }) => {

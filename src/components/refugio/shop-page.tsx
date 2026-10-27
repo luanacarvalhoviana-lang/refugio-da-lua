@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { bonusText, buyProduct, claimMonthPack, confirmShopReturn, leaveTip, moonCount, myBox, setPackEnabled, shopShelf, storyLook } from "@/lib/refugio/shop-cloud";
+import { shopText } from "@/lib/refugio/shop-text";
 
 type Product = {
   id: string;
@@ -105,8 +106,8 @@ export function ShopPage() {
           <div className="plan-grid once-grid">
             {shown.map((product) => {
               const owned = mine.includes(product.slug);
-              const title = lang === "es" ? product.title_es : product.title_pt;
-              const desc = lang === "es" ? product.desc_es : product.desc_pt;
+              const title = shopText(lang, product).title;
+              const desc = shopText(lang, product).desc;
               const pack = product.type === "story_pack" || product.type === "global_pack";
               return (
                 <article key={product.slug}>
@@ -151,7 +152,7 @@ export function MemoryBox() {
     <ul className="once-owned">
       {items.map((item) => (
         <li key={item.slug}>
-          <span>{lang === "es" ? item.title_es : item.title_pt}</span>
+          <span>{shopText(lang, item).title}</span>
           {item.type === "story_pack" || item.type === "global_pack" ? (
             <button type="button" onClick={() => {
               void setPackEnabled({ data: { slug: item.slug, enabled: !item.enabled } }).then(() => {
@@ -183,7 +184,7 @@ export function StoryExtras({ slug }: { slug: string }) {
       <div className="story-list">
         {products.map((product) => (
           <a key={product.slug} className="story-card" href="/loja">
-            <strong>{lang === "es" ? product.title_es : product.title_pt}</strong>
+            <strong>{shopText(lang, product).title}</strong>
             <p>{mine.includes(product.slug) ? t.shopOwned : reais(product.price_cents, false)}</p>
           </a>
         ))}

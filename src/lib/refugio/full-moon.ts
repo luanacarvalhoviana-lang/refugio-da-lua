@@ -1,4 +1,5 @@
 /** Pico de uma lua cheia conhecida. O ciclo médio leva as próximas. */
+import { dateLocale } from "@/lib/refugio/lang";
 const EPOCH = Date.parse("2026-10-26T04:12:00Z");
 const MONTH = 29.530588853 * 24 * 60 * 60 * 1000;
 const SAO_PAULO = 3 * 60 * 60 * 1000;
@@ -45,8 +46,8 @@ export function moonStatus(now = Date.now()) {
   return { open: false as const, until: null, next: upcoming?.start ?? peak };
 }
 
-export function moonDateLabel(ms: number, lang: "pt" | "es") {
-  return new Intl.DateTimeFormat(lang === "es" ? "es" : "pt-BR", {
+export function moonDateLabel(ms: number, lang: "pt" | "es" | "en") {
+  return new Intl.DateTimeFormat(dateLocale(lang), {
     day: "numeric",
     month: "long",
     timeZone: "America/Sao_Paulo",

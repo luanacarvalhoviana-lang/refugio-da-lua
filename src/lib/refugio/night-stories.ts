@@ -1,4 +1,5 @@
 import type { Lang, Story } from "@/lib/refugio/stories";
+import { lampEn, moonEn } from "@/lib/refugio/stories-en";
 
 const lampadaPt: Story = {
   slug: "a-lampada",
@@ -293,4 +294,5 @@ const luaEs: Story = {
 export const nightStories: Record<Lang, Story[]> = {
   pt: [lampadaPt, luaPt],
   es: [lampadaEs, luaEs],
+  en: [lampEn, moonEn],
 };

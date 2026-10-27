@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { ThemeToggle } from "@/components/refugio/theme-toggle";
+import { homePath } from "@/lib/refugio/lang";
 import { useT, type Lang } from "@/lib/i18n";
 import { useRefugioStore } from "@/lib/refugio/store";
 import { joinWaitlist, waitlistCount } from "@/lib/refugio/waitlist.server";
@@ -42,11 +43,11 @@ export function SoonPage({ pageLang }: { pageLang: Lang }) {
     event.preventDefault();
     setError("");
     if (!email.includes("@")) {
-      setError(pageLang === "es" ? "Falta el correo." : "Falta o e-mail.");
+      setError(pageLang === "en" ? "The email is missing." : pageLang === "es" ? "Falta el correo." : "Falta o e-mail.");
       return;
     }
     if (!consent) {
-      setError(pageLang === "es" ? "Marca la casilla para continuar." : "Marque a caixa para continuar.");
+      setError(pageLang === "en" ? "Check the box to continue." : pageLang === "es" ? "Marca la casilla para continuar." : "Marque a caixa para continuar.");
       return;
     }
     setPending(true);
@@ -62,10 +63,10 @@ export function SoonPage({ pageLang }: { pageLang: Lang }) {
           consent: true,
         },
       });
-      const next = pageLang === "es" ? "/es/obrigada" : "/obrigada";
+      const next = `${homePath(pageLang) === "/" ? "" : homePath(pageLang)}/obrigada`;
       window.location.assign(`${next}?code=${encodeURIComponent(result.code)}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : pageLang === "es" ? "No pude guardar ahora." : "Não consegui guardar agora.");
+      setError(err instanceof Error ? err.message : pageLang === "en" ? "I could not save it now." : pageLang === "es" ? "No pude guardar ahora." : "Não consegui guardar agora.");
     } finally {
       setPending(false);
     }
@@ -83,6 +84,9 @@ export function SoonPage({ pageLang }: { pageLang: Lang }) {
             </a>
             <a href="/es" className={pageLang === "es" ? "is-on" : ""}>
               ES
+            </a>
+            <a href="/en" className={pageLang === "en" ? "is-on" : ""}>
+              EN
             </a>
           </nav>
           <ThemeToggle compact />

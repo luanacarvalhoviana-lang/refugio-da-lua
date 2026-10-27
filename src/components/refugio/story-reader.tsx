@@ -538,8 +538,9 @@ export function StoryList() {
   useEffect(() => {
     void featuredAuthors().then(setFeatured).catch(() => setFeatured([]));
   }, []);
-  const genres = [...new Set(shelf.flatMap((story) => story.genres))].sort((a, b) => a.localeCompare(b, lang === "es" ? "es" : "pt"));
-  const places = [...new Set(shelf.map((story) => story.place))].sort((a, b) => a.localeCompare(b, lang === "es" ? "es" : "pt"));
+  const sortLocale = lang === "en" ? "en" : lang === "es" ? "es" : "pt";
+  const genres = [...new Set(shelf.flatMap((story) => story.genres))].sort((a, b) => a.localeCompare(b, sortLocale));
+  const places = [...new Set(shelf.map((story) => story.place))].sort((a, b) => a.localeCompare(b, sortLocale));
   const needle = foldName(query);
   const visible = shelf.filter((story) => {
     if (needle && !foldName(story.title).includes(needle) && !foldName(story.author).includes(needle)) return false;

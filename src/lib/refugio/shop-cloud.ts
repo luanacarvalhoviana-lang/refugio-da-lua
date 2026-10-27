@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { BONUS_SCENES } from "@/lib/refugio/shop-bonus";
+import { shopText, tipText } from "@/lib/refugio/shop-text";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
 const TIP_PRESETS = new Set([300, 500, 1000]);
@@ -78,7 +79,7 @@ export const shopShelf = createServerFn({ method: "GET" }).handler(async () => {
 });
 
 export const buyProduct = createServerFn({ method: "POST" })
-  .validator(z.object({ slug: z.string().trim().min(2).max(48), origin: z.string().url(), lang: z.enum(["pt", "es"]) }))
+  .validator(z.object({ slug: z.string().trim().min(2).max(48), origin: z.string().url(), lang: z.enum(["pt", "es", "en"]) }))
   .handler(async ({ data }) => {
     if (!shopOpen()) return { ok: false as const, reason: "breve" as const };
     const user = await sessionUser();
@@ -98,8 +99,8 @@ export const buyProduct = createServerFn({ method: "POST" })
     const amount = coupon ? product.price_cents : priceFor(product.price_cents, subscriber);
     const { createShopPayment } = await import("./stripe.server");
     const session = await createShopPayment({
-      name: data.lang === "es" ? product.title_es : product.title_pt,
-      description: data.lang === "es" ? product.desc_es : product.desc_pt,
+      name: shopText(data.lang, product).title,
+      description: shopText(data.lang, product).desc,
       amount,
       priceId: product.stripe_price_id,
       email,
@@ -221,7 +222,7 @@ export const storyLook = createServerFn({ method: "POST" })
   });
 
 export const bonusText = createServerFn({ method: "POST" })
-  .validator(z.object({ slug: z.string().trim().min(2).max(48), lang: z.enum(["pt", "es"]) }))
+  .validator(z.object({ slug: z.string().trim().min(2).max(48), lang: z.enum(["pt", "es", "en"]) }))
   .handler(async ({ data }) => {
     const user = await sessionUser();
     if (!user?.id) return { ok: false as const, reason: "conta" as const };
@@ -243,7 +244,7 @@ export const leaveTip = createServerFn({ method: "POST" })
     amountCents: z.number().int().min(200).max(20000),
     message: z.string().trim().max(200).optional(),
     origin: z.string().url(),
-    lang: z.enum(["pt", "es"]),
+    lang: z.enum(["pt", "es", "en"]),
   }))
   .handler(async ({ data }) => {
     if (!shopOpen()) return { ok: false as const, reason: "breve" as const };
@@ -254,9 +255,10 @@ export const leaveTip = createServerFn({ method: "POST" })
     const email = user?.email?.trim().toLowerCase() || "";
     if (!user?.id || !email) return { ok: false as const, reason: "conta" as const };
     const { createShopPayment } = await import("./stripe.server");
+    const tip = tipText(data.lang);
     const session = await createShopPayment({
-      name: data.lang === "es" ? "Una luna para la autora" : "Uma lua para a autora",
-      description: data.lang === "es" ? "Una propina. No abre nada de la historia." : "Uma gorjeta. Não abre nada da história.",
+      name: tip.name,
+      description: tip.description,
       amount: data.amountCents,
       email,
       origin: data.origin,

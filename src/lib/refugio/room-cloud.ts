@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import type { Story } from "@/lib/refugio/stories";
 
-const lang = z.enum(["pt", "es"]);
+const lang = z.enum(["pt", "es", "en"]);
 
 const statsInput = z.object({
   slug: z.string().trim().min(2).max(80),
@@ -141,23 +141,23 @@ export const addNote = createServerFn({ method: "POST" })
     return { signedIn: true as const, full: false as const, id: noteId };
   });
 
-function placeOf(place: "biblioteca" | "cafe" | "praia", storyLang: "pt" | "es") {
+function placeOf(place: "biblioteca" | "cafe" | "praia", storyLang: "pt" | "es" | "en") {
   if (place === "cafe") {
     return {
-      label: storyLang === "es" ? "Café bajo la lluvia" : "Café na chuva",
+      label: storyLang === "en" ? "Café in the rain" : storyLang === "es" ? "Café bajo la lluvia" : "Café na chuva",
       art: "/scenes/cafe.jpg",
       sound: "/sounds/rain.mp3",
     };
   }
   if (place === "praia") {
     return {
-      label: storyLang === "es" ? "Playa de noche" : "Praia à noite",
+      label: storyLang === "en" ? "Night beach" : storyLang === "es" ? "Playa de noche" : "Praia à noite",
       art: "/scenes/praia.jpg",
       sound: "/sounds/ocean.mp3",
     };
   }
   return {
-    label: storyLang === "es" ? "Biblioteca antigua" : "Biblioteca antiga",
+    label: storyLang === "en" ? "Old library" : storyLang === "es" ? "Biblioteca antigua" : "Biblioteca antiga",
     art: "/scenes/biblioteca.jpg",
     sound: "/sounds/rain.mp3",
   };

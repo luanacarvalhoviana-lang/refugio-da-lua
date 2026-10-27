@@ -51,8 +51,12 @@ export function PactPage({ initialLang }: { initialLang?: Lang }) {
               <label className="soon-check">
                 <input type="checkbox" checked={marks[index]} onChange={() => toggle(index)} />
                 <span>
-                  {index === 5 ? (
-                    lang === "es" ? (
+                  {index === t.pactoItems.length - 1 ? (
+                    lang === "en" ? (
+                      <>
+                        I have read and accept the <a href="/regras">Community rules</a>, the <a href="/termos">Terms</a> and the <a href="/privacidade">Privacy</a> policy.
+                      </>
+                    ) : lang === "es" ? (
                       <>
                         Leí y acepto las <a href="/regras">Reglas de la comunidad</a>, los <a href="/termos">Términos</a> y la <a href="/privacidade">Privacidad</a>.
                       </>

@@ -18,6 +18,7 @@ import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as CriarRouteImport } from './routes/criar'
 import { Route as CuidarRouteImport } from './routes/cuidar'
 import { Route as DiarioRouteImport } from './routes/diario'
+import { Route as EnRouteImport } from './routes/en'
 import { Route as EsRouteImport } from './routes/es'
 import { Route as EscreverRouteImport } from './routes/escrever'
 import { Route as HistoriasRouteImport } from './routes/historias'
@@ -49,6 +50,9 @@ import { Route as AutoraSlugRouteImport } from './routes/autora.$slug'
 import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
 import { Route as ContaRedefinirSenhaRouteImport } from './routes/conta.redefinir-senha'
+import { Route as EnIndexRouteImport } from './routes/en.index'
+import { Route as EnObrigadaRouteImport } from './routes/en.obrigada'
+import { Route as EnPactoRouteImport } from './routes/en.pacto'
 import { Route as EsIndexRouteImport } from './routes/es.index'
 import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
 import { Route as EsPactoRouteImport } from './routes/es.pacto'
@@ -64,6 +68,7 @@ import { Route as PlanosObrigadaRouteImport } from './routes/planos.obrigada'
 import { Route as TrilhaIdRouteImport } from './routes/trilha.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
+import { Route as EnAutoraSlugRouteImport } from './routes/en.autora.$slug'
 import { Route as EsAutoraSlugRouteImport } from './routes/es.autora.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -109,6 +114,11 @@ const CuidarRoute = CuidarRouteImport.update({
 const DiarioRoute = DiarioRouteImport.update({
   id: '/diario',
   path: '/diario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnRoute = EnRouteImport.update({
+  id: '/en',
+  path: '/en',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EsRoute = EsRouteImport.update({
@@ -266,6 +276,21 @@ const ContaRedefinirSenhaRoute = ContaRedefinirSenhaRouteImport.update({
   path: '/redefinir-senha',
   getParentRoute: () => ContaRoute,
 } as any)
+const EnIndexRoute = EnIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnObrigadaRoute = EnObrigadaRouteImport.update({
+  id: '/obrigada',
+  path: '/obrigada',
+  getParentRoute: () => EnRoute,
+} as any)
+const EnPactoRoute = EnPactoRouteImport.update({
+  id: '/pacto',
+  path: '/pacto',
+  getParentRoute: () => EnRoute,
+} as any)
 const EsIndexRoute = EsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -341,6 +366,11 @@ const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
   path: '/api/stripe/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnAutoraSlugRoute = EnAutoraSlugRouteImport.update({
+  id: '/autora/$slug',
+  path: '/autora/$slug',
+  getParentRoute: () => EnRoute,
+} as any)
 const EsAutoraSlugRoute = EsAutoraSlugRouteImport.update({
   id: '/autora/$slug',
   path: '/autora/$slug',
@@ -357,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/criar': typeof CriarRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
+  '/en': typeof EnRouteWithChildren
   '/es': typeof EsRouteWithChildren
   '/escrever': typeof EscreverRouteWithChildren
   '/historias': typeof HistoriasRoute
@@ -388,6 +419,8 @@ export interface FileRoutesByFullPath {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/en/obrigada': typeof EnObrigadaRoute
+  '/en/pacto': typeof EnPactoRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -400,9 +433,11 @@ export interface FileRoutesByFullPath {
   '/planos/cancelado': typeof PlanosCanceladoRoute
   '/planos/obrigada': typeof PlanosObrigadaRoute
   '/trilha/$id': typeof TrilhaIdRoute
+  '/en/': typeof EnIndexRoute
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/en/autora/$slug': typeof EnAutoraSlugRoute
   '/es/autora/$slug': typeof EsAutoraSlugRoute
 }
 export interface FileRoutesByTo {
@@ -445,6 +480,8 @@ export interface FileRoutesByTo {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/en/obrigada': typeof EnObrigadaRoute
+  '/en/pacto': typeof EnPactoRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -457,9 +494,11 @@ export interface FileRoutesByTo {
   '/planos/cancelado': typeof PlanosCanceladoRoute
   '/planos/obrigada': typeof PlanosObrigadaRoute
   '/trilha/$id': typeof TrilhaIdRoute
+  '/en': typeof EnIndexRoute
   '/es': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/en/autora/$slug': typeof EnAutoraSlugRoute
   '/es/autora/$slug': typeof EsAutoraSlugRoute
 }
 export interface FileRoutesById {
@@ -473,6 +512,7 @@ export interface FileRoutesById {
   '/criar': typeof CriarRoute
   '/cuidar': typeof CuidarRoute
   '/diario': typeof DiarioRoute
+  '/en': typeof EnRouteWithChildren
   '/es': typeof EsRouteWithChildren
   '/escrever': typeof EscreverRouteWithChildren
   '/historias': typeof HistoriasRoute
@@ -504,6 +544,8 @@ export interface FileRoutesById {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/en/obrigada': typeof EnObrigadaRoute
+  '/en/pacto': typeof EnPactoRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -516,9 +558,11 @@ export interface FileRoutesById {
   '/planos/cancelado': typeof PlanosCanceladoRoute
   '/planos/obrigada': typeof PlanosObrigadaRoute
   '/trilha/$id': typeof TrilhaIdRoute
+  '/en/': typeof EnIndexRoute
   '/es/': typeof EsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
+  '/en/autora/$slug': typeof EnAutoraSlugRoute
   '/es/autora/$slug': typeof EsAutoraSlugRoute
 }
 export interface FileRouteTypes {
@@ -533,6 +577,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/cuidar'
     | '/diario'
+    | '/en'
     | '/es'
     | '/escrever'
     | '/historias'
@@ -564,6 +609,8 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/en/obrigada'
+    | '/en/pacto'
     | '/es/obrigada'
     | '/es/pacto'
     | '/escrever/confirmacao'
@@ -576,9 +623,11 @@ export interface FileRouteTypes {
     | '/planos/cancelado'
     | '/planos/obrigada'
     | '/trilha/$id'
+    | '/en/'
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/en/autora/$slug'
     | '/es/autora/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -621,6 +670,8 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/en/obrigada'
+    | '/en/pacto'
     | '/es/obrigada'
     | '/es/pacto'
     | '/escrever/confirmacao'
@@ -633,9 +684,11 @@ export interface FileRouteTypes {
     | '/planos/cancelado'
     | '/planos/obrigada'
     | '/trilha/$id'
+    | '/en'
     | '/es'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/en/autora/$slug'
     | '/es/autora/$slug'
   id:
     | '__root__'
@@ -648,6 +701,7 @@ export interface FileRouteTypes {
     | '/criar'
     | '/cuidar'
     | '/diario'
+    | '/en'
     | '/es'
     | '/escrever'
     | '/historias'
@@ -679,6 +733,8 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/en/obrigada'
+    | '/en/pacto'
     | '/es/obrigada'
     | '/es/pacto'
     | '/escrever/confirmacao'
@@ -691,9 +747,11 @@ export interface FileRouteTypes {
     | '/planos/cancelado'
     | '/planos/obrigada'
     | '/trilha/$id'
+    | '/en/'
     | '/es/'
     | '/api/auth/$'
     | '/api/stripe/webhook'
+    | '/en/autora/$slug'
     | '/es/autora/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -707,6 +765,7 @@ export interface RootRouteChildren {
   CriarRoute: typeof CriarRoute
   CuidarRoute: typeof CuidarRoute
   DiarioRoute: typeof DiarioRoute
+  EnRoute: typeof EnRouteWithChildren
   EsRoute: typeof EsRouteWithChildren
   EscreverRoute: typeof EscreverRouteWithChildren
   HistoriasRoute: typeof HistoriasRoute
@@ -808,6 +867,13 @@ declare module '@tanstack/react-router' {
       path: '/diario'
       fullPath: '/diario'
       preLoaderRoute: typeof DiarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en': {
+      id: '/en'
+      path: '/en'
+      fullPath: '/en'
+      preLoaderRoute: typeof EnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/es': {
@@ -1027,6 +1093,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContaRedefinirSenhaRouteImport
       parentRoute: typeof ContaRoute
     }
+    '/en/': {
+      id: '/en/'
+      path: '/'
+      fullPath: '/en/'
+      preLoaderRoute: typeof EnIndexRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/obrigada': {
+      id: '/en/obrigada'
+      path: '/obrigada'
+      fullPath: '/en/obrigada'
+      preLoaderRoute: typeof EnObrigadaRouteImport
+      parentRoute: typeof EnRoute
+    }
+    '/en/pacto': {
+      id: '/en/pacto'
+      path: '/pacto'
+      fullPath: '/en/pacto'
+      preLoaderRoute: typeof EnPactoRouteImport
+      parentRoute: typeof EnRoute
+    }
     '/es/': {
       id: '/es/'
       path: '/'
@@ -1132,6 +1219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/autora/$slug': {
+      id: '/en/autora/$slug'
+      path: '/autora/$slug'
+      fullPath: '/en/autora/$slug'
+      preLoaderRoute: typeof EnAutoraSlugRouteImport
+      parentRoute: typeof EnRoute
+    }
     '/es/autora/$slug': {
       id: '/es/autora/$slug'
       path: '/autora/$slug'
@@ -1153,6 +1247,22 @@ const ContaRouteChildren: ContaRouteChildren = {
 }
 
 const ContaRouteWithChildren = ContaRoute._addFileChildren(ContaRouteChildren)
+
+interface EnRouteChildren {
+  EnObrigadaRoute: typeof EnObrigadaRoute
+  EnPactoRoute: typeof EnPactoRoute
+  EnIndexRoute: typeof EnIndexRoute
+  EnAutoraSlugRoute: typeof EnAutoraSlugRoute
+}
+
+const EnRouteChildren: EnRouteChildren = {
+  EnObrigadaRoute: EnObrigadaRoute,
+  EnPactoRoute: EnPactoRoute,
+  EnIndexRoute: EnIndexRoute,
+  EnAutoraSlugRoute: EnAutoraSlugRoute,
+}
+
+const EnRouteWithChildren = EnRoute._addFileChildren(EnRouteChildren)
 
 interface EsRouteChildren {
   EsObrigadaRoute: typeof EsObrigadaRoute
@@ -1217,6 +1327,7 @@ const rootRouteChildren: RootRouteChildren = {
   CriarRoute: CriarRoute,
   CuidarRoute: CuidarRoute,
   DiarioRoute: DiarioRoute,
+  EnRoute: EnRouteWithChildren,
   EsRoute: EsRouteWithChildren,
   EscreverRoute: EscreverRouteWithChildren,
   HistoriasRoute: HistoriasRoute,

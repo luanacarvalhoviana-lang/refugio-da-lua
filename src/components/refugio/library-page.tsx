@@ -6,7 +6,7 @@ import { getStory } from "@/lib/refugio/stories";
 
 type ShelfItem = {
   slug: string;
-  lang: "pt" | "es";
+  lang: "pt" | "es" | "en";
   title: string;
   ended: boolean;
   endingTitle?: string | null;

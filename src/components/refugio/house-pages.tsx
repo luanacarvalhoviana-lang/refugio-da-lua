@@ -10,7 +10,7 @@ import { loadGardenCloud } from "@/lib/refugio/progress-cloud";
 import { readEndings, type SavedEnding } from "@/lib/refugio/reading-local";
 
 export function PlansPage() {
-  const { t } = useHouse();
+  const { t, lang } = useHouse();
   const { user } = useCurrentUserState();
   const [ready, setReady] = useState(false);
   const [cycle, setCycle] = useState<"month" | "year">("month");
@@ -42,7 +42,7 @@ export function PlansPage() {
     }
     setPending(plan);
     setNote("");
-    void startStoryCheckout({ data: { plan, interval: cycle, origin: window.location.origin } })
+    void startStoryCheckout({ data: { plan, interval: cycle, origin: window.location.origin, lang } })
       .then((result) => {
         if (result.ok && result.url) window.location.assign(result.url);
         else setNote(result.reason === "conta" ? t.planEnter : t.shopSoon);
