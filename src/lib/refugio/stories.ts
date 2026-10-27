@@ -1,6 +1,7 @@
 import { sharpPt } from "@/lib/refugio/stories-sharp";
 import { sharpEs } from "@/lib/refugio/stories-sharp-es";
 import { sharpEn } from "@/lib/refugio/stories-sharp-en";
+import { applyMemory } from "@/lib/refugio/story-memory";
 
 export type Lang = "pt" | "es" | "en";
 
@@ -19,6 +20,10 @@ export type Ending = {
   body: string;
   flower: string;
   letter?: { from: string; text: string };
+  /** The morning after this ending. */
+  morning?: { title: string; body: string };
+  /** If the reader made this choice, that morning replaces the default. */
+  morningIf?: Array<{ if: string; title: string; body: string }>;
 };
 
 export type Scene = {
@@ -30,6 +35,8 @@ export type Scene = {
   music?: string;
   /** Se houver, a música toca só esses segundos e o som ambiente volta. */
   musicFor?: number;
+  /** A paragraph that appears only if that earlier choice was taken. */
+  after?: Array<{ if: string; line: string }>;
 };
 
 export type Story = {
@@ -51,11 +58,11 @@ export type Story = {
   moonNight?: boolean;
 };
 
-export const stories: Record<Lang, Story[]> = {
+export const stories: Record<Lang, Story[]> = applyMemory({
   pt: sharpPt,
   es: sharpEs,
   en: sharpEn,
-};
+});
 
 export function getStory(lang: Lang, slug: string) {
   return stories[lang].find((story) => story.slug === slug) ?? null;

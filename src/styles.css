@@ -3822,6 +3822,36 @@ html.protect-on .diary-card::after {
 
 .same-choice { margin: 12px 0 0; color: #174b59; font-size: 14px; }
 .house.is-night .same-choice { color: #f6d77a; }
+.reader-memory {
+  margin: 16px 0 0;
+  padding-left: 14px;
+  border-left: 2px solid #174b59;
+  font-family: "Lora", Georgia, serif;
+  font-size: 20px;
+  line-height: 1.55;
+}
+.morning-sheet {
+  display: grid;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(23, 75, 89, 0.06);
+  border: 1px solid rgba(23, 75, 89, 0.22);
+}
+.morning-sheet h3 {
+  margin: 0;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+}
+.morning-sheet p { margin: 0; font-family: "Lora", Georgia, serif; line-height: 1.55; }
+.same-sting {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-style: italic;
+  color: #174b59;
+}
 .community { margin-top: 16px; }
 .comment-list { display: grid; gap: 10px; margin-top: 10px; }
 .comment-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }

@@ -18,6 +18,7 @@ import { keepLetter } from "@/lib/refugio/kept-letters";
 import { keepStoryLetter } from "@/lib/refugio/letter-cloud";
 import { MoonNightNote } from "@/components/refugio/moon-night";
 import { artOf, authorSlug, sceneOf, type Choice, type Lang, type Story } from "@/lib/refugio/stories";
+import { cluesWithPick, picksIn, remembered, shownClues, stingKind } from "@/lib/refugio/path-picks";
 import { crossfade, sourceForScene } from "@/lib/refugio/music";
 import { HiddenPath, StoryExtras, TipBox } from "@/components/refugio/shop-page";
 import { storyLook } from "@/lib/refugio/shop-cloud";
@@ -49,10 +50,12 @@ export function StoryReader({ slug }: { slug: string }) {
   const [birth, setBirth] = useState<string | null>(null);
   const [ageReady, setAgeReady] = useState(false);
   const [kept, setKept] = useState(false);
-  const [trail, setTrail] = useState<Array<{ sceneId: string; affinity: number; clues: string[] }>>([]);
+  const [trail, setTrail] = useState<Array<{ sceneId: string; affinity: number; clues: string[]; picks: string[] }>>([]);
   const [arrived, setArrived] = useState<{ from: string; choiceId: string; thought: string } | null>(null);
   const [letterKept, setLetterKept] = useState(false);
-  useEffect(() => { setLetterKept(false); }, [sceneId]);
+  const [picks, setPicks] = useState<string[]>([]);
+  const [showMorning, setShowMorning] = useState(false);
+  useEffect(() => { setLetterKept(false); setShowMorning(false); }, [sceneId]);
   const [samePercent, setSamePercent] = useState<number | null>(null);
   const [volume, setVolume] = useState(0.35);
   const slots = useRef<Array<HTMLAudioElement | null>>([null, null]);
@@ -107,16 +110,19 @@ export function StoryReader({ slug }: { slug: string }) {
           setSceneId(remote.sceneId);
           setAffinity(remote.affinity);
           setClues(remote.clues);
+          setPicks(picksIn(remote.clues));
           setKept(result.signedIn);
         } else if (local) {
           setSceneId(local.sceneId);
           setAffinity(local.affinity);
           setClues(local.clues);
+          setPicks(picksIn(local.clues));
           setKept(false);
         } else {
           setSceneId(story.start);
           setAffinity(0);
           setClues([]);
+          setPicks([]);
           setKept(result.signedIn);
         }
       })
@@ -125,6 +131,7 @@ export function StoryReader({ slug }: { slug: string }) {
         setSceneId(local.sceneId);
         setAffinity(local.affinity);
         setClues(local.clues);
+        setPicks(picksIn(local.clues));
       });
     return () => {
       cancel = true;
@@ -226,11 +233,13 @@ export function StoryReader({ slug }: { slug: string }) {
   }
 
   function choose(choice: Choice) {
-    const nextClues = choice.clue && !clues.includes(choice.clue) ? [...clues, choice.clue] : clues;
+    const nextPicks = [...picks, `${sceneId}:${choice.id}`];
+    const nextClues = cluesWithPick(clues, nextPicks, choice.clue);
     const nextAffinity = affinity + (choice.affinity ?? 0);
-    if (choice.clue) setClues(nextClues);
+    setClues(nextClues);
+    setPicks(nextPicks);
     setAffinity(nextAffinity);
-    setTrail((current) => [...current, { sceneId, affinity, clues }]);
+    setTrail((current) => [...current, { sceneId, affinity, clues, picks }]);
     setArrived({ from: sceneId, choiceId: choice.id, thought: choice.thought || thoughtFor(story!.slug, lang, sceneId, choice.id) });
     setSamePercent(null);
     setSceneId(choice.to);
@@ -254,6 +263,7 @@ export function StoryReader({ slug }: { slug: string }) {
     setSceneId(previous.sceneId);
     setAffinity(previous.affinity);
     setClues(previous.clues);
+    setPicks(previous.picks);
     persist(story, previous.sceneId, previous.affinity, previous.clues);
     if (soundRef.current) playScene([...trail.slice(0, -1).map((step) => step.sceneId), previous.sceneId]);
   }
@@ -306,6 +316,15 @@ export function StoryReader({ slug }: { slug: string }) {
   }
 
   const moons = Math.max(0, Math.min(5, affinity + 2));
+  const memory = remembered(scene.after, picks)?.line ?? null;
+  const morning = remembered(scene.ending?.morningIf, picks) ?? scene.ending?.morning ?? null;
+  const kind = stingKind(samePercent);
+  const sting = kind === "high"
+    ? t.sameStingHigh.replace("{n}", String(samePercent))
+    : kind === "low"
+      ? t.sameStingLow.replace("{n}", String(samePercent))
+      : null;
+  const visibleClues = shownClues(clues);
 
   return (
     <StoryShell>
@@ -343,7 +362,7 @@ export function StoryReader({ slug }: { slug: string }) {
               <span>{"☾".repeat(5 - moons)}</span>
             </p>
             <p className="soon-kicker">{t.clues}</p>
-            {clues.length === 0 ? <p>{t.noClue}</p> : <ul>{clues.map((clue) => <li key={clue}>{clue}</li>)}</ul>}
+            {visibleClues.length === 0 ? <p>{t.noClue}</p> : <ul>{visibleClues.map((clue) => <li key={clue}>{clue}</li>)}</ul>}
           </aside>
           <div className="reader-sheet">
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
@@ -364,10 +383,12 @@ export function StoryReader({ slug }: { slug: string }) {
               </p>
             ) : null}
             <p className="reader-body">{scene.ending ? scene.ending.body : scene.body}</p>
-            {arrived?.thought && !scene.ending ? (
+            {memory ? <p className="reader-memory">{memory}</p> : null}
+            {(arrived?.thought || sting) && !scene.ending ? (
               <aside className="diary-slip">
                 <p className="soon-kicker">{t.diary}</p>
-                <p>{arrived.thought}</p>
+                {arrived?.thought ? <p>{arrived.thought}</p> : null}
+                {sting ? <p className="same-sting">{sting}</p> : null}
               </aside>
             ) : null}
             <p className="house-note">
@@ -403,6 +424,19 @@ export function StoryReader({ slug }: { slug: string }) {
                   kept={letterKept}
                   onKept={() => setLetterKept(true)}
                 />
+                {sting ? <p className="same-sting">{sting}</p> : null}
+                {morning && !showMorning ? (
+                  <button type="button" onClick={() => setShowMorning(true)}>
+                    {t.morning}
+                  </button>
+                ) : null}
+                {showMorning && morning ? (
+                  <article className="morning-sheet">
+                    <p className="soon-kicker">{t.morning}</p>
+                    <h3>{morning.title}</h3>
+                    <p>{morning.body}</p>
+                  </article>
+                ) : null}
                 {trail.length > 0 ? (
                   <button type="button" onClick={stepBack}>
                     {t.backPath}
@@ -417,6 +451,8 @@ export function StoryReader({ slug }: { slug: string }) {
                     setSceneId(story.start);
                     setAffinity(0);
                     setClues([]);
+                    setPicks([]);
+                    setShowMorning(false);
                     persist(story, story.start, 0, []);
                     if (soundRef.current) playScene([story.start]);
                   }}
@@ -439,7 +475,6 @@ export function StoryReader({ slug }: { slug: string }) {
                 ))}
               </div>
             )}
-            {samePercent !== null ? <p className="same-choice">{t.sameChoice.replace("{n}", String(samePercent))}</p> : null}
             {arrived && !scene.ending ? <CommunityDesk slug={story.slug} lang={lang} sceneId={arrived.from} /> : null}
           </div>
         </div>
