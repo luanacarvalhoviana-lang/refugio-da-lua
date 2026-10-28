@@ -4077,4 +4077,9 @@ a.story-card { color: inherit; text-decoration: none; }
 @media (max-width: 720px) {
   .house-bar { flex-wrap: wrap; }
 }
+.share-row { display: grid; gap: 8px; justify-items: start; }
+.share-row .house-note button {
+  border: 0; background: transparent; color: inherit; font: inherit;
+  text-decoration: underline; padding: 0; cursor: pointer;
+}
 

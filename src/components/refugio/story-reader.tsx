@@ -432,14 +432,7 @@ export function StoryReader({ slug }: { slug: string }) {
                 <p className="soon-kicker">{t.found}</p>
                 <h2>{scene.ending.title}</h2>
                 <p>{scene.ending.flower}</p>
-                <a
-                  className="house-primary"
-                  href={`https://wa.me/?text=${encodeURIComponent(`${t.shareLine.replace("{title}", story.title).replace("{ending}", scene.ending.title)}\nhttps://www.refugiodalua.com.br/ler/${story.slug}`)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {t.shareSend}
-                </a>
+                <ShareNight title={story.title} ending={scene.ending.title} slug={story.slug} />
                 <EndingLetter
                   slug={story.slug}
                   lang={lang}
@@ -505,6 +498,51 @@ export function StoryReader({ slug }: { slug: string }) {
         </div>
       </article>
     </StoryShell>
+  );
+}
+
+function ShareNight({ title, ending, slug }: { title: string; ending: string; slug: string }) {
+  const { t } = useHouse();
+  const [copied, setCopied] = useState(false);
+  const [native, setNative] = useState(false);
+  useEffect(() => {
+    setNative(typeof navigator.share === "function");
+  }, []);
+  const url = `https://www.refugiodalua.com.br/ler/${slug}`;
+  const line = t.shareLine.replace("{title}", title).replace("{ending}", ending);
+  const full = `${line}\n${url}`;
+  return (
+    <div className="share-row">
+      {native ? (
+        <button
+          type="button"
+          className="house-primary"
+          onClick={() => {
+            void navigator.share({ title, text: line, url }).catch(() => undefined);
+          }}
+        >
+          {t.shareNative}
+        </button>
+      ) : null}
+      <p className="house-note">
+        <a href={`https://wa.me/?text=${encodeURIComponent(full)}`} target="_blank" rel="noreferrer">{t.shareSend}</a>
+        {" · "}
+        <a href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(line)}`} target="_blank" rel="noreferrer">{t.shareTelegram}</a>
+        {" · "}
+        <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(full)}`} target="_blank" rel="noreferrer">{t.shareX}</a>
+        {" · "}
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noreferrer">{t.shareFacebook}</a>
+        {" · "}
+        <button
+          type="button"
+          onClick={() => {
+            void navigator.clipboard.writeText(full).then(() => setCopied(true)).catch(() => undefined);
+          }}
+        >
+          {copied ? t.shareCopied : t.shareCopy}
+        </button>
+      </p>
+    </div>
   );
 }
 

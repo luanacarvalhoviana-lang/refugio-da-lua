@@ -432,6 +432,12 @@ const pt = {
   readTitle: "Ler {title}",
   shareSend: "Mandar no WhatsApp",
   shareLine: "Terminei «{title}» no Refúgio da Lua. O final foi: {ending}. A escolha é de graça.",
+  shareNative: "Compartilhar",
+  shareTelegram: "Telegram",
+  shareX: "X",
+  shareFacebook: "Facebook",
+  shareCopy: "Copiar o link",
+  shareCopied: "Link copiado",
 };
 
 const es: typeof pt = {
@@ -865,6 +871,12 @@ const es: typeof pt = {
   readTitle: "Leer {title}",
   shareSend: "Enviar por WhatsApp",
   shareLine: "Terminé «{title}» en Refúgio da Lua. El final fue: {ending}. Elegir es gratis.",
+  shareNative: "Compartir",
+  shareTelegram: "Telegram",
+  shareX: "X",
+  shareFacebook: "Facebook",
+  shareCopy: "Copiar el enlace",
+  shareCopied: "Enlace copiado",
 };
 
 const english: typeof pt = en;

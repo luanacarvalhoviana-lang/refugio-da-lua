@@ -429,4 +429,10 @@ export const en = {
   readTitle: "Read {title}",
   shareSend: "Send on WhatsApp",
   shareLine: "I finished “{title}” at Refúgio da Lua. The ending was: {ending}. Choosing is free.",
+  shareNative: "Share",
+  shareTelegram: "Telegram",
+  shareX: "X",
+  shareFacebook: "Facebook",
+  shareCopy: "Copy the link",
+  shareCopied: "Link copied",
 };
