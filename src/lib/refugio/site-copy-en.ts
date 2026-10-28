@@ -426,4 +426,7 @@ export const en = {
   alertSend: "Tell me",
   alertDone: "Noted. The house writes when there is a new night.",
   alertFail: "Could not note it now. Try again.",
+  readTitle: "Read {title}",
+  shareSend: "Send on WhatsApp",
+  shareLine: "I finished “{title}” at Refúgio da Lua. The ending was: {ending}. Choosing is free.",
 };

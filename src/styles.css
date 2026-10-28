@@ -3917,6 +3917,7 @@ html.protect-on .diary-card::after {
 .story-poster { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
 .page-poster { max-width: 720px; margin: 18px 0 8px; box-shadow: 0 0 0 1px rgba(23, 75, 89, .18); }
 .story-card { overflow: hidden; border-radius: 4px; padding: 0 0 16px; }
+a.story-card { color: inherit; text-decoration: none; }
 .story-card > :not(.story-poster) { margin-left: 16px; margin-right: 16px; }
 .cast-line {
   margin: 10px 2px 0;

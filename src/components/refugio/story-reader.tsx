@@ -432,6 +432,14 @@ export function StoryReader({ slug }: { slug: string }) {
                 <p className="soon-kicker">{t.found}</p>
                 <h2>{scene.ending.title}</h2>
                 <p>{scene.ending.flower}</p>
+                <a
+                  className="house-primary"
+                  href={`https://wa.me/?text=${encodeURIComponent(`${t.shareLine.replace("{title}", story.title).replace("{ending}", scene.ending.title)}\nhttps://www.refugiodalua.com.br/ler/${story.slug}`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {t.shareSend}
+                </a>
                 <EndingLetter
                   slug={story.slug}
                   lang={lang}

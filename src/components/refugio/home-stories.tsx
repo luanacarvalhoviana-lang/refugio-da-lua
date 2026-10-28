@@ -3,7 +3,7 @@ import { AccessMark } from "@/components/refugio/access-mark";
 import { Door } from "@/components/refugio/account-pages";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { saveStoryAlert } from "@/lib/refugio/alert-cloud";
-import { authorSlug, type Lang } from "@/lib/refugio/stories";
+import { type Lang } from "@/lib/refugio/stories";
 import { useShelf } from "@/components/refugio/use-shelf";
 import { MoonNightNote } from "@/components/refugio/moon-night";
 
@@ -23,10 +23,7 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
           <p className="soon-lead">{t.heroLead}</p>
           <div className="house-cta">
             <a className="house-primary" href={`/ler/${story?.slug ?? "passageira"}`}>
-              {t.read}
-            </a>
-            <a className="house-quiet" href="#entrar">
-              {t.enter}
+              {story ? t.readTitle.replace("{title}", story.title) : t.read}
             </a>
           </div>
         </div>
@@ -42,32 +39,23 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
         <li>{t.safePrivate}</li>
         <li>{t.safeHelpShort}</li>
       </ul>
-      <section className="house-split">
-        <div>
-          <h2>{t.summaryTitle}</h2>
-          <p>{t.summary}</p>
-          <p className="house-note">{t.luna}</p>
-        </div>
-        <Door heading />
-      </section>
       <section className="house-block">
         <h2>{t.now}</h2>
         <MoonNightNote />
         <div className="story-list">
           {shelf.map((item) => (
-            <article key={item.slug} className="story-card">
+            <a key={item.slug} className="story-card" href={`/ler/${item.slug}`}>
               {item.art ? <img className="story-poster" src={item.art} alt="" /> : null}
               <span className="soon-kicker">{item.place} <AccessMark story={item} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} /></span>
-              <strong><a href={`/historia/${item.slug}`}>{item.title}</a></strong>
+              <strong>{item.title}</strong>
               <em>
-                {t.by} <a href={`/autora/${authorSlug(item.author)}`}>{item.author}</a> · {item.rating} · {item.minutes} {t.minutes}
+                {t.by} {item.author} · {item.rating} · {item.minutes} {t.minutes}
               </em>
               <p>{item.synopsis}</p>
-            </article>
+            </a>
           ))}
         </div>
       </section>
-      <AlertForm />
       <section className="house-block">
         <h2>{t.how}</h2>
         <div className="house-steps">
@@ -85,6 +73,15 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
           </article>
         </div>
       </section>
+      <section className="house-split">
+        <div>
+          <h2>{t.summaryTitle}</h2>
+          <p>{t.summary}</p>
+          <p className="house-note">{t.luna}</p>
+        </div>
+        <Door heading />
+      </section>
+      <AlertForm />
     </StoryShell>
   );
 }

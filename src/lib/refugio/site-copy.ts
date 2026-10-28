@@ -429,6 +429,9 @@ const pt = {
   alertSend: "Me avise",
   alertDone: "Anotado. A casa escreve quando tiver noite nova.",
   alertFail: "Não deu para anotar agora. Tente de novo.",
+  readTitle: "Ler {title}",
+  shareSend: "Mandar no WhatsApp",
+  shareLine: "Terminei «{title}» no Refúgio da Lua. O final foi: {ending}. A escolha é de graça.",
 };
 
 const es: typeof pt = {
@@ -859,6 +862,9 @@ const es: typeof pt = {
   alertSend: "Avísenme",
   alertDone: "Anotado. La casa escribe cuando haya una noche nueva.",
   alertFail: "No se pudo anotar ahora. Inténtalo de nuevo.",
+  readTitle: "Leer {title}",
+  shareSend: "Enviar por WhatsApp",
+  shareLine: "Terminé «{title}» en Refúgio da Lua. El final fue: {ending}. Elegir es gratis.",
 };
 
 const english: typeof pt = en;
