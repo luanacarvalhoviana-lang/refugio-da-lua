@@ -69,6 +69,7 @@ export function AuthorPage({ slug, initialLang }: { slug: string; initialLang?: 
         <div className="story-list">
           {stories.map((story) => (
             <a key={story.slug} className="story-card" href={`/historia/${story.slug}`}>
+              {story.art ? <img className="story-poster" src={story.art} alt="" /> : null}
               <span className="soon-kicker">{story.place}</span>
               <strong>{story.title}</strong>
               <p>{story.synopsis}</p>

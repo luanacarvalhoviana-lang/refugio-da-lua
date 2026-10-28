@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { confirmStoryCheckout, openPlanPortal, readHousePlan, startStoryCheckout, storyCheckoutReady } from "@/lib/refugio/billing";
@@ -123,7 +122,6 @@ export function AboutPage() {
   return (
     <StoryShell>
       <section className="house-hero">
-        <MoonMascot mood="hug" size={92} />
         <h1>{t.aboutTitle}</h1>
         <p className="soon-lead">{t.aboutBody}</p>
         <p className="soon-lead">{t.aboutKeep}</p>

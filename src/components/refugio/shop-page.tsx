@@ -96,10 +96,10 @@ export function ShopPage() {
       </section>
       <section className="house-block">
         <p className="house-cta">
-          <button type="button" onClick={() => setTab("story")}>{t.shopStory}</button>
-          <button type="button" onClick={() => setTab("all")}>{t.shopAll}</button>
-          <button type="button" onClick={() => setTab("special")}>{t.shopSpecial}</button>
-          <button type="button" onClick={() => setTab("box")}>{t.shopBox}</button>
+          <button type="button" className={tab === "story" ? "is-on" : ""} onClick={() => setTab("story")}>{t.shopStory}</button>
+          <button type="button" className={tab === "all" ? "is-on" : ""} onClick={() => setTab("all")}>{t.shopAll}</button>
+          <button type="button" className={tab === "special" ? "is-on" : ""} onClick={() => setTab("special")}>{t.shopSpecial}</button>
+          <button type="button" className={tab === "box" ? "is-on" : ""} onClick={() => setTab("box")}>{t.shopBox}</button>
         </p>
         {note ? <p className="house-note">{note}</p> : null}
         {tab === "box" ? <MemoryBox /> : (

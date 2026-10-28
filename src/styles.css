@@ -4033,3 +4033,47 @@ html.protect-on .diary-card::after {
 .studio-scene button, .studio > button { border: 0; background: transparent; color: #174b59; text-decoration: underline; padding: 0; }
 .studio .house-primary { justify-self: start; text-decoration: none; background: #0c3442; color: #f8f5ee; border-radius: 4px; padding: 12px 16px; }
 
+.house-bar { flex-wrap: nowrap; }
+.house-nav { flex: 1; min-width: 0; overflow-x: auto; }
+.house-nav a { white-space: nowrap; }
+.house-cta button {
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+.house-cta button.is-on { background: #0c3442; color: #f8f5ee; border-color: #0c3442; }
+.house.is-night .house-cta button.is-on { background: #f6d77a; color: #0c3442; border-color: #f6d77a; }
+.house-steps article,
+.plan-grid article,
+.flower-grid article,
+.reader-side,
+.keep-list article,
+.diary-slip,
+.letter-sheet,
+.morning-sheet,
+.editor-form fieldset,
+.path-notes li { border-radius: 4px; }
+.house-primary,
+.house-quiet,
+.reader-choices button,
+.reader-end button,
+.reader-top button,
+.plan-actions button,
+.plan-actions a,
+.pacto button,
+.house-filters button,
+.house-enter { border-radius: 4px; }
+.studio input, .studio textarea, .studio select,
+.house-search input,
+.path-notes input, .path-notes textarea,
+.editor-form input, .editor-form textarea, .editor-form select,
+.soon-form textarea, .comment-list textarea { border-radius: 4px; }
+.house-foot { gap: 18px 22px; }
+@media (max-width: 720px) {
+  .house-bar { flex-wrap: wrap; }
+}
+

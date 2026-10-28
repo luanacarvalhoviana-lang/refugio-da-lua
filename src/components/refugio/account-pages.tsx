@@ -141,10 +141,8 @@ export function Door({ heading = false }: { heading?: boolean }) {
         <button type="button" className="google-button" onClick={() => void signInGoogle({ callbackURL: "/historias", errorCallbackURL: "/#entrar" })}>
           <span>G</span> {t.googleContinue}
         </button>
-      ) : (
-        <p className="house-note">O entrar com Google liga quando o site publica o acesso.</p>
-      )}
-      <p className="door-or">{t.accountOr}</p>
+      ) : null}
+      {authEnabled ? <p className="door-or">{t.accountOr}</p> : null}
       <form
         className="soon-form"
         onSubmit={(event) => {

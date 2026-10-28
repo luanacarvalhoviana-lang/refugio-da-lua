@@ -61,28 +61,35 @@ export function LibraryPage() {
         {open.length > 0 ? (
           <>
             <h2>{t.libraryContinue}</h2>
-            <ul className="comment-list">
-              {open.map((item) => (
-                <li key={item.slug}>
-                  <p>{item.title}</p>
-                  <p><a href={`/ler/${item.slug}`}>{t.libraryOpen}</a></p>
-                </li>
-              ))}
-            </ul>
+            <div className="story-list">
+              {open.map((item) => {
+                const story = getStory(lang, item.slug);
+                return (
+                  <a key={item.slug} className="story-card" href={`/ler/${item.slug}`}>
+                    {story?.art ? <img className="story-poster" src={story.art} alt="" /> : null}
+                    <strong>{item.title}</strong>
+                    <em>{t.libraryOpen}</em>
+                  </a>
+                );
+              })}
+            </div>
           </>
         ) : null}
         {done.length > 0 ? (
           <>
             <h2>{t.libraryDone}</h2>
-            <ul className="comment-list">
-              {done.map((item) => (
-                <li key={item.slug}>
-                  <p>{item.title}</p>
-                  {item.endingTitle ? <p className="house-note">{item.endingTitle}</p> : null}
-                  <p><a href={`/ler/${item.slug}`}>{t.libraryAgain}</a></p>
-                </li>
-              ))}
-            </ul>
+            <div className="story-list">
+              {done.map((item) => {
+                const story = getStory(lang, item.slug);
+                return (
+                  <a key={item.slug} className="story-card" href={`/historia/${item.slug}`}>
+                    {story?.art ? <img className="story-poster" src={story.art} alt="" /> : null}
+                    <strong>{item.title}</strong>
+                    <em>{item.endingTitle || t.libraryDone}</em>
+                  </a>
+                );
+              })}
+            </div>
           </>
         ) : null}
       </section>
