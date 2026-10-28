@@ -94,9 +94,9 @@ export function LivingStage({
           <img key={current} className="stage-still" src={current} alt={caption} />
         )}
         <canvas ref={weather} className="stage-weather" aria-hidden="true" />
-        {life === "candle" ? <span className="stage-candle" aria-hidden="true" /> : null}
-        {life === "lamp" ? <span className="stage-lamp" aria-hidden="true" /> : null}
-        {life === "room" ? <span className="stage-rec" aria-hidden="true" /> : null}
+        {motion ? null : life === "candle" ? <span className="stage-candle" aria-hidden="true" /> : null}
+        {motion ? null : life === "lamp" ? <span className="stage-lamp" aria-hidden="true" /> : null}
+        {motion ? null : life === "room" ? <span className="stage-rec" aria-hidden="true" /> : null}
       </div>
       {caption ? <figcaption>{caption}</figcaption> : null}
       {people.length ? (

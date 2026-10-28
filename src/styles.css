@@ -3755,6 +3755,7 @@ html.protect-on .diary-card::after {
   object-fit: cover;
 }
 .stage-still { animation: stage-drift 32s ease-in-out alternate infinite; }
+.stage-clip { animation: scene-in .9s ease; }
 .stage.is-morning .stage-still { filter: brightness(1.08) saturate(.9) sepia(.12); }
 .stage-weather, .stage-candle, .stage-lamp { position: absolute; inset: 0; pointer-events: none; }
 .stage-candle {
