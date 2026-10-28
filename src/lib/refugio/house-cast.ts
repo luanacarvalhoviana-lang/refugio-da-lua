@@ -122,32 +122,18 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
 
 export const MOTION: Record<string, Record<string, string>> = {
   passageira: {
-    banco: "/motion/passageira-banco.mp4?v=cine",
-    marginal: "/motion/passageira-marginal.mp4?v=cine",
-    posto: "/motion/passageira-marginal.mp4?v=cine",
-    farol: "/motion/passageira-farol.mp4?v=cine",
+    "fim-curva": "/motion/passageira-curva.mp4?v=vida",
   },
   correspondencia: {
-    escada: "/motion/correspondencia-escada.mp4?v=cine",
-    mesa: "/motion/correspondencia-escada.mp4?v=cine",
-    "fim-resposta": "/motion/correspondencia-escada.mp4?v=cine",
+    mesa: "/motion/correspondencia-mesa.mp4?v=vida",
+    "fim-resposta": "/motion/correspondencia-resposta.mp4?v=vida",
   },
   sobremesa: {
-    forno: "/motion/sobremesa-forno.mp4?v=cine",
-    gelo: "/motion/sobremesa-forno.mp4?v=cine",
-    sala: "/motion/sobremesa-forno.mp4?v=cine",
-  },
-  corredor: {
-    porta714: "/motion/corredor-porta.mp4?v=cine",
-    corredor: "/motion/corredor-porta.mp4?v=cine",
-    elevador: "/motion/corredor-porta.mp4?v=cine",
-    "fim-saguao": "/motion/corredor-porta.mp4?v=cine",
+    forno: "/motion/sobremesa-forno.mp4?v=vida",
+    "fim-cozinha": "/motion/sobremesa-forno.mp4?v=vida",
   },
   depoimento: {
-    sala: "/motion/depoimento-sala.mp4?v=cine",
-    frase: "/motion/depoimento-sala.mp4?v=cine",
-    hospital: "/motion/depoimento-hospital.mp4?v=cine",
-    "fim-silencio": "/motion/depoimento-hospital.mp4?v=cine",
+    del: "/motion/depoimento-del.mp4?v=vida",
   },
 };
 
