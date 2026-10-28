@@ -558,6 +558,7 @@ export function StoryPage({ slug }: { slug: string }) {
         </p>
         <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} />
         <h1>{story.title}</h1>
+        {story.art ? <img className="story-poster page-poster" src={story.art} alt="" /> : null}
         <p className="soon-lead">{story.synopsis}</p>
         <p className="house-note">
           {t.by} <a href={`/autora/${authorSlug(story.author)}`}>{story.author}</a> · {story.genres.join(" · ")} · {story.minutes} {t.minutes}
@@ -655,6 +656,7 @@ export function StoryList() {
         <div className="story-list">
           {visible.map((story) => (
             <a key={story.slug} className="story-card" href={`/historia/${story.slug}`}>
+              {story.art ? <img className="story-poster" src={story.art} alt="" /> : null}
               <span className="soon-kicker">{story.place} <AccessMark story={story} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} /></span>
               <strong>{story.title}</strong>
               <em>

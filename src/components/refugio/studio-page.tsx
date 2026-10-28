@@ -289,7 +289,7 @@ export function StudioPage() {
             <p className="house-note">{t.studioClear}</p>
           )}
           <p className="house-cta">
-            <button type="button" onClick={() => void save(false)}>{t.studioSave}</button>
+            <button type="button" className="house-primary" onClick={() => void save(false)}>{t.studioSave}</button>
             <a className="house-quiet" href={`/ler/${meta.slug}`}>{t.studioRead}</a>
           </p>
           {meta.status !== "publicada" && meta.status !== "em_revisao" ? (

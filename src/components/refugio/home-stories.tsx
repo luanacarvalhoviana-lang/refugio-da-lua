@@ -1,7 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { AccessMark } from "@/components/refugio/access-mark";
 import { Door } from "@/components/refugio/account-pages";
-import { MoonMascot } from "@/components/refugio/moon-mascot";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { saveStoryAlert } from "@/lib/refugio/alert-cloud";
 import { authorSlug, type Lang } from "@/lib/refugio/stories";
@@ -31,7 +30,11 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
             </a>
           </div>
         </div>
-        <MoonMascot mood="hi" size={120} />
+        {story?.art ? (
+          <a className="house-poster" href={`/ler/${story.slug}`}>
+            <img src={story.art} alt="" />
+          </a>
+        ) : null}
       </section>
       <ul className="safe-row">
         <li>{t.safeAge}</li>
@@ -53,6 +56,7 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
         <div className="story-list">
           {shelf.map((item) => (
             <article key={item.slug} className="story-card">
+              {item.art ? <img className="story-poster" src={item.art} alt="" /> : null}
               <span className="soon-kicker">{item.place} <AccessMark story={item} cheia={t.accessCheia} early={t.accessEarly} moon={t.moonMark} /></span>
               <strong><a href={`/historia/${item.slug}`}>{item.title}</a></strong>
               <em>

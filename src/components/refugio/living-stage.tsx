@@ -87,7 +87,7 @@ export function LivingStage({
       <div className={`stage-gate is-${life}`}>
         {previous ? <img className="stage-old" src={previous} alt="" /> : null}
         {motion && !quiet ? (
-          <video key={clip} className="stage-clip" poster={current} muted loop autoPlay playsInline>
+          <video key={clip} className="stage-clip" poster={current} muted autoPlay playsInline>
             <source src={clip} type="video/mp4" />
           </video>
         ) : (
@@ -100,27 +100,9 @@ export function LivingStage({
       </div>
       {caption ? <figcaption>{caption}</figcaption> : null}
       {people.length ? (
-        <div className="cast-row">
-          {people.map((person) => (
-            <article key={person.name} className="cast-card">
-              {person.portrait ? (
-                person.motion && !quietMotion ? (
-                  <video className="cast-face" poster={person.portrait} muted loop autoPlay playsInline>
-                    <source src={person.motion} type="video/mp4" />
-                  </video>
-                ) : (
-                  <img className="cast-face" src={person.portrait} alt="" />
-                )
-              ) : (
-                <span className="cast-mark" aria-hidden="true">{person.name.slice(0, 1)}</span>
-              )}
-              <div>
-                <p className="cast-name">{person.name}</p>
-                {person.life ? <p className="cast-life">{person.life}</p> : null}
-              </div>
-            </article>
-          ))}
-        </div>
+        <p className="cast-line">
+          {people.map((person) => (person.life ? `${person.name}. ${person.life}` : person.name)).join("  ·  ")}
+        </p>
       ) : null}
     </figure>
   );
