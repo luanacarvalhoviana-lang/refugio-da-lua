@@ -27,7 +27,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
       {
         name: "Marina",
         portrait: "/cast/marina.jpg",
-        motion: "/motion/passageira-farol.mp4",
+        motion: "/motion/passageira-farol.mp4?v=rosto",
         life: line(
           "Sem casaco, debaixo do farol, e mesmo assim não corre.",
           "Sin abrigo, bajo el farol, y aun así no corre.",
@@ -123,15 +123,15 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
 
 export const MOTION: Record<string, Record<string, string>> = {
   passageira: {
-    banco: "/motion/passageira-banco.mp4",
-    marginal: "/motion/passageira-marginal.mp4",
+    banco: "/motion/passageira-banco.mp4?v=rosto",
+    marginal: "/motion/passageira-marginal.mp4?v=rosto",
   },
-  correspondencia: { escada: "/motion/correspondencia-escada.mp4" },
-  sobremesa: { forno: "/motion/sobremesa-forno.mp4" },
-  corredor: { porta714: "/motion/corredor-porta.mp4" },
+  correspondencia: { escada: "/motion/correspondencia-escada.mp4?v=rosto" },
+  sobremesa: { forno: "/motion/sobremesa-forno.mp4?v=rosto" },
+  corredor: { porta714: "/motion/corredor-porta.mp4?v=rosto" },
   depoimento: {
-    sala: "/motion/depoimento-sala.mp4",
-    hospital: "/motion/depoimento-hospital.mp4",
+    sala: "/motion/depoimento-sala.mp4?v=rosto",
+    hospital: "/motion/depoimento-hospital.mp4?v=rosto",
   },
 };
 
