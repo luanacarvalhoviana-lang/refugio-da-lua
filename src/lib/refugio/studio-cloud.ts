@@ -3,7 +3,7 @@ import { z } from "zod";
 import { PACTO_VERSION } from "@/lib/refugio/pacto";
 import { FREE_PUBLISHED_STORIES } from "@/lib/refugio/studio-limits";
 import { ACTIVE_PASS_SQL } from "@/lib/refugio/story-plans";
-import { checkStory, type StudioScene } from "@/lib/refugio/studio-check";
+import { checkStory, type StudioPerson, type StudioScene } from "@/lib/refugio/studio-check";
 import type { Story } from "@/lib/refugio/stories";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
@@ -18,6 +18,12 @@ const choiceSchema = z.object({
   afinidade: z.number().int().min(-1).max(2),
   pista: z.string().trim().max(80),
   diario: z.string().trim().max(280).optional().default(""),
+});
+
+const personSchema = z.object({
+  id: z.string().trim().min(2).max(40),
+  nome: z.string().trim().max(40),
+  vida: z.string().trim().max(180),
 });
 
 const sceneSchema = z.object({
@@ -79,6 +85,13 @@ async function authorName(sql: { query: <T>(q: string, p?: unknown[]) => Promise
   return rows[0]?.nome_publico || "Autora";
 }
 
+async function castOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T[]> }, storyId: string): Promise<StudioPerson[]> {
+  return sql.query<StudioPerson>(
+    `select id, nome, vida from story_cast where story_id = $1 order by ordem`,
+    [storyId],
+  );
+}
+
 async function scenesOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T[]> }, storyId: string): Promise<StudioScene[]> {
   const scenes = await sql.query<{ id: string; quem_fala: string | null; texto: string; musica: string | null; musica_segundos: number | null; ordem: number }>(
     `select id, quem_fala, texto, musica, musica_segundos, ordem from scenes where story_id = $1 order by ordem`,
@@ -127,7 +140,10 @@ async function scenesOf(sql: { query: <T>(q: string, p?: unknown[]) => Promise<T
   });
 }
 
-function toStory(row: StoryRow, author: string, scenes: StudioScene[]): Story {
+function toStory(row: StoryRow, author: string, scenes: StudioScene[], people: StudioPerson[] = []): Story {
+  const cast = people
+    .filter((person) => person.nome.trim())
+    .map((person) => ({ name: person.nome.trim(), life: person.vida.trim() }));
   return {
     slug: row.slug,
     title: row.titulo,
@@ -139,6 +155,7 @@ function toStory(row: StoryRow, author: string, scenes: StudioScene[]): Story {
     place: row.lugar,
     start: scenes[0]?.id || "inicio",
     sound: row.som || undefined,
+    cast: cast.length ? cast : undefined,
     scenes: scenes.map((scene) => ({
       id: scene.id,
       speaker: scene.quem || undefined,
@@ -312,11 +329,12 @@ export const loadStudioDraft = createServerFn({ method: "POST" })
         motivo: row.motivo,
       },
       scenes: await scenesOf(sql, row.id),
+      cast: await castOf(sql, row.id),
     };
   });
 
 export const saveStudioDraft = createServerFn({ method: "POST" })
-  .validator(z.object({ id: z.string().uuid(), scenes: z.array(sceneSchema).min(1).max(24) }))
+  .validator(z.object({ id: z.string().uuid(), scenes: z.array(sceneSchema).min(1).max(24), cast: z.array(personSchema).max(6).optional().default([]) }))
   .handler(async ({ data }) => {
     const user = await sessionUser();
     if (!user?.id) return { ok: false as const, reason: "conta" as const };
@@ -378,6 +396,15 @@ export const saveStudioDraft = createServerFn({ method: "POST" })
     if (owned[0].status === "recusada") {
       await sql.query(`update stories set status = 'rascunho', motivo = null where id = $1`, [data.id]);
     }
+    await sql.query(`delete from story_cast where story_id = $1`, [data.id]);
+    const people = data.cast.filter((person) => person.nome).slice(0, 6);
+    for (let index = 0; index < people.length; index += 1) {
+      const person = people[index];
+      await sql.query(
+        `insert into story_cast (id, story_id, nome, vida, ordem) values ($1, $2, $3, $4, $5)`,
+        [person.id, data.id, person.nome, person.vida, index],
+      );
+    }
     return { ok: true as const, issues };
   });
 
@@ -413,7 +440,7 @@ export const listPublishedStories = createServerFn({ method: "POST" })
     for (const row of rows) {
       const scenes = await scenesOf(sql, row.id);
       if (!scenes.length) continue;
-      stories.push(toStory(row, await authorName(sql, row.autora_id), scenes));
+      stories.push(toStory(row, await authorName(sql, row.autora_id), scenes, await castOf(sql, row.id)));
     }
     return stories;
   });
@@ -435,7 +462,7 @@ export const loadStudioStory = createServerFn({ method: "POST" })
     if (!allowed) return { story: null };
     const scenes = await scenesOf(sql, row.id);
     if (!scenes.length) return { story: null };
-    return { story: toStory(row, await authorName(sql, row.autora_id), scenes) };
+    return { story: toStory(row, await authorName(sql, row.autora_id), scenes, await castOf(sql, row.id)) };
   });
 
 export const reviewStories = createServerFn({ method: "GET" })

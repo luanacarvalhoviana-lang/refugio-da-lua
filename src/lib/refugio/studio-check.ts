@@ -7,6 +7,12 @@ export type StudioChoice = {
   diario: string;
 };
 
+export type StudioPerson = {
+  id: string;
+  nome: string;
+  vida: string;
+};
+
 export type StudioScene = {
   id: string;
   quem: string;

@@ -43,6 +43,10 @@ export type Scene = {
   artIf?: Array<{ if: string; art: string; where?: string }>;
   /** Short name of the place, shown under the still. */
   where?: string;
+  /** Names present in this scene. */
+  people?: string[];
+  /** A short cinematic loop of this exact scene. */
+  motion?: string;
 };
 
 export type Story = {
@@ -57,6 +61,8 @@ export type Story = {
   art?: string;
   start: string;
   sound?: string;
+  life?: "rain" | "paper" | "candle" | "lamp" | "room";
+  cast?: Array<{ name: string; life: string; portrait?: string; motion?: string }>;
   scenes: Scene[];
   access?: "aberta" | "cheia" | "antecipada";
   opensOn?: string;

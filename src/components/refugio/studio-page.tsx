@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { StoryShell, useHouse } from "@/components/refugio/story-shell";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
-import { checkStory, type StudioIssue, type StudioScene } from "@/lib/refugio/studio-check";
+import { checkStory, type StudioIssue, type StudioPerson, type StudioScene } from "@/lib/refugio/studio-check";
 import { tracks } from "@/lib/refugio/music";
 import { listAuthorTracks, removeAuthorTrack, saveAuthorTrack } from "@/lib/refugio/track-cloud";
 import {
@@ -57,6 +57,7 @@ export function StudioPage() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [meta, setMeta] = useState<Mine | null>(null);
   const [scenes, setScenes] = useState<StudioScene[]>([]);
+  const [cast, setCast] = useState<StudioPerson[]>([]);
   const [note, setNote] = useState("");
   const [fresh, setFresh] = useState({ titulo: "", sinopse: "", classificacao: "16" as "livre" | "14" | "16", generos: "", lugar: "" });
   const [original, setOriginal] = useState(false);
@@ -97,6 +98,7 @@ export function StudioPage() {
       setOpenId(id);
       setMeta({ id, slug: result.story.slug, titulo: result.story.titulo, status: result.story.status, motivo: result.story.motivo });
       setScenes(result.scenes.length ? result.scenes : [blankScene()]);
+      setCast(result.cast ?? []);
       void authorChoiceStats({ data: { slug: result.story.slug, lang } })
         .then((statsResult) => setStats(statsResult.ok ? statsResult.scenes : []))
         .catch(() => setStats([]));
@@ -165,12 +167,35 @@ export function StudioPage() {
           <h2>{meta.titulo}</h2>
           <p className="house-note">{statusLabel[meta.status] || meta.status}</p>
           <StatsBlock title={t.studioStats} wait={t.studioStatsWait} scenes={stats} />
+          <div className="studio-cast">
+            <p className="soon-kicker">{t.studioCast}</p>
+            <p className="house-note">{t.studioCastLead}</p>
+            {cast.map((person, index) => (
+              <div key={person.id} className="studio-person">
+                <label>
+                  {t.studioCastName}
+                  <input value={person.nome} onChange={(event) => setCast((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, nome: event.target.value } : item))} />
+                </label>
+                <label>
+                  {t.studioCastLife}
+                  <input value={person.vida} maxLength={180} onChange={(event) => setCast((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, vida: event.target.value } : item))} />
+                </label>
+                <button type="button" onClick={() => setCast((current) => current.filter((item) => item.id !== person.id))}>{t.studioCastRemove}</button>
+              </div>
+            ))}
+            {cast.length < 6 ? (
+              <button type="button" onClick={() => setCast((current) => [...current, { id: crypto.randomUUID(), nome: "", vida: "" }])}>{t.studioCastAdd}</button>
+            ) : null}
+          </div>
           {scenes.map((scene, index) => (
             <article key={scene.id} className="studio-scene">
               <p className="soon-kicker">{t.studioScene} {index + 1}</p>
               <label>
                 {t.studioWho}
-                <input value={scene.quem} onChange={(event) => patchScene(index, { quem: event.target.value })} />
+                <input list={`cast-${scene.id}`} value={scene.quem} onChange={(event) => patchScene(index, { quem: event.target.value })} />
+                <datalist id={`cast-${scene.id}`}>
+                  {cast.filter((person) => person.nome.trim()).map((person) => <option key={person.id} value={person.nome} />)}
+                </datalist>
               </label>
               <label className="soon-check">
                 <input type="checkbox" checked={scene.final} onChange={(event) => patchScene(index, { final: event.target.checked, choices: [] })} />
@@ -337,7 +362,7 @@ export function StudioPage() {
   async function save(send: boolean) {
     if (!openId) return;
     setNote("");
-    const saved = await saveStudioDraft({ data: { id: openId, scenes } }).catch(() => null);
+    const saved = await saveStudioDraft({ data: { id: openId, scenes, cast: cast.filter((person) => person.nome.trim()) } }).catch(() => null);
     if (!saved?.ok) {
       setNote(t.studioNeed);
       return;

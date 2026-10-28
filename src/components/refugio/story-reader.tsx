@@ -22,6 +22,8 @@ import { cluesWithPick, picksIn, remembered, shownClues, stingKind } from "@/lib
 import { crossfade, sourceForScene } from "@/lib/refugio/music";
 import { HiddenPath, StoryExtras, TipBox } from "@/components/refugio/shop-page";
 import { storyLook } from "@/lib/refugio/shop-cloud";
+import { LivingStage } from "@/components/refugio/living-stage";
+import { lifeFromPlace } from "@/lib/refugio/house-cast";
 
 export function StoryReader({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
@@ -326,9 +328,15 @@ export function StoryReader({ slug }: { slug: string }) {
       : null;
   const visibleClues = shownClues(clues);
   const shot = remembered(scene.artIf, picks);
-  const still = shot?.art || scene.art;
-  const backdrop = dress || still || artOf(story);
+  const still = shot?.art || scene.art || artOf(story);
+  const backdrop = dress || still;
   const frameCaption = showMorning && morning ? morning.title : shot?.where || scene.where || "";
+  const life = story.life || lifeFromPlace(story.place);
+  const wanted = [...(scene.people ?? []), ...(scene.speaker ? [scene.speaker] : [])];
+  const names = wanted.length ? wanted : scene.id === story.start ? (story.cast ?? []).map((person) => person.name) : [];
+  const plates = names
+    .map((name) => (story.cast ?? []).find((person) => person.name.toLowerCase() === name.toLowerCase()) || { name, life: "" })
+    .filter((person, index, list) => list.findIndex((item) => item.name.toLowerCase() === person.name.toLowerCase()) === index);
 
   return (
     <StoryShell>
@@ -373,7 +381,7 @@ export function StoryReader({ slug }: { slug: string }) {
             {visibleClues.length === 0 ? <p>{t.noClue}</p> : <ul>{visibleClues.map((clue) => <li key={clue}>{clue}</li>)}</ul>}
           </aside>
           <div className="reader-sheet">
-            {still ? <SceneFrame src={still} caption={frameCaption} morning={Boolean(showMorning && morning)} /> : null}
+            <LivingStage src={still} caption={frameCaption} morning={Boolean(showMorning && morning)} life={life} motion={scene.motion} people={plates} />
             {scene.speaker ? <p className="reader-who">{scene.speaker}</p> : null}
             {scene.music?.startsWith("t") ? (
               <p className="house-note">
@@ -489,29 +497,6 @@ export function StoryReader({ slug }: { slug: string }) {
         </div>
       </article>
     </StoryShell>
-  );
-}
-
-function SceneFrame({ src, caption, morning }: { src: string; caption: string; morning: boolean }) {
-  const [current, setCurrent] = useState(src);
-  const [previous, setPrevious] = useState<string | null>(null);
-  const seen = useRef(src);
-  useEffect(() => {
-    if (seen.current === src) return;
-    setPrevious(seen.current);
-    seen.current = src;
-    setCurrent(src);
-    const id = window.setTimeout(() => setPrevious(null), 700);
-    return () => window.clearTimeout(id);
-  }, [src]);
-  return (
-    <figure className={morning ? "scene-frame is-morning" : "scene-frame"}>
-      <div className="scene-frame-stack">
-        {previous ? <img className="scene-frame-old" src={previous} alt="" /> : null}
-        <img key={current} className="scene-frame-now" src={current} alt={caption} />
-      </div>
-      {caption ? <figcaption>{caption}</figcaption> : null}
-    </figure>
   );
 }
 

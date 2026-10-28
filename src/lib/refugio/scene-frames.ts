@@ -1,4 +1,5 @@
 import type { Lang, Story } from "@/lib/refugio/stories";
+import { HOUSE, MOTION, namesIn } from "@/lib/refugio/house-cast";
 
 const frames: Record<string, Record<string, {
   art: string;
@@ -76,7 +77,19 @@ export function applyFrames(book: Record<Lang, Story[]>) {
         if (!frame) continue;
         scene.art = frame.art;
         scene.where = frame.where[lang];
+        scene.people = namesIn(frame.where[lang]);
+        scene.motion = MOTION[story.slug]?.[scene.id];
         scene.artIf = frame.artIf?.map((item) => ({ if: item.if, art: item.art, where: item.where[lang] }));
+      }
+      const house = HOUSE[story.slug];
+      if (house) {
+        story.life = house.life;
+        story.cast = house.people.map((person) => ({
+          name: person.name,
+          life: person.life[lang],
+          portrait: person.portrait,
+          motion: person.motion,
+        }));
       }
       const opening = pack[story.start];
       if (opening) story.art = opening.art;
