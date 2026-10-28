@@ -508,7 +508,7 @@ function ShareNight({ title, ending, slug }: { title: string; ending: string; sl
   useEffect(() => {
     setNative(typeof navigator.share === "function");
   }, []);
-  const url = `https://www.refugiodalua.com.br/ler/${slug}`;
+  const url = `https://refugio-da-lua.vercel.app/ler/${slug}`;
   const line = t.shareLine.replace("{title}", title).replace("{ending}", ending);
   const full = `${line}\n${url}`;
   return (

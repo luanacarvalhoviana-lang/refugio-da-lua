@@ -61,6 +61,7 @@ export function StoryShell({ children }: { children: ReactNode }) {
         <a href="/escrever">{t.writeStory}</a>
         <a href="/apoio">{t.helpLink}</a>
         <a href="/instalar">{t.install}</a>
+        <a href="https://refugio-da-lua.vercel.app">refugio-da-lua.vercel.app</a>
       </footer>
     </div>
   );
