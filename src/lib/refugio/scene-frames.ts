@@ -16,7 +16,7 @@ const frames: Record<string, Record<string, {
       where: { pt: "Debaixo do farol — Marina", es: "Bajo el farol — Marina", en: "Under the light — Marina" },
       artIf: [
         { if: "posto:atender", art: "/scenes/passageira-farol-atender.jpg?v=vida4", where: { pt: "Debaixo do farol — Marina", es: "Bajo el farol — Marina", en: "Under the light — Marina" } },
-        { if: "posto:viva", art: "/scenes/passageira-farol-viva.jpg?v=vida4", where: { pt: "No carro — Renata e Marina", es: "En el coche — Renata y Marina", en: "In the car — Renata and Marina" } },
+        { if: "posto:viva", art: "/scenes/passageira-farol-viva.jpg?v=vida5", where: { pt: "O viva-voz — Renata e Marina", es: "El altavoz — Renata y Marina", en: "On speaker — Renata and Marina" } },
       ],
     },
     "fim-curva": { art: "/scenes/passageira-curva.jpg?v=vida4", where: { pt: "A curva — Renata e Marina", es: "La curva — Renata y Marina", en: "The curve — Renata and Marina" } },
@@ -40,7 +40,7 @@ const frames: Record<string, Record<string, {
     sal: { art: "/scenes/sobremesa-sal.jpg?v=vida4", where: { pt: "A porta da despensa", es: "La puerta de la despensa", en: "The pantry door" } },
     "fim-conta": { art: "/scenes/sobremesa-conta.jpg?v=vida4", where: { pt: "O beco — Nanda", es: "El callejón — Nanda", en: "The alley — Nanda" } },
     "fim-prato": { art: "/scenes/sobremesa-prato.jpg?v=vida4", where: { pt: "Debaixo do prato", es: "Debajo del plato", en: "Under the plate" } },
-    "fim-cozinha": { art: "/scenes/sobremesa-cozinha.jpg?v=vida4", where: { pt: "Depois da sobremesa", es: "Después del postre", en: "After dessert" } },
+    "fim-cozinha": { art: "/scenes/sobremesa-cozinha.jpg?v=vida5", where: { pt: "Depois da sobremesa — Clara", es: "Después del postre — Clara", en: "After dessert — Clara" } },
   },
   corredor: {
     porta714: { art: "/scenes/corredor-porta.jpg?v=vida4", where: { pt: "A porta — Iara", es: "La puerta — Iara", en: "The door — Iara" } },

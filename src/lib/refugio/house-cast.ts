@@ -130,7 +130,6 @@ export const MOTION: Record<string, Record<string, string>> = {
   },
   sobremesa: {
     forno: "/motion/sobremesa-forno.mp4?v=vida4",
-    "fim-cozinha": "/motion/sobremesa-forno.mp4?v=vida4",
   },
   depoimento: {
     del: "/motion/depoimento-del.mp4?v=vida4",
