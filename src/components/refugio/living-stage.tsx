@@ -87,7 +87,7 @@ export function LivingStage({
       <div className={`stage-gate is-${life}`}>
         {previous ? <img className="stage-old" src={previous} alt="" /> : null}
         {motion && !quiet ? (
-          <video key={clip} className="stage-clip" poster={current} muted autoPlay playsInline>
+          <video key={clip} className="stage-clip" poster={current} muted autoPlay playsInline preload="auto">
             <source src={clip} type="video/mp4" />
           </video>
         ) : (

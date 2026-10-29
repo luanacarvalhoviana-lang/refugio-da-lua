@@ -122,18 +122,18 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
 
 export const MOTION: Record<string, Record<string, string>> = {
   passageira: {
-    "fim-curva": "/motion/passageira-curva.mp4?v=vida3",
+    "fim-curva": "/motion/passageira-curva.mp4?v=vida4",
   },
   correspondencia: {
-    mesa: "/motion/correspondencia-mesa.mp4?v=vida3",
-    "fim-resposta": "/motion/correspondencia-resposta.mp4?v=vida3",
+    mesa: "/motion/correspondencia-mesa.mp4?v=vida4",
+    "fim-resposta": "/motion/correspondencia-resposta.mp4?v=vida4",
   },
   sobremesa: {
-    forno: "/motion/sobremesa-forno.mp4?v=vida3",
-    "fim-cozinha": "/motion/sobremesa-forno.mp4?v=vida3",
+    forno: "/motion/sobremesa-forno.mp4?v=vida4",
+    "fim-cozinha": "/motion/sobremesa-forno.mp4?v=vida4",
   },
   depoimento: {
-    del: "/motion/depoimento-del.mp4?v=vida3",
+    del: "/motion/depoimento-del.mp4?v=vida4",
   },
 };
 
