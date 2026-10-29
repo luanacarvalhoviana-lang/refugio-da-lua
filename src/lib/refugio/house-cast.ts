@@ -17,7 +17,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
     people: [
       {
         name: "Renata",
-        portrait: "/cast/renata.jpg",
+        portrait: "/cast/renata.jpg?v=pintura",
         life: line(
           "Onze meses sem uma frase, e a chave ainda abre.",
           "Once meses sin una frase, y la llave todavía abre.",
@@ -26,7 +26,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
       },
       {
         name: "Marina",
-        portrait: "/cast/marina.jpg",
+        portrait: "/cast/marina.jpg?v=pintura",
         life: line(
           "Sem casaco, debaixo do farol, e mesmo assim não corre.",
           "Sin abrigo, bajo el farol, y aun así no corre.",
@@ -40,7 +40,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
     people: [
       {
         name: "Helena",
-        portrait: "/cast/helena.jpg",
+        portrait: "/cast/helena.jpg?v=pintura",
         life: line(
           "Parou no último lance. O nome antigo ficou lá embaixo.",
           "Se detuvo en el último tramo. El nombre viejo se quedó abajo.",
@@ -54,7 +54,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
     people: [
       {
         name: "Clara",
-        portrait: "/cast/clara.jpg",
+        portrait: "/cast/clara.jpg?v=pintura",
         life: line(
           "O brinde chega antes da comida.",
           "El brindis llega antes de la comida.",
@@ -63,7 +63,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
       },
       {
         name: "Nanda",
-        portrait: "/cast/nanda.jpg",
+        portrait: "/cast/nanda.jpg?v=pintura",
         life: line(
           "O balde de gelo parou no peito.",
           "El cubo de hielo se detuvo en el pecho.",
@@ -77,7 +77,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
     people: [
       {
         name: "Iara",
-        portrait: "/cast/iara.jpg",
+        portrait: "/cast/iara.jpg?v=pintura",
         life: line(
           "Já explicou. Não acreditaram.",
           "Ya lo explicó. No le creyeron.",
@@ -91,7 +91,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
     people: [
       {
         name: "Elisa",
-        portrait: "/cast/elisa.jpg",
+        portrait: "/cast/elisa.jpg?v=pintura",
         life: line(
           "Não precisa levantar a voz.",
           "No necesita alzar la voz.",
@@ -100,7 +100,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
       },
       {
         name: "Duda",
-        portrait: "/cast/duda.jpg",
+        portrait: "/cast/duda.jpg?v=pintura",
         life: line(
           "O por favor não tem som.",
           "El por favor no tiene sonido.",
@@ -109,7 +109,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
       },
       {
         name: "Soraia",
-        portrait: "/cast/soraia.jpg",
+        portrait: "/cast/soraia.jpg?v=pintura",
         life: line(
           "Acordada. Sem romance e sem ódio.",
           "Despierta. Sin romance y sin odio.",
@@ -122,17 +122,17 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
 
 export const MOTION: Record<string, Record<string, string>> = {
   passageira: {
-    "fim-curva": "/motion/passageira-curva.mp4?v=vida4",
+    "fim-curva": "/motion/passageira-curva.mp4?v=pintura",
   },
   correspondencia: {
-    mesa: "/motion/correspondencia-mesa.mp4?v=vida4",
-    "fim-resposta": "/motion/correspondencia-resposta.mp4?v=vida4",
+    mesa: "/motion/correspondencia-mesa.mp4?v=pintura",
+    "fim-resposta": "/motion/correspondencia-resposta.mp4?v=pintura",
   },
   sobremesa: {
-    forno: "/motion/sobremesa-forno.mp4?v=vida4",
+    forno: "/motion/sobremesa-forno.mp4?v=pintura",
   },
   depoimento: {
-    del: "/motion/depoimento-del.mp4?v=vida4",
+    del: "/motion/depoimento-del.mp4?v=pintura",
   },
 };
 
