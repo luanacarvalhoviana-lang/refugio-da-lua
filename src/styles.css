@@ -4201,5 +4201,16 @@ a.story-card { color: inherit; text-decoration: none; }
     line-height: 1;
     cursor: pointer;
   }
+  .house-stage {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 24px;
+  }
+  .house-stage .house-poster {
+    flex: none;
+    width: 100%;
+    max-width: none;
+  }
 }
 
