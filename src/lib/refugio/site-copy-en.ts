@@ -6,7 +6,7 @@ export const en = {
   navLibrary: "Library",
   navAbout: "About",
   enter: "Enter",
-  heroKicker: "romance · mystery · at night",
+  heroKicker: "Interactive sapphic stories",
   heroTitle: "Fall in love, doubt, choose.",
   heroLead: "Original stories between women. Every choice changes the ending. Choosing is always free.",
   summaryTitle: "What this house is",
