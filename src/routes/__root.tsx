@@ -15,7 +15,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Refúgio da Lua — romance e mistério" },
       { name: "theme-color", content: "#0c3442" },
-      { name: "description", content: "Histórias interativas sáficas de romance e mistério, em português, espanhol e inglês. A escolha é sempre de graça." },
+      { name: "description", content: "Cinco histórias entre mulheres: Passageira, Correspondência, Sobremesa, Corredor e Depoimento. Romance e mistério. A escolha é de graça." },
       { name: "robots", content: "index, follow" },
       { property: "og:url", content: "https://www.refugiodalua.com.br/" },
       { name: "apple-mobile-web-app-capable", content: "yes" },

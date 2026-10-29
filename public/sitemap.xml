@@ -2,23 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.refugiodalua.com.br/</loc>
+    <lastmod>2026-10-29</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
     <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.refugiodalua.com.br/en"/>
   </url>
   <url>
     <loc>https://www.refugiodalua.com.br/es</loc>
+    <lastmod>2026-10-29</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
     <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.refugiodalua.com.br/en"/>
   </url>
   <url>
     <loc>https://www.refugiodalua.com.br/en</loc>
+    <lastmod>2026-10-29</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.refugiodalua.com.br/"/>
     <xhtml:link rel="alternate" hreflang="es-419" href="https://www.refugiodalua.com.br/es"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.refugiodalua.com.br/en"/>
   </url>
-  <url><loc>https://www.refugiodalua.com.br/sobre</loc></url>
+  <url><loc>https://www.refugiodalua.com.br/historias</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/biblioteca</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/historia/passageira</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/historia/correspondencia</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/historia/sobremesa</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/historia/corredor</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/historia/depoimento</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/ler/passageira</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/ler/correspondencia</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/ler/sobremesa</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/ler/corredor</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/ler/depoimento</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/autora/luana-viana</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://www.refugiodalua.com.br/sobre</loc><lastmod>2026-10-29</lastmod></url>
   <url><loc>https://www.refugiodalua.com.br/planos</loc></url>
   <url><loc>https://www.refugiodalua.com.br/privacidade</loc></url>
   <url><loc>https://www.refugiodalua.com.br/termos</loc></url>
