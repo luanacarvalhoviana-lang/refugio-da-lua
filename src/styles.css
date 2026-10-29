@@ -4212,5 +4212,8 @@ a.story-card { color: inherit; text-decoration: none; }
     width: 100%;
     max-width: none;
   }
+  .house > .house-block:has(.now-title) { padding-top: 32px; }
+  .now-title { margin: 0 0 8px; }
+  .house-block:has(.now-title) > .house-note { margin-top: 0; }
 }
 

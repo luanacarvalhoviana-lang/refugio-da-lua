@@ -40,7 +40,7 @@ export function HomeStories({ initialLang }: { initialLang?: Lang }) {
         <li>{t.safeHelpShort}</li>
       </ul>
       <section className="house-block">
-        <h2>{t.now}</h2>
+        <h2 className="now-title">{t.now}</h2>
         <MoonNightNote />
         <div className="story-list">
           {shelf.map((item) => (
