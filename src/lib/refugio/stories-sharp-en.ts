@@ -202,97 +202,6 @@ const correspondenciaEn: Story = {
   ],
 };
 
-const sobremesaEn: Story = {
-  slug: "sobremesa",
-  title: "The Last Course",
-  author: "Luana Viana",
-  rating: "16",
-  genres: ["comedy", "betrayal", "romance"],
-  minutes: 12,
-  synopsis: "You cook your ex’s dinner. Her date is the woman you have been seeing for six weeks. The wine is perfect. No one in that room is.",
-  place: "The service kitchen",
-  art: "/scenes/cafe.jpg",
-  start: "forno",
-  sound: "/sounds/fireplace.mp3",
-  scenes: [
-    {
-      id: "forno",
-      music: "calma",
-      body: "The oven timer is the only honest creature in the house. Inside, a fish you could cook with your eyes closed. Outside, Clara’s dining room, your ex, the long table, the candles she always lights too early, the speech she rehearses even to the mirror. You took the job because this month’s bill has no sense of humor. Clara comes into the kitchen with two glasses. “Taste. Like before.” The kiss on the cheek lasts a second longer than what people who have ended are allowed. Nanda comes in behind her for ice and stops with the bucket at her chest. Six weeks. She had said she was almost single. Clara smiles with every tooth.",
-      choices: [
-        { id: "voz", label: "Say it out loud: she’s my ex", to: "sala", affinity: 1, clue: "Clara kissed your cheek on purpose.", thought: "If I say it now, the fish burns. Let it burn." },
-        { id: "gelo", label: "Send Nanda back into the dining room", to: "gelo", affinity: 0, thought: "Taking her out of the audience doesn’t erase what she saw. It only delays the melting ice." },
-        { id: "beijo", label: "Kiss Clara back to kill the joke", to: "fim-cozinha", affinity: -2, thought: "I pick the wrong joke. Nanda sees the version that isn’t ours." },
-      ],
-    },
-    {
-      id: "gelo",
-      speaker: "Nanda",
-      music: "calma",
-      body: "The pantry fits two people if one of them isn’t angry. Nanda is. The ice has already become water and an opinion. “She called me this morning. I didn’t know the cook was you. I was going to end it on Sunday. Not in the middle of the fish, not with her mouth on your face.” She laughs once, short, graceless, which on another night would be your kind of joke. “You’re going to look at me as if I were the whole betrayal. Look at her too. Nobody sets a dinner this size without knowing the menu.”",
-      choices: [
-        { id: "rir", label: "Laugh, even if it’s ugly", to: "sal", affinity: 2, thought: "The laugh comes out crooked and true. It is the first relief of the night." },
-        { id: "terminar", label: "Ask: you were going to end it?", to: "sal", affinity: 1, clue: "Nanda was already leaving before the dinner.", thought: "The question hurts in the wrong order. I ask it because I want the right one." },
-        { id: "muda", label: "Go back to the risotto and say nothing", to: "fim-prato", affinity: 0, thought: "If I have no voice, I have a plate. Pathetic, and mine." },
-      ],
-    },
-    {
-      id: "sala",
-      speaker: "Clara",
-      music: "revelacao",
-      body: "The room understands everything one second too late, which is how dining rooms understand. Someone thinks it is a toast. Clara lifts her glass toward you, beautiful and cruel in the exact measure you already knew in bed and in a fight. “To the woman who cooks what I don’t know how to say.” Nanda is standing by the window, empty glass, deciding whether to laugh or leave. The guests smile at the wrong part of the sentence. The fish, on the platter, looks embarrassed.",
-      choices: [
-        { id: "brinde", label: "Toast, and sit beside Nanda", to: "fim-conta", affinity: 2, thought: "I choose the chair, not the speech. The chair is more honest." },
-        { id: "corrigir", label: "Correct Clara in front of everyone", to: "fim-conta", affinity: 1, thought: "It will be ugly. Ugly is still better than her sentence alone in the air." },
-        { id: "cozinha", label: "Go back to the kitchen as if this were only work", to: "fim-prato", affinity: 0, thought: "The apron is a ridiculous hiding place. I put it on." },
-      ],
-    },
-    {
-      id: "sal",
-      speaker: "Clara",
-      music: "revelacao",
-      body: "You laugh in the pantry, an awful necessary laugh, the kind that unblocks a chest. The door opens. Clara has no wine. She has empty hands, which on her is serious anger. “I wanted to see if either of you would tell the truth without an audience. Nanda said your first name yesterday, without knowing. I had already hired you. I didn’t cancel.” She looks at the coarse salt in your hand as if it were a small weapon. “I won’t make a scene. A scene is intimacy, and I won’t borrow it. But someone here is going to speak before dessert, or dessert goes out alone and I charge for the whole night.”",
-      choices: [
-        { id: "desculpa", label: "Apologize with no audience", to: "fim-conta", affinity: 2, thought: "Sorry doesn’t erase the dinner. It keeps it from becoming a legend." },
-        { id: "armou", label: "Say she set the night up", to: "fim-conta", affinity: 1, clue: "Clara hired you knowing.", thought: "I hand the plot back to its owner. The owner makes an almost respectful face." },
-        { id: "servir", label: "Serve dessert and leave without a word", to: "fim-prato", affinity: 0, thought: "Dessert can carry what my mouth refuses." },
-      ],
-    },
-    {
-      id: "fim-conta",
-      music: "romance",
-      ending: {
-        key: "conta",
-        title: "The bill",
-        flower: "Lemon",
-        body: "The truth comes out between the main course and the sweet, badly told, with a joke in the wrong place and a silence someone tries to cover with a fork. Clara tells the table to eat. It is not forgiveness. It is control, and you recognize it, and you are still grateful for the lack of a scene. Nanda takes your hand in the service alley, furious and tender, which has been your dialect since the third week. “Sunday still stands. No dinner. No ex. No fish.” You leave the refund and a short apology on Clara’s counter. She does not come out to read it in front of you. On Sunday, Nanda shows up. She doesn’t end it. She starts a harder conversation, which is better.",
-        letter: { from: "Nanda", text: "Sunday. No candle, no toast, no your ex narrating us. I was still going to end it, you know. Then you laughed ugly in the pantry and I remembered why not. I’ll be there at four. If there’s lunch, make it bread. I don’t trust you near an oven on a night of crisis." },
-      },
-    },
-    {
-      id: "fim-prato",
-      music: "calma",
-      ending: {
-        key: "prato",
-        title: "Under the plate",
-        flower: "Burnt sugar",
-        body: "You don’t make a speech. Speech is Clara’s genre. Under Nanda’s plate, on the back of a receipt: “I didn’t know it was her. If you were already going to end it, end it looking at me.” Clara’s plate goes out clean of notes. She understands the night anyway, because Clara always understood an hour late and with precision. She pays double. She doesn’t say goodbye. Nanda texts from the taxi, one word that saves what can be saved: come down. You go down with the apron still tied, ridiculous, exact. The burnt sugar stays for the guests. They will think it was technique.",
-        letter: { from: "Clara", text: "The money went through. Don’t thank me and don’t explain Nanda. I wanted to see your face. I saw it. It wasn’t as sweet as I imagined, which is fair. Don’t call me for the next dinner. I won’t call you either. This bill is closed." },
-      },
-    },
-    {
-      id: "fim-cozinha",
-      music: "despedida",
-      ending: {
-        key: "cozinha",
-        title: "Service",
-        flower: "Napkin",
-        body: "You return Clara’s kiss on the cheek the way you return a joke. Nanda sees the wrong version and does not stay for the correction. The ice bucket sits in the sink, absurd, melting. Dessert goes out on time. No one notices that the host’s date has already left, or they notice and decide that dessert is more polite than a question. Later, only you and Clara and the pans. “I wanted it to hurt the same,” she says, without victory. It doesn’t. You wash up. The comedy ends with no tip. On your phone, Nanda does not leave the Sunday note. She leaves the blank, which is also a text.",
-        letter: { from: "Nanda", text: "I saw what you chose to do with your mouth. You don’t have to tell me it was a joke. A joke is a choice too. Don’t come on Sunday. Don’t come on Monday. When you have a sentence that isn’t service, then we’ll see if there’s still a person on the other side." },
-      },
-    },
-  ],
-};
 
 const corredorEn: Story = {
   slug: "corredor",
@@ -468,4 +377,4 @@ const depoimentoEn: Story = {
   ],
 };
 
-export const sharpEn: Story[] = [passageiraEn, correspondenciaEn, sobremesaEn, corredorEn, depoimentoEn];
+export const sharpEn: Story[] = [passageiraEn, correspondenciaEn, corredorEn, depoimentoEn];

@@ -202,97 +202,6 @@ const correspondenciaPt: Story = {
   ],
 };
 
-const sobremesaPt: Story = {
-  slug: "sobremesa",
-  title: "Sobremesa",
-  author: "Luana Viana",
-  rating: "16",
-  genres: ["comédia", "traição", "romance"],
-  minutes: 12,
-  synopsis: "Você cozinha o jantar da sua ex. A acompanhante dela é a mulher com quem você tem saído há seis semanas. O vinho está ótimo. Ninguém naquela sala está.",
-  place: "Cozinha de serviço",
-  art: "/scenes/cafe.jpg",
-  start: "forno",
-  sound: "/sounds/fireplace.mp3",
-  scenes: [
-    {
-      id: "forno",
-      music: "calma",
-      body: "O timer do forno é a única criatura honesta da casa. Lá dentro, um peixe que você sabe fazer de olhos fechados. Lá fora, a sala da Clara, sua ex, com a mesa longa, as velas que ela sempre acende cedo demais e o discurso que ela ensaia até contra o espelho. Você aceitou o trabalho porque a conta do mês não tem humor. Clara entra na cozinha com duas taças. “Prova. Como antigamente.” O beijo na bochecha dura um segundo a mais do que o combinado entre pessoas que terminaram. A Nanda entra atrás, atrás de gelo, e para com o balde na altura do peito. Seis semanas. Ela tinha dito que estava quase solteira. A Clara sorri com todos os dentes.",
-      choices: [
-        { id: "voz", label: "Dizer, alto: é a minha ex", to: "sala", affinity: 1, clue: "A Clara beijou a sua bochecha de propósito.", thought: "Se eu digo agora, o peixe queima. Que queime." },
-        { id: "gelo", label: "Empurrar a Nanda de volta para a sala", to: "gelo", affinity: 0, thought: "Tirar ela da plateia não apaga o que ela viu. Só adia o gelo derretendo." },
-        { id: "beijo", label: "Retribuir o beijo para acabar com a piada", to: "fim-cozinha", affinity: -2, thought: "Eu escolho a piada errada. A Nanda vê a versão que não é a nossa." },
-      ],
-    },
-    {
-      id: "gelo",
-      speaker: "Nanda",
-      music: "calma",
-      body: "A despensa cabe duas pessoas se uma não estiver com raiva. A Nanda está. O gelo já virou água e opinião. “Ela me chamou hoje de manhã. Eu não sabia que a cozinheira era você. Eu ia terminar com você no domingo. Não no meio do peixe, não com a boca dela na sua cara.” Ela ri uma vez, curto, sem graça, o que em outra noite seria o seu tipo de piada. “Você vai me olhar como se eu fosse a traição inteira. Olha ela também. Ninguém arma um jantar deste tamanho sem saber o cardápio.”",
-      choices: [
-        { id: "rir", label: "Rir, mesmo feio", to: "sal", affinity: 2, thought: "O riso sai torto e verdadeiro. É o primeiro alívio da noite." },
-        { id: "terminar", label: "Perguntar: você ia terminar?", to: "sal", affinity: 1, clue: "A Nanda já ia embora antes do jantar.", thought: "A pergunta dói na ordem errada. Eu faço porque eu quero a ordem certa." },
-        { id: "muda", label: "Voltar muda para o risoto", to: "fim-prato", affinity: 0, thought: "Se eu não tenho voz, eu tenho prato. Patético e meu." },
-      ],
-    },
-    {
-      id: "sala",
-      speaker: "Clara",
-      music: "revelacao",
-      body: "A sala entende tudo um segundo tarde demais, que é como sala de jantar entende. Alguém acha que é brinde. A Clara levanta a taça na sua direção, linda e cruel na medida exata que você já conheceu na cama e na briga. “À mulher que cozinha o que eu não sei dizer.” A Nanda está de pé junto à janela, com o copo vazio, decidindo se ri ou se sai. Os convidados sorriem para o ponto errado da frase. O peixe, na travessa, parece constrangido.",
-      choices: [
-        { id: "brinde", label: "Brindar e sentar ao lado da Nanda", to: "fim-conta", affinity: 2, thought: "Eu escolho a cadeira, não o discurso. A cadeira é mais honesta." },
-        { id: "corrigir", label: "Corrigir a Clara na frente de todo mundo", to: "fim-conta", affinity: 1, thought: "Vai ficar feio. Feio ainda é melhor do que a frase dela sozinha no ar." },
-        { id: "cozinha", label: "Voltar para a cozinha como se fosse só serviço", to: "fim-prato", affinity: 0, thought: "O avental é um esconderijo ridículo. Eu visto." },
-      ],
-    },
-    {
-      id: "sal",
-      speaker: "Clara",
-      music: "revelacao",
-      body: "Vocês riem na despensa, um riso horrível e necessário, o tipo que desentupa o peito. A porta abre. A Clara não está com o vinho. Está com as mãos vazias, o que nela é raiva séria. “Eu queria ver se alguma de vocês dizia a verdade sem plateia. A Nanda me falou o seu primeiro nome ontem, sem saber. Eu já tinha contratado você. Não cancelei.” Ela olha o sal grosso na sua mão como se fosse uma arma pequena. “Eu não vou fazer escândalo. Escândalo é intimidade, e eu não vou pedir isso emprestado. Mas alguém aqui vai falar antes da sobremesa, ou a sobremesa sai sozinha e eu cobro a noite cheia.”",
-      choices: [
-        { id: "desculpa", label: "Pedir desculpa sem plateia", to: "fim-conta", affinity: 2, thought: "Desculpa não apaga o jantar. Impede que ele vire lenda." },
-        { id: "armou", label: "Dizer que ela armou a noite", to: "fim-conta", affinity: 1, clue: "A Clara contratou você já sabendo.", thought: "Eu devolvo o enredo para a dona. A dona faz uma careta quase respeitosa." },
-        { id: "servir", label: "Servir a sobremesa e ir embora calada", to: "fim-prato", affinity: 0, thought: "A sobremesa pode carregar o que a minha boca recusa." },
-      ],
-    },
-    {
-      id: "fim-conta",
-      music: "romance",
-      ending: {
-        key: "conta",
-        title: "A conta",
-        flower: "Limão",
-        body: "A verdade sai entre o prato principal e o doce, mal contada, com uma piada no lugar errado e um silêncio que alguém tenta tapar com garfo. A Clara manda a mesa comer. Não é perdão. É controle, e você reconhece, e mesmo assim agradece o não-escândalo. A Nanda pega a sua mão no beco de serviço, furiosa e terna, que é o dialeto de vocês desde a terceira semana. “Domingo ainda vale. Sem jantar. Sem ex. Sem peixe.” Você deixa o reembolso e um pedido de desculpa curto no balcão da Clara. Ela não sai para ler na sua frente. No domingo, a Nanda aparece. Não termina. Começa uma conversa mais difícil, que é melhor.",
-        letter: { from: "Nanda", text: "Domingo. Sem vela, sem brinde, sem a sua ex narrando a gente. Eu ainda ia terminar, sabia? Aí você riu feio na despensa e eu lembrei por que não. Chego às quatro. Se tiver almoço, que seja pão. Eu não confio em você perto de um forno em noite de crise." },
-      },
-    },
-    {
-      id: "fim-prato",
-      music: "calma",
-      ending: {
-        key: "prato",
-        title: "Por baixo do prato",
-        flower: "Açúcar queimado",
-        body: "Você não faz discurso. Discurso é o gênero da Clara. Debaixo do prato da Nanda, no verso de um recibo: “Eu não sabia que era ela. Se você já ia terminar, termina olhando para mim.” O prato da Clara sai limpo de recado. Ela entende a noite mesmo assim, porque a Clara sempre entendeu uma hora tarde e com precisão. Paga em dobro. Não se despede. A Nanda manda mensagem do táxi, três letras que salvam o que dava para salvar: desce. Você desce com o avental ainda amarrado, ridícula, exata. O açúcar queimado fica para os convidados. Eles vão achar que foi técnica.",
-        letter: { from: "Clara", text: "O dinheiro caiu. Não precisa agradecer e não precisa me explicar a Nanda. Eu quis ver a sua cara. Vi. Não ficou tão doce quanto eu imaginei, o que é justo. Não me chama para o próximo jantar. Eu também não vou chamar você. A conta, esta, fechou." },
-      },
-    },
-    {
-      id: "fim-cozinha",
-      music: "despedida",
-      ending: {
-        key: "cozinha",
-        title: "Serviço",
-        flower: "Guardanapo",
-        body: "Você devolve o beijo na bochecha da Clara como quem devolve uma piada. A Nanda vê a versão errada e não fica para a correção. O balde de gelo fica na pia, absurdo, derretendo. A sobremesa sai no horário. Ninguém percebe que a acompanhante da anfitriã já foi embora, ou percebe e decide que sobremesa é mais educada do que pergunta. Depois, só você e a Clara e as panelas. “Eu queria que doesse igual”, ela diz, sem vitória. Não dói igual. Você lava. A comédia acaba sem gorjeta. No celular, a Nanda não deixa o recado de domingo. Deixa o vazio, que é um texto também.",
-        letter: { from: "Nanda", text: "Eu vi o que você escolheu fazer com a boca. Não precisa me contar que foi piada. Piada também é escolha. Não vem no domingo. Não vem na segunda. Quando você tiver uma frase que não seja serviço, aí a gente vê se ainda existe gente do outro lado." },
-      },
-    },
-  ],
-};
 
 const corredorPt: Story = {
   slug: "corredor",
@@ -468,4 +377,4 @@ const depoimentoPt: Story = {
   ],
 };
 
-export const sharpPt: Story[] = [passageiraPt, correspondenciaPt, sobremesaPt, corredorPt, depoimentoPt];
+export const sharpPt: Story[] = [passageiraPt, correspondenciaPt, corredorPt, depoimentoPt];

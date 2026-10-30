@@ -202,97 +202,6 @@ const correspondenciaEs: Story = {
   ],
 };
 
-const sobremesaEs: Story = {
-  slug: "sobremesa",
-  title: "Sobremesa",
-  author: "Luana Viana",
-  rating: "16",
-  genres: ["comedia", "traición", "romance"],
-  minutes: 12,
-  synopsis: "Cocinas la cena de tu ex. Su acompañante es la mujer con la que sales desde hace seis semanas. El vino está perfecto. Nadie en esa sala lo está.",
-  place: "Cocina de servicio",
-  art: "/scenes/cafe.jpg",
-  start: "forno",
-  sound: "/sounds/fireplace.mp3",
-  scenes: [
-    {
-      id: "forno",
-      music: "calma",
-      body: "El timer del horno es la única criatura honesta de la casa. Adentro, un pescado que sabes hacer con los ojos cerrados. Afuera, la sala de Clara, tu ex, con la mesa larga, las velas que siempre enciende demasiado pronto y el discurso que ensaya hasta contra el espejo. Aceptaste el trabajo porque la cuenta del mes no tiene humor. Clara entra en la cocina con dos copas. “Prueba. Como antes.” El beso en la mejilla dura un segundo más de lo pactado entre personas que terminaron. Nanda entra detrás, a buscar hielo, y se detiene con el balde a la altura del pecho. Seis semanas. Había dicho que estaba casi soltera. Clara sonríe con todos los dientes.",
-      choices: [
-        { id: "voz", label: "Decir, alto: es mi ex", to: "sala", affinity: 1, clue: "Clara te besó la mejilla a propósito.", thought: "Si lo digo ahora, el pescado se quema. Que se queme." },
-        { id: "gelo", label: "Empujar a Nanda de vuelta a la sala", to: "gelo", affinity: 0, thought: "Sacarla del público no borra lo que vio. Solo aplaza el hielo derritiéndose." },
-        { id: "beijo", label: "Devolver el beso para acabar con el chiste", to: "fim-cozinha", affinity: -2, thought: "Elijo el chiste equivocado. Nanda ve la versión que no es la nuestra." },
-      ],
-    },
-    {
-      id: "gelo",
-      speaker: "Nanda",
-      music: "calma",
-      body: "La despensa cabe a dos personas si una no está enojada. Nanda lo está. El hielo ya se volvió agua y opinión. “Ella me llamó esta mañana. Yo no sabía que la cocinera eras tú. Iba a terminar contigo el domingo. No en medio del pescado, no con la boca de ella en tu cara.” Ríe una vez, corto, sin gracia, lo que en otra noche sería tu tipo de broma. “Me vas a mirar como si yo fuera la traición entera. Mírala a ella también. Nadie arma una cena de este tamaño sin saber el menú.”",
-      choices: [
-        { id: "rir", label: "Reír, aunque sea feo", to: "sal", affinity: 2, thought: "La risa sale torcida y verdadera. Es el primer alivio de la noche." },
-        { id: "terminar", label: "Preguntar: ¿ibas a terminar?", to: "sal", affinity: 1, clue: "Nanda ya se iba antes de la cena.", thought: "La pregunta duele en el orden equivocado. La hago porque quiero el orden justo." },
-        { id: "muda", label: "Volver muda al risotto", to: "fim-prato", affinity: 0, thought: "Si no tengo voz, tengo plato. Patético y mío." },
-      ],
-    },
-    {
-      id: "sala",
-      speaker: "Clara",
-      music: "revelacao",
-      body: "La sala lo entiende todo un segundo demasiado tarde, que es como entiende un comedor. Alguien cree que es un brindis. Clara levanta la copa hacia ti, hermosa y cruel en la medida exacta que ya conociste en la cama y en la pelea. “Por la mujer que cocina lo que yo no sé decir.” Nanda está de pie junto a la ventana, con el vaso vacío, decidiendo si ríe o si se va. Los invitados sonríen al punto equivocado de la frase. El pescado, en la fuente, parece incómodo.",
-      choices: [
-        { id: "brinde", label: "Brindar y sentarte al lado de Nanda", to: "fim-conta", affinity: 2, thought: "Elijo la silla, no el discurso. La silla es más honesta." },
-        { id: "corrigir", label: "Corregir a Clara delante de todo el mundo", to: "fim-conta", affinity: 1, thought: "Va a quedar feo. Feo sigue siendo mejor que su frase sola en el aire." },
-        { id: "cozinha", label: "Volver a la cocina como si fuera solo trabajo", to: "fim-prato", affinity: 0, thought: "El delantal es un escondite ridículo. Me lo pongo." },
-      ],
-    },
-    {
-      id: "sal",
-      speaker: "Clara",
-      music: "revelacao",
-      body: "Ríen en la despensa, una risa horrible y necesaria, de las que destapan el pecho. La puerta se abre. Clara no trae el vino. Trae las manos vacías, que en ella es rabia seria. “Quería ver si alguna de las dos decía la verdad sin público. Nanda me dijo tu nombre de pila ayer, sin saber. Yo ya te había contratado. No cancelé.” Mira la sal gruesa en tu mano como si fuera un arma pequeña. “No voy a hacer un escándalo. El escándalo es intimidad, y no voy a pedirla prestada. Pero alguien aquí va a hablar antes del postre, o el postre sale solo y yo cobro la noche entera.”",
-      choices: [
-        { id: "desculpa", label: "Pedir perdón sin público", to: "fim-conta", affinity: 2, thought: "El perdón no borra la cena. Impide que se vuelva leyenda." },
-        { id: "armou", label: "Decir que ella armó la noche", to: "fim-conta", affinity: 1, clue: "Clara te contrató sabiéndolo.", thought: "Le devuelvo el relato a su dueña. La dueña hace una mueca casi respetuosa." },
-        { id: "servir", label: "Servir el postre e irte en silencio", to: "fim-prato", affinity: 0, thought: "El postre puede cargar lo que mi boca se niega." },
-      ],
-    },
-    {
-      id: "fim-conta",
-      music: "romance",
-      ending: {
-        key: "conta",
-        title: "La cuenta",
-        flower: "Limón",
-        body: "La verdad sale entre el plato principal y el dulce, mal contada, con un chiste en el lugar equivocado y un silencio que alguien intenta tapar con el tenedor. Clara manda a la mesa a comer. No es perdón. Es control, y lo reconoces, y aun así agradeces el no escándalo. Nanda te toma la mano en el callejón de servicio, furiosa y tierna, que es el dialecto de ustedes desde la tercera semana. “El domingo sigue en pie. Sin cena. Sin ex. Sin pescado.” Dejas el reembolso y un perdón corto en el mostrador de Clara. Ella no sale a leerlo delante de ti. El domingo, Nanda aparece. No termina. Empieza una conversación más difícil, que es mejor.",
-        letter: { from: "Nanda", text: "Domingo. Sin vela, sin brindis, sin tu ex narrándonos. Yo igual iba a terminar, ¿sabías? Después reíste feo en la despensa y recordé por qué no. Llego a las cuatro. Si hay almuerzo, que sea pan. No confío en ti cerca de un horno en noche de crisis." },
-      },
-    },
-    {
-      id: "fim-prato",
-      music: "calma",
-      ending: {
-        key: "prato",
-        title: "Debajo del plato",
-        flower: "Azúcar quemada",
-        body: "No haces discurso. El discurso es el género de Clara. Debajo del plato de Nanda, en el reverso de un recibo: “No sabía que era ella. Si ya ibas a terminar, termina mirándome.” El plato de Clara sale limpio de recado. Ella entiende la noche igual, porque Clara siempre entendió una hora tarde y con precisión. Paga el doble. No se despide. Nanda escribe desde el taxi, tres letras que salvan lo que se podía salvar: baja. Bajas con el delantal todavía atado, ridícula, exacta. El azúcar quemada se queda para los invitados. Van a creer que fue técnica.",
-        letter: { from: "Clara", text: "El dinero cayó. No hace falta agradecer y no hace falta explicarme a Nanda. Quise ver tu cara. La vi. No quedó tan dulce como imaginé, lo cual es justo. No me llames para la próxima cena. Yo tampoco voy a llamarte. Esta cuenta, cerró." },
-      },
-    },
-    {
-      id: "fim-cozinha",
-      music: "despedida",
-      ending: {
-        key: "cozinha",
-        title: "Servicio",
-        flower: "Servilleta",
-        body: "Le devuelves el beso en la mejilla a Clara como quien devuelve un chiste. Nanda ve la versión equivocada y no se queda para la corrección. El balde de hielo queda en el fregadero, absurdo, derritiéndose. El postre sale a horario. Nadie nota que la acompañante de la anfitriona ya se fue, o lo nota y decide que el postre es más educado que la pregunta. Después, solo tú y Clara y las ollas. “Quería que doliera igual”, dice, sin victoria. No duele igual. Lavas. La comedia termina sin propina. En el celular, Nanda no deja el recado del domingo. Deja el vacío, que también es un texto.",
-        letter: { from: "Nanda", text: "Vi lo que elegiste hacer con la boca. No hace falta contarme que fue un chiste. El chiste también es una elección. No vengas el domingo. No vengas el lunes. Cuando tengas una frase que no sea servicio, ahí vemos si todavía hay alguien del otro lado." },
-      },
-    },
-  ],
-};
 
 const corredorEs: Story = {
   slug: "corredor",
@@ -468,4 +377,4 @@ const depoimentoEs: Story = {
   ],
 };
 
-export const sharpEs: Story[] = [passageiraEs, correspondenciaEs, sobremesaEs, corredorEs, depoimentoEs];
+export const sharpEs: Story[] = [passageiraEs, correspondenciaEs, corredorEs, depoimentoEs];
