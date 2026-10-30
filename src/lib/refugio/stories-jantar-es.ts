@@ -10,16 +10,16 @@ export const jantarEs: Story = {
   minutes: 75,
   synopsis: "Eres chef particular y aceptaste cocinar el cumpleaños de la madre de tu ex. A la hora de la entrada, tu ex presenta a la novia nueva: la mujer con la que sales desde hace seis semanas. Ocho episodios, una casa llena y tres finales.",
   place: "Casa de los Prado",
-  art: "/scenes/cafe.jpg",
+  art: "/scenes/jantar-capa.jpg",
   start: "e1x1",
   life: "candle",
   sound: "/sounds/fireplace.mp3",
   cast: [
-    { name: "Helena", life: "Tu ex. Arquitecta, 33.", portrait: "/cast/clara.jpg?v=pintura2" },
-    { name: "Bia", life: "Fotógrafa, 29. Sales con ella desde hace seis semanas.", portrait: "/cast/nanda.jpg?v=pintura2" },
-    { name: "Teté", life: "Tu sous-chef y mejor amiga, 34." },
-    { name: "Dona Lúcia", life: "Madre de Helena, la cumpleañera." },
-    { name: "Caio", life: "Hermano menor de Helena. Se da cuenta de todo." },
+    { name: "Helena", life: "Tu ex. Arquitecta, 33.", portrait: "/cast/jantar-helena.jpg" },
+    { name: "Bia", life: "Fotógrafa, 29. Sales con ella desde hace seis semanas.", portrait: "/cast/jantar-bia.jpg" },
+    { name: "Teté", life: "Tu sous-chef y mejor amiga, 34.", portrait: "/cast/jantar-tete.jpg" },
+    { name: "Dona Lúcia", life: "Madre de Helena, la cumpleañera.", portrait: "/cast/jantar-lucia.jpg" },
+    { name: "Caio", life: "Hermano menor de Helena. Se da cuenta de todo.", portrait: "/cast/jantar-caio.jpg" },
   ],
   scenes: [
     {

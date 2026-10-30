@@ -10,16 +10,16 @@ export const jantarPt: Story = {
   minutes: 75,
   synopsis: "Você é chef particular e aceitou cozinhar o aniversário da mãe da sua ex. Na hora da entrada, a ex apresenta a namorada nova: a mulher com quem você sai há seis semanas. Oito episódios, uma casa cheia e três finais.",
   place: "Casa dos Prado",
-  art: "/scenes/cafe.jpg",
+  art: "/scenes/jantar-capa.jpg",
   start: "e1x1",
   life: "candle",
   sound: "/sounds/fireplace.mp3",
   cast: [
-    { name: "Helena", life: "Sua ex. Arquiteta, 33.", portrait: "/cast/clara.jpg?v=pintura2" },
-    { name: "Bia", life: "Fotógrafa, 29. Você sai com ela há seis semanas.", portrait: "/cast/nanda.jpg?v=pintura2" },
-    { name: "Teté", life: "Sua sous-chef e melhor amiga, 34." },
-    { name: "Dona Lúcia", life: "Mãe da Helena, a aniversariante." },
-    { name: "Caio", life: "Irmão caçula da Helena. Percebe tudo." },
+    { name: "Helena", life: "Sua ex. Arquiteta, 33.", portrait: "/cast/jantar-helena.jpg" },
+    { name: "Bia", life: "Fotógrafa, 29. Você sai com ela há seis semanas.", portrait: "/cast/jantar-bia.jpg" },
+    { name: "Teté", life: "Sua sous-chef e melhor amiga, 34.", portrait: "/cast/jantar-tete.jpg" },
+    { name: "Dona Lúcia", life: "Mãe da Helena, a aniversariante.", portrait: "/cast/jantar-lucia.jpg" },
+    { name: "Caio", life: "Irmão caçula da Helena. Percebe tudo.", portrait: "/cast/jantar-caio.jpg" },
   ],
   scenes: [
     {

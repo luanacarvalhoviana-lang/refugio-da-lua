@@ -10,16 +10,16 @@ export const jantarEn: Story = {
   minutes: 75,
   synopsis: "You are a private chef, and you agreed to cook your ex's mother's birthday. When the starter goes out, your ex introduces her new girlfriend: the woman you've been seeing for six weeks. Eight episodes, a full house, and three endings.",
   place: "Casa dos Prado",
-  art: "/scenes/cafe.jpg",
+  art: "/scenes/jantar-capa.jpg",
   start: "e1x1",
   life: "candle",
   sound: "/sounds/fireplace.mp3",
   cast: [
-    { name: "Helena", life: "Your ex. Architect, 33.", portrait: "/cast/clara.jpg?v=pintura2" },
-    { name: "Bia", life: "Photographer, 29. You've been seeing her for six weeks.", portrait: "/cast/nanda.jpg?v=pintura2" },
-    { name: "Teté", life: "Your sous-chef and best friend, 34." },
-    { name: "Dona Lúcia", life: "Helena's mother. It's her birthday." },
-    { name: "Caio", life: "Helena's youngest brother. He notices everything." },
+    { name: "Helena", life: "Your ex. Architect, 33.", portrait: "/cast/jantar-helena.jpg" },
+    { name: "Bia", life: "Photographer, 29. You've been seeing her for six weeks.", portrait: "/cast/jantar-bia.jpg" },
+    { name: "Teté", life: "Your sous-chef and best friend, 34.", portrait: "/cast/jantar-tete.jpg" },
+    { name: "Dona Lúcia", life: "Helena's mother. It's her birthday.", portrait: "/cast/jantar-lucia.jpg" },
+    { name: "Caio", life: "Helena's youngest brother. He notices everything.", portrait: "/cast/jantar-caio.jpg" },
   ],
   scenes: [
     {
