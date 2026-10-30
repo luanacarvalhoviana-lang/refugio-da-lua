@@ -235,7 +235,8 @@ export function StoryReader({ slug }: { slug: string }) {
   }
 
   function choose(choice: Choice) {
-    const nextPicks = [...picks, `${sceneId}:${choice.id}`];
+    // A lone "Continuar" is not a choice: keep the saved path short for long stories.
+    const nextPicks = (scene?.choices?.length ?? 0) > 1 ? [...picks, `${sceneId}:${choice.id}`] : picks;
     const nextClues = cluesWithPick(clues, nextPicks, choice.clue);
     const nextAffinity = affinity + (choice.affinity ?? 0);
     setClues(nextClues);
@@ -318,7 +319,9 @@ export function StoryReader({ slug }: { slug: string }) {
   }
 
   const moons = Math.max(0, Math.min(5, affinity + 2));
-  const memory = remembered(scene.after, picks)?.line ?? null;
+  const memories = scene.afterEach
+    ? [...new Set((scene.after ?? []).filter((row) => picks.includes(row.if)).map((row) => row.line))]
+    : [remembered(scene.after, picks)?.line].filter((line): line is string => Boolean(line));
   const morning = remembered(scene.ending?.morningIf, picks) ?? scene.ending?.morning ?? null;
   const kind = stingKind(samePercent);
   const sting = kind === "high"
@@ -400,7 +403,7 @@ export function StoryReader({ slug }: { slug: string }) {
               </p>
             ) : null}
             <p className="reader-body">{scene.ending ? scene.ending.body : scene.body}</p>
-            {memory ? <p className="reader-memory">{memory}</p> : null}
+            {memories.map((line) => <p key={line} className="reader-memory">{line}</p>)}
             {(arrived?.thought || sting) && !scene.ending ? (
               <aside className="diary-slip">
                 <p className="soon-kicker">{t.diary}</p>

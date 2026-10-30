@@ -2,6 +2,7 @@ import { sharpPt } from "@/lib/refugio/stories-sharp";
 import { sharpEs } from "@/lib/refugio/stories-sharp-es";
 import { sharpEn } from "@/lib/refugio/stories-sharp-en";
 import { applyMemory } from "@/lib/refugio/story-memory";
+import { jantarPt } from "@/lib/refugio/stories-jantar";
 
 export type Lang = "pt" | "es" | "en";
 
@@ -37,6 +38,8 @@ export type Scene = {
   musicFor?: number;
   /** A paragraph that appears only if that earlier choice was taken. */
   after?: Array<{ if: string; line: string }>;
+  /** Show every matching `after` line (in order), not only the latest one. */
+  afterEach?: boolean;
   /** Still for this place. Changes when the scene changes. */
   art?: string;
   /** A different still when an earlier choice was taken. */
@@ -71,7 +74,7 @@ export type Story = {
 };
 
 export const stories: Record<Lang, Story[]> = applyMemory({
-  pt: sharpPt,
+  pt: [...sharpPt, jantarPt],
   es: sharpEs,
   en: sharpEn,
 });
