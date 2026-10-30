@@ -33,15 +33,6 @@ const frames: Record<string, Record<string, {
     "fim-escada": { art: "/scenes/correspondencia-escada-fim.jpg?v=vida4", where: { pt: "O copo", es: "El vaso", en: "The glass" } },
     "fim-nome": { art: "/scenes/correspondencia-nome.jpg?v=vida4", where: { pt: "A carta que amarela", es: "La carta que amarillea", en: "The letter that yellows" } },
   },
-  sobremesa: {
-    forno: { art: "/scenes/sobremesa-forno.jpg?v=pintura", where: { pt: "A cozinha — Clara e Nanda", es: "La cocina — Clara y Nanda", en: "The kitchen — Clara and Nanda" } },
-    gelo: { art: "/scenes/sobremesa-gelo.jpg?v=vida4", where: { pt: "A despensa — Nanda", es: "La despensa — Nanda", en: "The pantry — Nanda" } },
-    sala: { art: "/scenes/sobremesa-sala.jpg?v=vida4", where: { pt: "A sala — Clara e Nanda", es: "El comedor — Clara y Nanda", en: "The dining room — Clara and Nanda" } },
-    sal: { art: "/scenes/sobremesa-sal.jpg?v=vida4", where: { pt: "A porta da despensa", es: "La puerta de la despensa", en: "The pantry door" } },
-    "fim-conta": { art: "/scenes/sobremesa-conta.jpg?v=vida4", where: { pt: "O beco — Nanda", es: "El callejón — Nanda", en: "The alley — Nanda" } },
-    "fim-prato": { art: "/scenes/sobremesa-prato.jpg?v=vida4", where: { pt: "Debaixo do prato", es: "Debajo del plato", en: "Under the plate" } },
-    "fim-cozinha": { art: "/scenes/sobremesa-cozinha.jpg?v=vida5", where: { pt: "Depois da sobremesa — Clara", es: "Después del postre — Clara", en: "After dessert — Clara" } },
-  },
   corredor: {
     porta714: { art: "/scenes/corredor-porta.jpg?v=pintura", where: { pt: "A porta — Iara", es: "La puerta — Iara", en: "The door — Iara" } },
     corredor: { art: "/scenes/corredor-corredor.jpg?v=vida4", where: { pt: "O corredor — Iara", es: "El pasillo — Iara", en: "The corridor — Iara" } },

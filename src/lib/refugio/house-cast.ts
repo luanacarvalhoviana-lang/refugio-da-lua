@@ -49,29 +49,6 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
       },
     ],
   },
-  sobremesa: {
-    life: "candle",
-    people: [
-      {
-        name: "Clara",
-        portrait: "/cast/clara.jpg?v=pintura2",
-        life: line(
-          "O brinde chega antes da comida.",
-          "El brindis llega antes de la comida.",
-          "The toast arrives before the food.",
-        ),
-      },
-      {
-        name: "Nanda",
-        portrait: "/cast/nanda.jpg?v=pintura2",
-        life: line(
-          "O balde de gelo parou no peito.",
-          "El cubo de hielo se detuvo en el pecho.",
-          "The ice bucket stopped at her chest.",
-        ),
-      },
-    ],
-  },
   corredor: {
     life: "lamp",
     people: [
@@ -127,9 +104,6 @@ export const MOTION: Record<string, Record<string, string>> = {
   correspondencia: {
     mesa: "/motion/correspondencia-mesa.mp4?v=pintura2",
     "fim-resposta": "/motion/correspondencia-resposta.mp4?v=pintura2",
-  },
-  sobremesa: {
-    forno: "/motion/sobremesa-forno.mp4?v=pintura2",
   },
   depoimento: {
     del: "/motion/depoimento-del.mp4?v=pintura2",
