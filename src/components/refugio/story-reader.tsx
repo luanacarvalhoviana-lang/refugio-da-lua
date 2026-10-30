@@ -228,6 +228,17 @@ export function StoryReader({ slug }: { slug: string }) {
           <p className="soon-lead">{story.synopsis.split(". ").slice(0, 2).join(". ")}</p>
           <p>{t.lockCheia}</p>
           <MoonNightNote />
+        <a
+          href="/webtoon/cobertura/1"
+          style={{ display: "flex", gap: 16, alignItems: "center", margin: "20px 0", padding: 12, borderRadius: 18, background: "#0c0e14", color: "#f3e9d8", textDecoration: "none", border: "1px solid rgba(255,255,255,.12)" }}
+        >
+          <img src="/webtoon/cobertura/ep1/capa.webp" alt="" width={120} height={90} loading="lazy" style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 12, flexShrink: 0 }} />
+          <span>
+            <span style={{ display: "block", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", opacity: 0.65 }}>Novo · Webtoon · 16+</span>
+            <span style={{ display: "block", fontFamily: "Fraunces, Georgia, serif", fontSize: 19, margin: "4px 0" }}>O Que Eu Vi na Cobertura — Webtoon</span>
+            <span style={{ display: "block", fontSize: 14, opacity: 0.75 }}>Episódio 1 · ler agora →</span>
+          </span>
+        </a>
           <p><a className="house-primary" href="/planos">{t.navPlans}</a></p>
         </section>
       </StoryShell>
