@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
       { title: "Refúgio da Lua — romance e mistério" },
       {
         name: "description",
-        content: "Cinco histórias entre mulheres: Passageira, Correspondência, Sobremesa, Corredor e Depoimento. Romance e mistério. A escolha é de graça.",
+        content: "Cinco histórias entre mulheres: Passageira, Correspondência, Jantar com a Minha Ex, Corredor e Depoimento. Romance e mistério. A escolha é de graça.",
       },
     ],
   }),
