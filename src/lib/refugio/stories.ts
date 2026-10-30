@@ -3,6 +3,8 @@ import { sharpEs } from "@/lib/refugio/stories-sharp-es";
 import { sharpEn } from "@/lib/refugio/stories-sharp-en";
 import { applyMemory } from "@/lib/refugio/story-memory";
 import { jantarPt } from "@/lib/refugio/stories-jantar";
+import { jantarEs } from "@/lib/refugio/stories-jantar-es";
+import { jantarEn } from "@/lib/refugio/stories-jantar-en";
 
 export type Lang = "pt" | "es" | "en";
 
@@ -75,8 +77,8 @@ export type Story = {
 
 export const stories: Record<Lang, Story[]> = applyMemory({
   pt: [...sharpPt, jantarPt],
-  es: sharpEs,
-  en: sharpEn,
+  es: [...sharpEs, jantarEs],
+  en: [...sharpEn, jantarEn],
 });
 
 export function getStory(lang: Lang, slug: string) {
