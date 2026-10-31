@@ -51,9 +51,11 @@ import { Route as CartaIdRouteImport } from './routes/carta.$id'
 import { Route as ContaRecuperarSenhaRouteImport } from './routes/conta.recuperar-senha'
 import { Route as ContaRedefinirSenhaRouteImport } from './routes/conta.redefinir-senha'
 import { Route as EnIndexRouteImport } from './routes/en.index'
+import { Route as EnLojaRouteImport } from './routes/en.loja'
 import { Route as EnObrigadaRouteImport } from './routes/en.obrigada'
 import { Route as EnPactoRouteImport } from './routes/en.pacto'
 import { Route as EsIndexRouteImport } from './routes/es.index'
+import { Route as EsLojaRouteImport } from './routes/es.loja'
 import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
 import { Route as EsPactoRouteImport } from './routes/es.pacto'
 import { Route as EscreverConfirmacaoRouteImport } from './routes/escrever.confirmacao'
@@ -287,6 +289,11 @@ const EnIndexRoute = EnIndexRouteImport.update({
   path: '/',
   getParentRoute: () => EnRoute,
 } as any)
+const EnLojaRoute = EnLojaRouteImport.update({
+  id: '/loja',
+  path: '/loja',
+  getParentRoute: () => EnRoute,
+} as any)
 const EnObrigadaRoute = EnObrigadaRouteImport.update({
   id: '/obrigada',
   path: '/obrigada',
@@ -300,6 +307,11 @@ const EnPactoRoute = EnPactoRouteImport.update({
 const EsIndexRoute = EsIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsLojaRoute = EsLojaRouteImport.update({
+  id: '/loja',
+  path: '/loja',
   getParentRoute: () => EsRoute,
 } as any)
 const EsObrigadaRoute = EsObrigadaRouteImport.update({
@@ -455,8 +467,10 @@ export interface FileRoutesByFullPath {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/en/loja': typeof EnLojaRoute
   '/en/obrigada': typeof EnObrigadaRoute
   '/en/pacto': typeof EnPactoRoute
+  '/es/loja': typeof EsLojaRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -522,8 +536,10 @@ export interface FileRoutesByTo {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/en/loja': typeof EnLojaRoute
   '/en/obrigada': typeof EnObrigadaRoute
   '/en/pacto': typeof EnPactoRoute
+  '/es/loja': typeof EsLojaRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -592,8 +608,10 @@ export interface FileRoutesById {
   '/carta/$id': typeof CartaIdRoute
   '/conta/recuperar-senha': typeof ContaRecuperarSenhaRoute
   '/conta/redefinir-senha': typeof ContaRedefinirSenhaRoute
+  '/en/loja': typeof EnLojaRoute
   '/en/obrigada': typeof EnObrigadaRoute
   '/en/pacto': typeof EnPactoRoute
+  '/es/loja': typeof EsLojaRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
@@ -663,8 +681,10 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/en/loja'
     | '/en/obrigada'
     | '/en/pacto'
+    | '/es/loja'
     | '/es/obrigada'
     | '/es/pacto'
     | '/escrever/confirmacao'
@@ -730,8 +750,10 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/en/loja'
     | '/en/obrigada'
     | '/en/pacto'
+    | '/es/loja'
     | '/es/obrigada'
     | '/es/pacto'
     | '/escrever/confirmacao'
@@ -799,8 +821,10 @@ export interface FileRouteTypes {
     | '/carta/$id'
     | '/conta/recuperar-senha'
     | '/conta/redefinir-senha'
+    | '/en/loja'
     | '/en/obrigada'
     | '/en/pacto'
+    | '/es/loja'
     | '/es/obrigada'
     | '/es/pacto'
     | '/escrever/confirmacao'
@@ -1178,6 +1202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnIndexRouteImport
       parentRoute: typeof EnRoute
     }
+    '/en/loja': {
+      id: '/en/loja'
+      path: '/loja'
+      fullPath: '/en/loja'
+      preLoaderRoute: typeof EnLojaRouteImport
+      parentRoute: typeof EnRoute
+    }
     '/en/obrigada': {
       id: '/en/obrigada'
       path: '/obrigada'
@@ -1197,6 +1228,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/es/'
       preLoaderRoute: typeof EsIndexRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/loja': {
+      id: '/es/loja'
+      path: '/loja'
+      fullPath: '/es/loja'
+      preLoaderRoute: typeof EsLojaRouteImport
       parentRoute: typeof EsRoute
     }
     '/es/obrigada': {
@@ -1369,6 +1407,7 @@ const ContaRouteChildren: ContaRouteChildren = {
 const ContaRouteWithChildren = ContaRoute._addFileChildren(ContaRouteChildren)
 
 interface EnRouteChildren {
+  EnLojaRoute: typeof EnLojaRoute
   EnObrigadaRoute: typeof EnObrigadaRoute
   EnPactoRoute: typeof EnPactoRoute
   EnIndexRoute: typeof EnIndexRoute
@@ -1376,6 +1415,7 @@ interface EnRouteChildren {
 }
 
 const EnRouteChildren: EnRouteChildren = {
+  EnLojaRoute: EnLojaRoute,
   EnObrigadaRoute: EnObrigadaRoute,
   EnPactoRoute: EnPactoRoute,
   EnIndexRoute: EnIndexRoute,
@@ -1385,6 +1425,7 @@ const EnRouteChildren: EnRouteChildren = {
 const EnRouteWithChildren = EnRoute._addFileChildren(EnRouteChildren)
 
 interface EsRouteChildren {
+  EsLojaRoute: typeof EsLojaRoute
   EsObrigadaRoute: typeof EsObrigadaRoute
   EsPactoRoute: typeof EsPactoRoute
   EsIndexRoute: typeof EsIndexRoute
@@ -1392,6 +1433,7 @@ interface EsRouteChildren {
 }
 
 const EsRouteChildren: EsRouteChildren = {
+  EsLojaRoute: EsLojaRoute,
   EsObrigadaRoute: EsObrigadaRoute,
   EsPactoRoute: EsPactoRoute,
   EsIndexRoute: EsIndexRoute,

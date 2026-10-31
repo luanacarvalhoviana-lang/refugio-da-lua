@@ -29,6 +29,34 @@ const EN: Record<string, { title: string; desc: string }> = {
     title: "The last shelf still lit",
     desc: "A short path after the ending. It does not change what you already chose.",
   },
+  "pack-passageira": {
+    title: "Riverside road in the rain",
+    desc: "The setting and music of \"The Woman in the Back Seat\". The choices stay the same.",
+  },
+  "pack-cartas": {
+    title: "Paper on the last step",
+    desc: "The setting and music of \"Letters to Who I Was\". The plot does not change.",
+  },
+  "pack-corredor": {
+    title: "Seventh floor",
+    desc: "The setting and music of \"Don't Look Back in Room 714\". Nothing on the main path is for sale.",
+  },
+  "pack-jantar": {
+    title: "Table set",
+    desc: "The setting and music of \"Dinner with My Ex\". The choices stay the same.",
+  },
+  "bonus-passageira": {
+    title: "One more day",
+    desc: "A short chapter after the ending \"The Curve\". It does not change what you already chose.",
+  },
+  "bonus-cartas": {
+    title: "Monday's letter",
+    desc: "A short chapter after the ending. It does not change what you already chose.",
+  },
+  "bonus-corredor": {
+    title: "Coffee in blue",
+    desc: "A short chapter after the ending \"The Lobby\". It does not change what you already chose.",
+  },
 };
 
 export function shopText(

@@ -262,6 +262,7 @@ export const en = {
   sealCheia: "🌕 Lua Cheia",
   sealStar: "✨ Constellation",
   planEnter: "Sign in to subscribe",
+  shopEnter: "Sign in to buy",
   planOpened: "Subscription confirmed. The house already recognizes your plan.",
   planBack: "Payment canceled. Nothing was charged.",
   planFail: "I could not confirm the payment.",

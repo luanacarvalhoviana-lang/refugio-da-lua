@@ -46,8 +46,11 @@ function Preview({ image, audio }: { image: string | null; audio: string | null 
   );
 }
 
-export function ShopPage() {
-  const { lang, t } = useHouse();
+export function ShopPage({ initialLang }: { initialLang?: "pt" | "es" | "en" } = {}) {
+  const { lang, setLang, t } = useHouse();
+  useEffect(() => {
+    if (initialLang && initialLang !== lang) setLang(initialLang);
+  }, [initialLang, lang, setLang]);
   const { user } = useCurrentUserState();
   const [tab, setTab] = useState<"story" | "all" | "special" | "box">("story");
   const [open, setOpen] = useState(true);
@@ -69,6 +72,13 @@ export function ShopPage() {
     }).catch(() => setOpen(false));
   }
   useEffect(() => { load(); }, []);
+  const has = (kind: "story" | "all" | "special") => products.some((product) =>
+    kind === "all" ? product.type === "global_pack"
+      : kind === "special" ? product.type === "special_story"
+      : product.type === "story_pack" || product.type === "bonus_chapter");
+  useEffect(() => {
+    if (tab !== "box" && products.length > 0 && !has(tab)) setTab(has("story") ? "story" : has("all") ? "all" : "box");
+  }, [products, tab]);
   const shown = products.filter((product) => {
     if (tab === "all") return product.type === "global_pack";
     if (tab === "special") return product.type === "special_story";
@@ -81,7 +91,7 @@ export function ShopPage() {
     void buyProduct({ data: { slug, origin: window.location.origin, lang } })
       .then((result) => {
         if (result.ok && result.url) window.location.assign(result.url);
-        else setNote(result.reason === "tem" ? t.shopOwned : result.reason === "conta" ? t.planEnter : t.shopSoon);
+        else setNote(result.reason === "tem" ? t.shopOwned : result.reason === "conta" ? t.shopEnter : t.shopSoon);
       })
       .catch(() => setNote(t.planFail))
       .finally(() => setPending(""));
@@ -96,9 +106,9 @@ export function ShopPage() {
       </section>
       <section className="house-block">
         <p className="house-cta">
-          <button type="button" className={tab === "story" ? "is-on" : ""} onClick={() => setTab("story")}>{t.shopStory}</button>
-          <button type="button" className={tab === "all" ? "is-on" : ""} onClick={() => setTab("all")}>{t.shopAll}</button>
-          <button type="button" className={tab === "special" ? "is-on" : ""} onClick={() => setTab("special")}>{t.shopSpecial}</button>
+          {has("story") ? <button type="button" className={tab === "story" ? "is-on" : ""} onClick={() => setTab("story")}>{t.shopStory}</button> : null}
+          {has("all") ? <button type="button" className={tab === "all" ? "is-on" : ""} onClick={() => setTab("all")}>{t.shopAll}</button> : null}
+          {has("special") ? <button type="button" className={tab === "special" ? "is-on" : ""} onClick={() => setTab("special")}>{t.shopSpecial}</button> : null}
           <button type="button" className={tab === "box" ? "is-on" : ""} onClick={() => setTab("box")}>{t.shopBox}</button>
         </p>
         {note ? <p className="house-note">{note}</p> : null}
@@ -121,7 +131,7 @@ export function ShopPage() {
                       <button type="button" disabled={!open || pending !== ""} onClick={() => buy(product.slug)}>
                         {pending === product.slug ? t.passWorking : t.shopBuy}
                       </button>
-                    ) : <a className="house-primary" href="/conta">{t.planEnter}</a>}
+                    ) : <a className="house-primary" href="/conta">{t.shopEnter}</a>}
                     {owned || !pack || !subscriber ? null : (
                       <button type="button" disabled={!open || redeemed || pending !== ""} onClick={() => {
                         setPending(product.slug);
@@ -210,7 +220,7 @@ export function TipBox({ authorSlug, storySlug }: { authorSlug: string; storySlu
       void leaveTip({ data: { authorSlug, storySlug, amountCents: cents, message, origin: window.location.origin, lang } })
         .then((result) => {
           if (result.ok && result.url) window.location.assign(result.url);
-          else setNote(result.reason === "conta" ? t.planEnter : t.shopSoon);
+          else setNote(result.reason === "conta" ? t.shopEnter : t.shopSoon);
         })
         .catch(() => setNote(t.planFail));
     }}>
