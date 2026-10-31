@@ -665,7 +665,7 @@ export function StoryList() {
           </a>
           <span>
             <span style={{ display: "block", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", opacity: 0.65 }}>Série completa · 6 episódios · Webtoon · 16+</span>
-            <span style={{ display: "block", fontFamily: "Fraunces, Georgia, serif", fontSize: 19, margin: "4px 0" }}>O Que Eu Vi na Cobertura — Webtoon</span>
+            <a href={lang === "pt" ? "/webtoons" : `/${lang}/webtoons`} style={{ display: "block", fontFamily: "Fraunces, Georgia, serif", fontSize: 19, margin: "4px 0", color: "#f5e1aa" }}>O Que Eu Vi na Cobertura — Webtoon ↗</a>
             <span style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 14 }}>
               <a href="/webtoon/cobertura/1" style={{ color: "#f3e9d8", opacity: 0.75 }}>Episódio 1: A Festa</a>
               <a href="/webtoon/cobertura/2" style={{ color: "#f3e9d8", opacity: 0.75 }}>Episódio 2: A Sala</a>

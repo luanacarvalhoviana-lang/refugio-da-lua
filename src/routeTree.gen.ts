@@ -42,6 +42,7 @@ import { Route as RegrasRouteImport } from './routes/regras'
 import { Route as SelosRouteImport } from './routes/selos'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as WebtoonsRouteImport } from './routes/webtoons'
 import { Route as AdminAssinaturasRouteImport } from './routes/admin.assinaturas'
 import { Route as AdminLojaRouteImport } from './routes/admin.loja'
 import { Route as AdminModeracaoRouteImport } from './routes/admin.moderacao'
@@ -54,10 +55,12 @@ import { Route as EnIndexRouteImport } from './routes/en.index'
 import { Route as EnLojaRouteImport } from './routes/en.loja'
 import { Route as EnObrigadaRouteImport } from './routes/en.obrigada'
 import { Route as EnPactoRouteImport } from './routes/en.pacto'
+import { Route as EnWebtoonsRouteImport } from './routes/en.webtoons'
 import { Route as EsIndexRouteImport } from './routes/es.index'
 import { Route as EsLojaRouteImport } from './routes/es.loja'
 import { Route as EsObrigadaRouteImport } from './routes/es.obrigada'
 import { Route as EsPactoRouteImport } from './routes/es.pacto'
+import { Route as EsWebtoonsRouteImport } from './routes/es.webtoons'
 import { Route as EscreverConfirmacaoRouteImport } from './routes/escrever.confirmacao'
 import { Route as HistoriaSlugRouteImport } from './routes/historia.$slug'
 import { Route as LerSlugRouteImport } from './routes/ler.$slug'
@@ -244,6 +247,11 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WebtoonsRoute = WebtoonsRouteImport.update({
+  id: '/webtoons',
+  path: '/webtoons',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAssinaturasRoute = AdminAssinaturasRouteImport.update({
   id: '/admin/assinaturas',
   path: '/admin/assinaturas',
@@ -304,6 +312,11 @@ const EnPactoRoute = EnPactoRouteImport.update({
   path: '/pacto',
   getParentRoute: () => EnRoute,
 } as any)
+const EnWebtoonsRoute = EnWebtoonsRouteImport.update({
+  id: '/webtoons',
+  path: '/webtoons',
+  getParentRoute: () => EnRoute,
+} as any)
 const EsIndexRoute = EsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -322,6 +335,11 @@ const EsObrigadaRoute = EsObrigadaRouteImport.update({
 const EsPactoRoute = EsPactoRouteImport.update({
   id: '/pacto',
   path: '/pacto',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsWebtoonsRoute = EsWebtoonsRouteImport.update({
+  id: '/webtoons',
+  path: '/webtoons',
   getParentRoute: () => EsRoute,
 } as any)
 const EscreverConfirmacaoRoute = EscreverConfirmacaoRouteImport.update({
@@ -459,6 +477,7 @@ export interface FileRoutesByFullPath {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/webtoons': typeof WebtoonsRoute
   '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
@@ -470,9 +489,11 @@ export interface FileRoutesByFullPath {
   '/en/loja': typeof EnLojaRoute
   '/en/obrigada': typeof EnObrigadaRoute
   '/en/pacto': typeof EnPactoRoute
+  '/en/webtoons': typeof EnWebtoonsRoute
   '/es/loja': typeof EsLojaRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
+  '/es/webtoons': typeof EsWebtoonsRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
@@ -528,6 +549,7 @@ export interface FileRoutesByTo {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/webtoons': typeof WebtoonsRoute
   '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
@@ -539,9 +561,11 @@ export interface FileRoutesByTo {
   '/en/loja': typeof EnLojaRoute
   '/en/obrigada': typeof EnObrigadaRoute
   '/en/pacto': typeof EnPactoRoute
+  '/en/webtoons': typeof EnWebtoonsRoute
   '/es/loja': typeof EsLojaRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
+  '/es/webtoons': typeof EsWebtoonsRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
@@ -600,6 +624,7 @@ export interface FileRoutesById {
   '/selos': typeof SelosRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/webtoons': typeof WebtoonsRoute
   '/admin/assinaturas': typeof AdminAssinaturasRoute
   '/admin/loja': typeof AdminLojaRoute
   '/admin/moderacao': typeof AdminModeracaoRoute
@@ -611,9 +636,11 @@ export interface FileRoutesById {
   '/en/loja': typeof EnLojaRoute
   '/en/obrigada': typeof EnObrigadaRoute
   '/en/pacto': typeof EnPactoRoute
+  '/en/webtoons': typeof EnWebtoonsRoute
   '/es/loja': typeof EsLojaRoute
   '/es/obrigada': typeof EsObrigadaRoute
   '/es/pacto': typeof EsPactoRoute
+  '/es/webtoons': typeof EsWebtoonsRoute
   '/escrever/confirmacao': typeof EscreverConfirmacaoRoute
   '/historia/$slug': typeof HistoriaSlugRoute
   '/ler/$slug': typeof LerSlugRoute
@@ -673,6 +700,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/webtoons'
     | '/admin/assinaturas'
     | '/admin/loja'
     | '/admin/moderacao'
@@ -684,9 +712,11 @@ export interface FileRouteTypes {
     | '/en/loja'
     | '/en/obrigada'
     | '/en/pacto'
+    | '/en/webtoons'
     | '/es/loja'
     | '/es/obrigada'
     | '/es/pacto'
+    | '/es/webtoons'
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
@@ -742,6 +772,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/webtoons'
     | '/admin/assinaturas'
     | '/admin/loja'
     | '/admin/moderacao'
@@ -753,9 +784,11 @@ export interface FileRouteTypes {
     | '/en/loja'
     | '/en/obrigada'
     | '/en/pacto'
+    | '/en/webtoons'
     | '/es/loja'
     | '/es/obrigada'
     | '/es/pacto'
+    | '/es/webtoons'
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
@@ -813,6 +846,7 @@ export interface FileRouteTypes {
     | '/selos'
     | '/sobre'
     | '/termos'
+    | '/webtoons'
     | '/admin/assinaturas'
     | '/admin/loja'
     | '/admin/moderacao'
@@ -824,9 +858,11 @@ export interface FileRouteTypes {
     | '/en/loja'
     | '/en/obrigada'
     | '/en/pacto'
+    | '/en/webtoons'
     | '/es/loja'
     | '/es/obrigada'
     | '/es/pacto'
+    | '/es/webtoons'
     | '/escrever/confirmacao'
     | '/historia/$slug'
     | '/ler/$slug'
@@ -885,6 +921,7 @@ export interface RootRouteChildren {
   SelosRoute: typeof SelosRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  WebtoonsRoute: typeof WebtoonsRoute
   AdminAssinaturasRoute: typeof AdminAssinaturasRoute
   AdminLojaRoute: typeof AdminLojaRoute
   AdminModeracaoRoute: typeof AdminModeracaoRoute
@@ -1139,6 +1176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/webtoons': {
+      id: '/webtoons'
+      path: '/webtoons'
+      fullPath: '/webtoons'
+      preLoaderRoute: typeof WebtoonsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/assinaturas': {
       id: '/admin/assinaturas'
       path: '/admin/assinaturas'
@@ -1223,6 +1267,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnPactoRouteImport
       parentRoute: typeof EnRoute
     }
+    '/en/webtoons': {
+      id: '/en/webtoons'
+      path: '/webtoons'
+      fullPath: '/en/webtoons'
+      preLoaderRoute: typeof EnWebtoonsRouteImport
+      parentRoute: typeof EnRoute
+    }
     '/es/': {
       id: '/es/'
       path: '/'
@@ -1249,6 +1300,13 @@ declare module '@tanstack/react-router' {
       path: '/pacto'
       fullPath: '/es/pacto'
       preLoaderRoute: typeof EsPactoRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/webtoons': {
+      id: '/es/webtoons'
+      path: '/webtoons'
+      fullPath: '/es/webtoons'
+      preLoaderRoute: typeof EsWebtoonsRouteImport
       parentRoute: typeof EsRoute
     }
     '/escrever/confirmacao': {
@@ -1410,6 +1468,7 @@ interface EnRouteChildren {
   EnLojaRoute: typeof EnLojaRoute
   EnObrigadaRoute: typeof EnObrigadaRoute
   EnPactoRoute: typeof EnPactoRoute
+  EnWebtoonsRoute: typeof EnWebtoonsRoute
   EnIndexRoute: typeof EnIndexRoute
   EnAutoraSlugRoute: typeof EnAutoraSlugRoute
 }
@@ -1418,6 +1477,7 @@ const EnRouteChildren: EnRouteChildren = {
   EnLojaRoute: EnLojaRoute,
   EnObrigadaRoute: EnObrigadaRoute,
   EnPactoRoute: EnPactoRoute,
+  EnWebtoonsRoute: EnWebtoonsRoute,
   EnIndexRoute: EnIndexRoute,
   EnAutoraSlugRoute: EnAutoraSlugRoute,
 }
@@ -1428,6 +1488,7 @@ interface EsRouteChildren {
   EsLojaRoute: typeof EsLojaRoute
   EsObrigadaRoute: typeof EsObrigadaRoute
   EsPactoRoute: typeof EsPactoRoute
+  EsWebtoonsRoute: typeof EsWebtoonsRoute
   EsIndexRoute: typeof EsIndexRoute
   EsAutoraSlugRoute: typeof EsAutoraSlugRoute
 }
@@ -1436,6 +1497,7 @@ const EsRouteChildren: EsRouteChildren = {
   EsLojaRoute: EsLojaRoute,
   EsObrigadaRoute: EsObrigadaRoute,
   EsPactoRoute: EsPactoRoute,
+  EsWebtoonsRoute: EsWebtoonsRoute,
   EsIndexRoute: EsIndexRoute,
   EsAutoraSlugRoute: EsAutoraSlugRoute,
 }
@@ -1513,6 +1575,7 @@ const rootRouteChildren: RootRouteChildren = {
   SelosRoute: SelosRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  WebtoonsRoute: WebtoonsRoute,
   AdminAssinaturasRoute: AdminAssinaturasRoute,
   AdminLojaRoute: AdminLojaRoute,
   AdminModeracaoRoute: AdminModeracaoRoute,
