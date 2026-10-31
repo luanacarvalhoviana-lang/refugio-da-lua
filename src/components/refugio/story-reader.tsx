@@ -660,8 +660,8 @@ export function StoryList() {
         <div
           style={{ display: "flex", gap: 16, alignItems: "center", margin: "20px 0", padding: 12, borderRadius: 18, background: "#0c0e14", color: "#f3e9d8", border: "1px solid rgba(255,255,255,.12)" }}
         >
-          <a href="/webtoon/cobertura/3" style={{ flexShrink: 0 }}>
-            <img src="/webtoon/cobertura/ep3/capa.webp" alt="Capa do Episódio 3: O Corredor" width={120} height={90} loading="lazy" style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 12, display: "block" }} />
+          <a href="/webtoon/cobertura/4" style={{ flexShrink: 0 }}>
+            <img src="/webtoon/cobertura/ep4/capa.webp" alt="Capa do Episódio 4: O Hospital" width={120} height={90} loading="lazy" style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 12, display: "block" }} />
           </a>
           <span>
             <span style={{ display: "block", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", opacity: 0.65 }}>Novo episódio · Webtoon · 16+</span>
@@ -669,7 +669,8 @@ export function StoryList() {
             <span style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 14 }}>
               <a href="/webtoon/cobertura/1" style={{ color: "#f3e9d8", opacity: 0.75 }}>Episódio 1: A Festa</a>
               <a href="/webtoon/cobertura/2" style={{ color: "#f3e9d8", opacity: 0.75 }}>Episódio 2: A Sala</a>
-              <a href="/webtoon/cobertura/3" style={{ color: "#f5e1aa" }}>Episódio 3: O Corredor · ler agora →</a>
+              <a href="/webtoon/cobertura/3" style={{ color: "#f3e9d8", opacity: 0.75 }}>Episódio 3: O Corredor</a>
+              <a href="/webtoon/cobertura/4" style={{ color: "#f5e1aa" }}>Episódio 4: O Hospital · ler agora →</a>
             </span>
           </span>
         </div>
