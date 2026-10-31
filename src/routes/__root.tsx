@@ -1,4 +1,5 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, Scripts, useRouterState } from "@tanstack/react-router";
+import { Analytics } from "@vercel/analytics/react";
 import { AuthProvider } from "@/lib/auth/provider";
 import { ForgetLocalAccounts } from "@/components/refugio/forget-local-accounts";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
@@ -7,6 +8,11 @@ import appCss from "../styles.css?url";
 const APP_NAME = "Refúgio da Lua";
 
 const THEME_BOOT = `(function(){try{var r=localStorage.getItem("refugio-session");if(!r)return;var d=JSON.parse(r);var t=(d&&d.state&&d.state.theme)||(d&&d.theme);if(t==="night"||t==="day"){document.documentElement.setAttribute("data-theme",t);document.documentElement.style.colorScheme=t==="night"?"dark":"light";}}catch(e){}})();`;
+
+function Visits() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  return <Analytics path={path} route={path} />;
+}
 
 export const Route = createRootRoute({
   head: () => ({
@@ -50,6 +56,7 @@ export const Route = createRootRoute({
           <Outlet />
         </AuthProvider>
         <Scripts />
+        <Visits />
       </body>
     </html>
   ),
