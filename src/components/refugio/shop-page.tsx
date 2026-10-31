@@ -157,7 +157,14 @@ export function MemoryBox() {
   useEffect(() => {
     void myBox().then((result) => setItems(result.items)).catch(() => setItems([]));
   }, []);
+  const [reading, setReading] = useState<BonusChapterView | null>(null);
   if (items.length === 0) return <p>{t.shopLead}</p>;
+  if (reading) return (
+    <div className="reader-end">
+      <button type="button" onClick={() => setReading(null)}>←</button>
+      <BonusReader chapter={reading} />
+    </div>
+  );
   return (
     <ul className="once-owned">
       {items.map((item) => (
@@ -169,6 +176,12 @@ export function MemoryBox() {
                 setItems((list) => list.map((row) => row.slug === item.slug ? { ...row, enabled: !row.enabled } : row));
               });
             }}>{item.enabled ? t.shopOn : t.shopOff}</button>
+          ) : item.type === "bonus_chapter" ? (
+            <button type="button" onClick={() => {
+              void bonusText({ data: { slug: item.slug, lang } }).then((result) => {
+                if (result.ok) setReading(result.chapter as BonusChapterView);
+              });
+            }}>{t.shopRead}</button>
           ) : <span className="access-pill">{t.shopOwned}</span>}
         </li>
       ))}
@@ -254,25 +267,70 @@ export function MoonCount({ authorSlug }: { authorSlug: string }) {
   return <p className="house-note">✦ {moons} {t.shopMoons}</p>;
 }
 
+type BonusChapterView = {
+  title: string;
+  cover: string;
+  start: string;
+  scenes: Array<{ id: string; art?: string; motion?: string; body: string; choices?: Array<{ label: string; to: string }>; end?: string }>;
+};
+
+export function BonusReader({ chapter }: { chapter: BonusChapterView }) {
+  const { t } = useHouse();
+  const [sceneId, setSceneId] = useState(chapter.start);
+  const topRef = useRef<HTMLDivElement>(null);
+  const scene = chapter.scenes.find((item) => item.id === sceneId) || chapter.scenes[0];
+  const go = (to: string) => {
+    setSceneId(to);
+    window.setTimeout(() => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 30);
+  };
+  return (
+    <div className="bonus-reader" ref={topRef}>
+      <h2>{chapter.title}</h2>
+      {scene.motion ? (
+        <video key={scene.motion} className="bonus-art" src={scene.motion} poster={scene.art} autoPlay muted loop playsInline />
+      ) : scene.art ? <img className="bonus-art" src={scene.art} alt="" /> : null}
+      {scene.body.split(/\n\n+/).map((paragraph, index) => <p key={`${scene.id}-${index}`}>{paragraph}</p>)}
+      {scene.choices?.length ? (
+        <div className="reader-choices">
+          {scene.choices.map((choice) => (
+            <button key={choice.to + choice.label} type="button" onClick={() => go(choice.to)}>{choice.label}</button>
+          ))}
+        </div>
+      ) : null}
+      {scene.end ? (
+        <>
+          <p className="bonus-end">{t.shopEnd} — {scene.end}</p>
+          <button type="button" onClick={() => go(chapter.start)}>{t.shopAgain}</button>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
 export function HiddenPath({ slug }: { slug: string }) {
   const { lang, t } = useHouse();
-  const [look, setLook] = useState<{ bonus: boolean; bonusOwned: boolean; bonusSlug: string } | null>(null);
-  const [text, setText] = useState("");
+  const [look, setLook] = useState<{ bonus: boolean; bonusOwned: boolean; bonusSlug: string; bonusTitle?: string; bonusCover?: string; bonusTeaser?: string } | null>(null);
+  const [chapter, setChapter] = useState<BonusChapterView | null>(null);
   useEffect(() => {
-    void storyLook({ data: { slug } }).then(setLook).catch(() => setLook(null));
-  }, [slug]);
+    setChapter(null);
+    void storyLook({ data: { slug, lang } }).then(setLook).catch(() => setLook(null));
+  }, [slug, lang]);
   if (!look?.bonus) return null;
+  if (chapter) return <div className="reader-end"><BonusReader chapter={chapter} /></div>;
   return (
-    <div className="reader-end">
+    <div className="reader-end bonus-teaser">
       <p>{t.shopHidden}</p>
+      {look.bonusCover ? <img className="bonus-art" src={look.bonusCover} alt="" /> : null}
+      {look.bonusTitle ? <h2>{look.bonusTitle}</h2> : null}
+      <p className="house-note">{t.shopTeaser}</p>
+      {look.bonusTeaser ? <p>{look.bonusTeaser}</p> : null}
       {look.bonusOwned ? (
         <button type="button" onClick={() => {
           void bonusText({ data: { slug: look.bonusSlug, lang } }).then((result) => {
-            if (result.ok) setText(result.text);
+            if (result.ok) setChapter(result.chapter as BonusChapterView);
           });
         }}>{t.shopUnlock}</button>
-      ) : <a href="/loja">{t.shopBuy}</a>}
-      {text ? <p>{text}</p> : null}
+      ) : <a href={lang === "pt" ? "/loja" : `/${lang}/loja`}>{t.shopBuy}</a>}
     </div>
   );
 }

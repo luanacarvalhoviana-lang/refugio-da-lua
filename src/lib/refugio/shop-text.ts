@@ -47,15 +47,15 @@ const EN: Record<string, { title: string; desc: string }> = {
   },
   "bonus-passageira": {
     title: "One more day",
-    desc: "A short chapter after the ending \"The Curve\". It does not change what you already chose.",
+    desc: "Interactive bonus chapter after the ending \"The Curve\": the following Monday, the spare key and a question. About 2,000 words, with choices and two endings. It does not change the main story.",
   },
   "bonus-cartas": {
     title: "Monday's letter",
-    desc: "A short chapter after the ending. It does not change what you already chose.",
+    desc: "Interactive bonus chapter after the ending \"The answer\": Monday's green letter and one true thing a week. About 2,000 words, with choices and two endings. It does not change the main story.",
   },
   "bonus-corredor": {
     title: "Coffee in blue",
-    desc: "A short chapter after the ending \"The Lobby\". It does not change what you already chose.",
+    desc: "Interactive bonus chapter after the ending \"The Lobby\": a week later, a bakery window and Iara saying the color first. About 2,000 words, with choices and two endings. It does not change the main story.",
   },
 };
 

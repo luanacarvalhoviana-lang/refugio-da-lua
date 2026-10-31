@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { BONUS_SCENES } from "@/lib/refugio/shop-bonus";
+import { BONUS_CHAPTERS } from "@/lib/refugio/shop-bonus";
 import { shopText, tipText } from "@/lib/refugio/shop-text";
 
 const OWNERS = new Set(["contato.refugiodalua@gmail.com", "contato@refugiodalua.com.br"]);
@@ -190,16 +190,20 @@ export const myBox = createServerFn({ method: "GET" }).handler(async () => {
 });
 
 export const storyLook = createServerFn({ method: "POST" })
-  .validator(z.object({ slug: z.string().trim().min(2).max(48) }))
+  .validator(z.object({ slug: z.string().trim().min(2).max(48), lang: z.enum(["pt", "es", "en"]).optional() }))
   .handler(async ({ data }) => {
-    const empty = { image: "", audio: "", bonus: false, bonusOwned: false, bonusSlug: "" };
+    const teaserOf = (bonusSlug?: string) => {
+      const chapter = bonusSlug ? BONUS_CHAPTERS[bonusSlug]?.[data.lang || "pt"] : undefined;
+      return chapter ? { bonusTitle: chapter.title, bonusCover: chapter.cover, bonusTeaser: chapter.teaser } : { bonusTitle: "", bonusCover: "", bonusTeaser: "" };
+    };
+    const empty = { image: "", audio: "", bonus: false, bonusOwned: false, bonusSlug: "", ...teaserOf() };
     const sql = await sqlOf();
     const bonus = await sql.query<{ slug: string }>(
       `select slug from products where type = 'bonus_chapter' and story_slug = $1 and active = true limit 1`,
       [data.slug],
     );
     const user = await sessionUser();
-    if (!user?.id) return { ...empty, bonus: Boolean(bonus[0]), bonusSlug: bonus[0]?.slug || "" };
+    if (!user?.id) return { ...empty, bonus: Boolean(bonus[0]), bonusSlug: bonus[0]?.slug || "", ...teaserOf(bonus[0]?.slug) };
     const rows = await sql.query<{ type: string; story_slug: string | null; preview_image: string | null; preview_audio: string | null; slug: string }>(
       `select p.type, p.story_slug, p.preview_image, p.preview_audio, p.slug
        from purchases u join products p on p.id = u.product_id
@@ -218,6 +222,7 @@ export const storyLook = createServerFn({ method: "POST" })
       bonus: Boolean(bonus[0]),
       bonusOwned: ownedBonus,
       bonusSlug: bonus[0]?.slug || "",
+      ...teaserOf(bonus[0]?.slug),
     };
   });
 
@@ -232,9 +237,9 @@ export const bonusText = createServerFn({ method: "POST" })
        where u.user_id = $1 and u.status = 'paid' and p.slug = $2 and p.type = 'bonus_chapter' limit 1`,
       [user.id, data.slug],
     );
-    const scene = BONUS_SCENES[data.slug];
-    if (!rows[0] || !scene) return { ok: false as const, reason: "plano" as const };
-    return { ok: true as const, text: scene[data.lang] };
+    const chapter = BONUS_CHAPTERS[data.slug]?.[data.lang];
+    if (!rows[0] || !chapter) return { ok: false as const, reason: "plano" as const };
+    return { ok: true as const, chapter };
   });
 
 export const leaveTip = createServerFn({ method: "POST" })
