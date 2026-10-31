@@ -4249,3 +4249,5 @@ a.story-card { color: inherit; text-decoration: none; }
   .wt-series { grid-template-columns: 1fr; padding: 14px; gap: 16px; }
   .wt-eps { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
+.house .wt-series p, .house .wt-series .wt-rating { color: #e9dfcd; }
+.house .wt-series .wt-status, .house .wt-series small { color: #cfc4b1; }
