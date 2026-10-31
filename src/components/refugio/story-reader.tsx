@@ -661,7 +661,7 @@ export function StoryList() {
           style={{ display: "flex", gap: 16, alignItems: "center", margin: "20px 0", padding: 12, borderRadius: 18, background: "#0c0e14", color: "#f3e9d8", border: "1px solid rgba(255,255,255,.12)" }}
         >
           <a href="/webtoon/cobertura/2" style={{ flexShrink: 0 }}>
-            <img src="/webtoon/cobertura/ep1/capa.webp" alt="" width={120} height={90} loading="lazy" style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 12, display: "block" }} />
+            <img src="/webtoon/cobertura/ep2/capa.webp" alt="Capa do Episódio 2: A Sala" width={120} height={90} loading="lazy" style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 12, display: "block" }} />
           </a>
           <span>
             <span style={{ display: "block", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", opacity: 0.65 }}>Novo episódio · Webtoon · 16+</span>
