@@ -74,6 +74,7 @@ import { Route as WebtoonCobertura1RouteImport } from './routes/webtoon.cobertur
 import { Route as WebtoonCobertura2RouteImport } from './routes/webtoon.cobertura.2'
 import { Route as WebtoonCobertura3RouteImport } from './routes/webtoon.cobertura.3'
 import { Route as WebtoonCobertura4RouteImport } from './routes/webtoon.cobertura.4'
+import { Route as WebtoonCobertura5RouteImport } from './routes/webtoon.cobertura.5'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -400,6 +401,11 @@ const WebtoonCobertura4Route = WebtoonCobertura4RouteImport.update({
   path: '/webtoon/cobertura/4',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WebtoonCobertura5Route = WebtoonCobertura5RouteImport.update({
+  id: '/webtoon/cobertura/5',
+  path: '/webtoon/cobertura/5',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -467,6 +473,7 @@ export interface FileRoutesByFullPath {
   '/webtoon/cobertura/2': typeof WebtoonCobertura2Route
   '/webtoon/cobertura/3': typeof WebtoonCobertura3Route
   '/webtoon/cobertura/4': typeof WebtoonCobertura4Route
+  '/webtoon/cobertura/5': typeof WebtoonCobertura5Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -532,6 +539,7 @@ export interface FileRoutesByTo {
   '/webtoon/cobertura/2': typeof WebtoonCobertura2Route
   '/webtoon/cobertura/3': typeof WebtoonCobertura3Route
   '/webtoon/cobertura/4': typeof WebtoonCobertura4Route
+  '/webtoon/cobertura/5': typeof WebtoonCobertura5Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -600,6 +608,7 @@ export interface FileRoutesById {
   '/webtoon/cobertura/2': typeof WebtoonCobertura2Route
   '/webtoon/cobertura/3': typeof WebtoonCobertura3Route
   '/webtoon/cobertura/4': typeof WebtoonCobertura4Route
+  '/webtoon/cobertura/5': typeof WebtoonCobertura5Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -669,6 +678,7 @@ export interface FileRouteTypes {
     | '/webtoon/cobertura/2'
     | '/webtoon/cobertura/3'
     | '/webtoon/cobertura/4'
+    | '/webtoon/cobertura/5'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -734,6 +744,7 @@ export interface FileRouteTypes {
     | '/webtoon/cobertura/2'
     | '/webtoon/cobertura/3'
     | '/webtoon/cobertura/4'
+    | '/webtoon/cobertura/5'
   id:
     | '__root__'
     | '/'
@@ -801,6 +812,7 @@ export interface FileRouteTypes {
     | '/webtoon/cobertura/2'
     | '/webtoon/cobertura/3'
     | '/webtoon/cobertura/4'
+    | '/webtoon/cobertura/5'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -854,6 +866,7 @@ export interface RootRouteChildren {
   WebtoonCobertura2Route: typeof WebtoonCobertura2Route
   WebtoonCobertura3Route: typeof WebtoonCobertura3Route
   WebtoonCobertura4Route: typeof WebtoonCobertura4Route
+  WebtoonCobertura5Route: typeof WebtoonCobertura5Route
 }
 
 declare module '@tanstack/react-router' {
@@ -1313,6 +1326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WebtoonCobertura4RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/webtoon/cobertura/5': {
+      id: '/webtoon/cobertura/5'
+      path: '/webtoon/cobertura/5'
+      fullPath: '/webtoon/cobertura/5'
+      preLoaderRoute: typeof WebtoonCobertura5RouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1448,6 +1468,7 @@ const rootRouteChildren: RootRouteChildren = {
   WebtoonCobertura2Route: WebtoonCobertura2Route,
   WebtoonCobertura3Route: WebtoonCobertura3Route,
   WebtoonCobertura4Route: WebtoonCobertura4Route,
+  WebtoonCobertura5Route: WebtoonCobertura5Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
