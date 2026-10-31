@@ -657,17 +657,21 @@ export function StoryList() {
       <section className="house-block">
         <h1>{t.navStories}</h1>
         <MoonNightNote />
-        <a
-          href="/webtoon/cobertura/1"
-          style={{ display: "flex", gap: 16, alignItems: "center", margin: "20px 0", padding: 12, borderRadius: 18, background: "#0c0e14", color: "#f3e9d8", textDecoration: "none", border: "1px solid rgba(255,255,255,.12)" }}
+        <div
+          style={{ display: "flex", gap: 16, alignItems: "center", margin: "20px 0", padding: 12, borderRadius: 18, background: "#0c0e14", color: "#f3e9d8", border: "1px solid rgba(255,255,255,.12)" }}
         >
-          <img src="/webtoon/cobertura/ep1/capa.webp" alt="" width={120} height={90} loading="lazy" style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 12, flexShrink: 0 }} />
+          <a href="/webtoon/cobertura/2" style={{ flexShrink: 0 }}>
+            <img src="/webtoon/cobertura/ep1/capa.webp" alt="" width={120} height={90} loading="lazy" style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 12, display: "block" }} />
+          </a>
           <span>
-            <span style={{ display: "block", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", opacity: 0.65 }}>Novo · Webtoon · 16+</span>
+            <span style={{ display: "block", fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", opacity: 0.65 }}>Novo episódio · Webtoon · 16+</span>
             <span style={{ display: "block", fontFamily: "Fraunces, Georgia, serif", fontSize: 19, margin: "4px 0" }}>O Que Eu Vi na Cobertura — Webtoon</span>
-            <span style={{ display: "block", fontSize: 14, opacity: 0.75 }}>Episódio 1 · ler agora →</span>
+            <span style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 14 }}>
+              <a href="/webtoon/cobertura/1" style={{ color: "#f3e9d8", opacity: 0.75 }}>Episódio 1: A Festa</a>
+              <a href="/webtoon/cobertura/2" style={{ color: "#f5e1aa" }}>Episódio 2: A Sala · ler agora →</a>
+            </span>
           </span>
-        </a>
+        </div>
         <label className="house-search">
           {t.searchName}
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.searchHint} />
