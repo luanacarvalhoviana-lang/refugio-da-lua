@@ -1,3 +1,4 @@
+import { cartasPt } from "@/lib/refugio/stories-cartas";
 import type { Story } from "@/lib/refugio/stories";
 
 const passageiraPt: Story = {
@@ -101,107 +102,6 @@ const passageiraPt: Story = {
     },
   ],
 };
-
-const correspondenciaPt: Story = {
-  slug: "correspondencia",
-  title: "Correspondência",
-  author: "Luana Viana",
-  rating: "16",
-  genres: ["drama", "drama psicológico", "amor não correspondido"],
-  minutes: 13,
-  synopsis: "Chegam cartas para um nome que você enterrou. Quem escreve é a mulher que nunca ouviu a resposta. O porteiro diz que ela esteve aqui ontem e que volta hoje.",
-  place: "Apartamento novo",
-  art: "/scenes/biblioteca.jpg",
-  start: "caixa",
-  sound: "/sounds/rain.mp3",
-  scenes: [
-    {
-      id: "caixa",
-      music: "calma",
-      body: "Três semanas neste endereço e a caixa de correio ainda cheira a tinta. Entre a conta de luz e um folheto, um envelope sem selo, com a letra que você reconheceria no escuro: A. Varela. Esse nome durou um ano, numa cidade que você deixou, e só uma pessoa o usou sem ironia. Helena. O porteiro deixou recado no interfone, voz de quem não quer drama no turno dele. “A moça de ontem perguntou por esse nome. Eu disse que não mora aqui. Ela falou que volta hoje. Não subiu.” A carta pesa como se já tivesse sido lida por alguém mais corajoso.",
-      choices: [
-        { id: "abrir", label: "Abrir a carta", to: "leitura", affinity: 1, clue: "A carta chama você de A. Varela.", thought: "Abrir é deixar ela entrar sem a chave. Eu abro." },
-        { id: "nao", label: "Subir com a carta fechada", to: "escada", affinity: 0, thought: "Se eu não ler, eu ainda posso fingir que o nome morreu de causas naturais." },
-        { id: "descer", label: "Descer agora, antes que ela volte", to: "portaria", affinity: 2, thought: "Eu quero ver o rosto antes da frase. Sempre quis, e sempre fiz o contrário." },
-      ],
-    },
-    {
-      id: "leitura",
-      music: "luar",
-      body: "Helena escreve como quem fala baixo para não acordar a casa. Ela descreve a cozinha daquela noite: a conta por pagar, a chaleira, a pergunta fica. Você disse que tinha trem. Não tinha. Tinha medo, e uma vida já arrumada demais para caber uma verdade. “Eu não precisava que você ficasse. Precisava que você dissesse que também queria. Eu passei um ano achando que inventei o que eu senti na sua boca quando você não me beijou.” Não é uma carta de acusação. É pior. É uma carta certa. No fim: “Se A. Varela não mora mais aí, rasga. Se mora, não precisa responder bonito. Precisa responder.”",
-      choices: [
-        { id: "escrever", label: "Escrever de volta, sem enfeite", to: "mesa", affinity: 2, clue: "Você também queria ficar naquela cozinha.", thought: "A frase verdadeira cabe em três linhas. Eu levei um ano para merecer o papel." },
-        { id: "jogar", label: "Rasgar a carta", to: "fim-nome", affinity: -1, thought: "Rasgar é repetir a partida. Eu sou boa nisso. Não é um elogio." },
-        { id: "guardar", label: "Guardar sem responder", to: "escada", affinity: 0, thought: "Guardar é um meio-termo que só protege a mim." },
-      ],
-    },
-    {
-      id: "escada",
-      speaker: "Helena",
-      music: "calma",
-      body: "Helena está no patamar de baixo. Não sobe o último lance. O casaco é o mesmo, a boca não. Ela segura a alça da bolsa como quem segura uma desculpa. “Se não for você, eu peço desculpa ao prédio e vou embora. Se for, eu não vou subir sem você dizer um nome. Qualquer um dos dois. Eu só não quero falar sozinha no corredor, de novo.” A luz do andar pisca. Nenhum vizinho abre. A cidade inteira, por um minuto, é um degrau.",
-      choices: [
-        { id: "sou", label: "Dizer: sou eu", to: "fim-escada", affinity: 2, thought: "O nome de agora sai primeiro. O antigo fica na garganta, vivo." },
-        { id: "morto", label: "Dizer que esse nome não mora aqui", to: "fim-nome", affinity: -1, thought: "A mentira cabe na boca com uma facilidade que me envergonha." },
-        { id: "carta", label: "Mostrar a carta sem falar", to: "fim-resposta", affinity: 1, thought: "O papel fala o que a minha voz ainda negocia." },
-      ],
-    },
-    {
-      id: "portaria",
-      music: "revelacao",
-      body: "O porteiro empurra um segundo envelope, este com o seu nome de agora, escrito devagar, como quem teve que confirmar cada letra. “Ela esperou quarenta minutos. Deixou isso e um número. Disse que não é para ligar se doer. É para ligar se não doer mais do que da outra vez.” Ele não pede explicação. Portaria boa é a que já viu coisa pior. Lá fora, a chuva apaga a calçada. Não apaga o fato: Helena sabe os dois nomes. O antigo não era uma fantasia que só você carregava.",
-      choices: [
-        { id: "ler", label: "Ler a segunda carta", to: "mesa", affinity: 2, clue: "Ela já sabe o seu nome de agora.", thought: "Ela me achou sem o nome antigo. Então não era o nome que ela queria. Era eu." },
-        { id: "devolver", label: "Devolver sem ler", to: "fim-nome", affinity: -1, thought: "Devolver é elegante. Também é covarde. Eu visto as duas coisas igual." },
-        { id: "endereco", label: "Pedir o número que ela deixou", to: "mesa", affinity: 1, thought: "Ter o número não é usar. Mas eu quero a possibilidade na mão." },
-      ],
-    },
-    {
-      id: "mesa",
-      music: "romance",
-      body: "Você senta no chão porque a mesa nova ainda não merece esta frase. Três linhas cabem no verso da conta de luz. Não é para sempre. É: eu também queria ficar. Eu menti o trem. O nome A. Varela fui eu, e eu levei ele embora porque não soube ficar junto com ele. O interfone toca uma vez, sem insistir. Helena, embaixo, dando a você a última escolha com educação demais. O porteiro não anuncia. Ele já entendeu que anunciar estraga.",
-      choices: [
-        { id: "descer", label: "Descer com a resposta na mão", to: "fim-resposta", affinity: 2, thought: "O papel treme menos do que eu. Ainda bem que a verdade está nele." },
-        { id: "subir", label: "Pedir para ela subir", to: "fim-escada", affinity: 2, thought: "Se ela cruza a porta, o apartamento deixa de ser esconderijo. Eu quero isso e tenho medo do mesmo tamanho." },
-        { id: "nao", label: "Não atender o interfone", to: "fim-nome", affinity: -1, thought: "O toque para. O ano recomeça, idêntico." },
-      ],
-    },
-    {
-      id: "fim-resposta",
-      music: "romance",
-      ending: {
-        key: "resposta",
-        title: "A resposta",
-        flower: "Camélia",
-        body: "Você entrega o papel. Helena lê de pé, na portaria, sem teatro. Quando chega na frase do trem, a boca dela faz uma coisa pequena, quase um sorriso que não se autoriza. Ela não beija você. Dobra a folha e guarda no bolso interno, onde se guarda o que vai ser relido no ônibus. “Então não fui só eu.” A chuva acerta a calçada e erra vocês duas, por um segundo, debaixo da marquise. Ela não pede para subir. Você não pede para ela ficar. Pela primeira vez a falta de pedido não é fuga. É medida. Ela toca o seu pulso, dois dedos, e solta. “Pode escrever para este nome. Eu respondo.”",
-        letter: { from: "Helena", text: "Li de novo no ônibus. A frase do trem doeu menos no papel do que doeu um ano na minha cabeça. Não vou aparecer amanhã. Vou escrever. Se você responder uma linha, eu não transformo isso numa vida inteira sem a sua licença. Eu só precisava saber que a cozinha foi real." },
-      },
-    },
-    {
-      id: "fim-escada",
-      music: "luar",
-      ending: {
-        key: "escada",
-        title: "O último degrau",
-        flower: "Violeta",
-        body: "Um de vocês cruza o degrau. Não importa qual. Helena pede o nome de agora primeiro, para você não se sentir caçada pelo antigo. Você diz. Ela repete baixinho, experimentando, e depois diz A. Varela como quem devolve um casaco sem exigir que você vista. Nada está resolvido. A cidade dela continua sendo a cidade que você deixou. O apartamento novo continua sem mesa digna. Ela pergunta se pode escrever para este endereço. Você diz que sim. É mais do que disse na cozinha, e menos do que um filme prometeria. Ela fica vinte minutos. Bebe água. Não dorme aqui. Quando desce, o corredor volta ao tamanho normal. Você sobe sabendo o peso exato de um sim pequeno.",
-        letter: { from: "Helena", text: "Cheguei em casa. Não vou romantizar a escada. Você me deu um nome novo e vinte minutos de água. Eu guardei os dois. Escrevo na quinta, se a quinta não for cedo demais. Se for, rasga e eu entendo o tempo." },
-      },
-    },
-    {
-      id: "fim-nome",
-      music: "despedida",
-      ending: {
-        key: "nome",
-        title: "O nome morto",
-        flower: "Papel queimado",
-        body: "A. Varela morre uma segunda vez, e desta você assiste. Helena aceita o prédio vazio com a educação de quem já ensaiou a derrota. Ela não discute. Discussão seria uma intimidade que você não ofereceu. As cartas param depois de mais uma, que chega na sexta e fica fechada até o papel amarelar. Há amores certos e inacabados. O seu foi dos dois. O apartamento novo cumpre a função: ninguém aqui sabe o nome que você não soube sustentar. De noite, a caixa de correio faz um barulho de metal. Quase sempre é o vento.",
-        letter: { from: "Helena", text: "Esta é a última. Eu não vou transformar a sua recusa em mistério, porque ela não é mistério. É resposta. Eu inventei menos do que pensei e mais do que você pôde carregar. Fica bem. Eu vou ficar também, só que sem escrever para um nome que você enterrou duas vezes." },
-      },
-    },
-  ],
-};
-
 
 const corredorPt: Story = {
   slug: "corredor",
@@ -377,4 +277,4 @@ const depoimentoPt: Story = {
   ],
 };
 
-export const sharpPt: Story[] = [passageiraPt, correspondenciaPt, corredorPt, depoimentoPt];
+export const sharpPt: Story[] = [passageiraPt, cartasPt, corredorPt, depoimentoPt];

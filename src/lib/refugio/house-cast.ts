@@ -39,7 +39,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
     life: "paper",
     people: [
       {
-        name: "Helena",
+        name: "Angelina",
         portrait: "/cast/helena.jpg?v=pintura2",
         life: line(
           "Parou no último lance. O nome antigo ficou lá embaixo.",

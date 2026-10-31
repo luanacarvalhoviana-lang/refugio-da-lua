@@ -1,3 +1,4 @@
+import { cartasEn } from "@/lib/refugio/stories-cartas";
 import type { Story } from "@/lib/refugio/stories";
 
 const passageiraEn: Story = {
@@ -101,107 +102,6 @@ const passageiraEn: Story = {
     },
   ],
 };
-
-const correspondenciaEn: Story = {
-  slug: "correspondencia",
-  title: "Correspondence",
-  author: "Luana Viana",
-  rating: "16",
-  genres: ["drama", "psychological drama", "unrequited love"],
-  minutes: 13,
-  synopsis: "Letters arrive for a name you buried. The woman who writes them never heard the answer. The doorman says she was here yesterday and that she is coming back today.",
-  place: "A new apartment",
-  art: "/scenes/biblioteca.jpg",
-  start: "caixa",
-  sound: "/sounds/rain.mp3",
-  scenes: [
-    {
-      id: "caixa",
-      music: "calma",
-      body: "Three weeks at this address and the mailbox still smells of paint. Between the electric bill and a flyer, an envelope with no stamp, in the handwriting you would know in the dark: A. Varela. That name lasted a year, in a city you left, and only one person used it without irony. Helena. The doorman left a message on the intercom, the voice of a man who does not want drama on his shift. “The woman from yesterday asked for that name. I said she doesn’t live here. She said she’ll come back today. She didn’t come up.” The letter weighs as if someone braver had already read it.",
-      choices: [
-        { id: "abrir", label: "Open the letter", to: "leitura", affinity: 1, clue: "The letter calls you A. Varela.", thought: "Opening is letting her in without the key. I open it." },
-        { id: "nao", label: "Go up with the letter sealed", to: "escada", affinity: 0, thought: "If I don’t read it, I can still pretend the name died of natural causes." },
-        { id: "descer", label: "Go down now, before she comes back", to: "portaria", affinity: 2, thought: "I want the face before the sentence. I always did, and I always did the opposite." },
-      ],
-    },
-    {
-      id: "leitura",
-      music: "luar",
-      body: "Helena writes the way you speak softly so you don’t wake the house. She describes the kitchen of that night: the unpaid bill, the kettle, the question stay. You said you had a train. You didn’t. You had fear, and a life already too arranged to hold a truth. “I didn’t need you to stay. I needed you to say you wanted to. I spent a year thinking I invented what I felt on your mouth when you didn’t kiss me.” It is not a letter of accusation. It is worse. It is an accurate letter. At the end: “If A. Varela doesn’t live there anymore, tear it up. If she does, you don’t have to answer beautifully. You have to answer.”",
-      choices: [
-        { id: "escrever", label: "Write back, with no ornament", to: "mesa", affinity: 2, clue: "You wanted to stay in that kitchen too.", thought: "The true sentence fits in three lines. It took me a year to deserve the paper." },
-        { id: "jogar", label: "Tear the letter up", to: "fim-nome", affinity: -1, thought: "Tearing it is leaving all over again. I’m good at that. It isn’t a compliment." },
-        { id: "guardar", label: "Keep it and don’t answer", to: "escada", affinity: 0, thought: "Keeping it is a compromise that only protects me." },
-      ],
-    },
-    {
-      id: "escada",
-      speaker: "Helena",
-      music: "calma",
-      body: "Helena is on the landing below. She does not climb the last flight. The coat is the same. The mouth is not. She holds the strap of her bag the way you hold an apology. “If it isn’t you, I’ll apologize to the building and go. If it is, I won’t come up until you say a name. Either one. I just don’t want to talk alone in the hall again.” The floor light flickers. No neighbor opens. For one minute the whole city is a step.",
-      choices: [
-        { id: "sou", label: "Say: it’s me", to: "fim-escada", affinity: 2, thought: "The name I use now comes out first. The old one stays in my throat, alive." },
-        { id: "morto", label: "Say that name doesn’t live here", to: "fim-nome", affinity: -1, thought: "The lie fits in my mouth with an ease that shames me." },
-        { id: "carta", label: "Show her the letter and say nothing", to: "fim-resposta", affinity: 1, thought: "The paper says what my voice is still negotiating." },
-      ],
-    },
-    {
-      id: "portaria",
-      music: "revelacao",
-      body: "The doorman pushes a second envelope across the desk, this one in your current name, written slowly, as if each letter had to be confirmed. “She waited forty minutes. Left this and a number. Said not to call if it hurts. Call if it doesn’t hurt more than last time.” He doesn’t ask. A good desk has already seen worse. Outside, the rain erases the sidewalk. It does not erase the fact: Helena knows both names. The old one was not a fantasy only you were carrying.",
-      choices: [
-        { id: "ler", label: "Read the second letter", to: "mesa", affinity: 2, clue: "She already knows the name you use now.", thought: "She found me without the old name. So it wasn’t the name she wanted. It was me." },
-        { id: "devolver", label: "Give it back unread", to: "fim-nome", affinity: -1, thought: "Giving it back is elegant. It is also cowardly. Both fit me the same." },
-        { id: "endereco", label: "Ask for the number she left", to: "mesa", affinity: 1, thought: "Having the number isn’t using it. I still want the possibility in my hand." },
-      ],
-    },
-    {
-      id: "mesa",
-      music: "romance",
-      body: "You sit on the floor because the new table has not earned this sentence. Three lines fit on the back of the electric bill. It is not forever. It is: I wanted to stay too. I lied about the train. A. Varela was me, and I took her with me because I didn’t know how to stay beside her. The intercom rings once, without insisting. Helena, downstairs, giving you the last choice with too much manners. The doorman does not announce her. He already understands that announcing ruins it.",
-      choices: [
-        { id: "descer", label: "Go down with the answer in your hand", to: "fim-resposta", affinity: 2, thought: "The paper shakes less than I do. Good that the truth is on it." },
-        { id: "subir", label: "Ask her to come up", to: "fim-escada", affinity: 2, thought: "If she crosses the door, the apartment stops being a hiding place. I want that and I’m afraid of it in equal measure." },
-        { id: "nao", label: "Don’t answer the intercom", to: "fim-nome", affinity: -1, thought: "The ring stops. The year starts over, identical." },
-      ],
-    },
-    {
-      id: "fim-resposta",
-      music: "romance",
-      ending: {
-        key: "resposta",
-        title: "The answer",
-        flower: "Camellia",
-        body: "You hand her the paper. Helena reads it standing up, in the lobby, without theater. When she reaches the sentence about the train, her mouth does something small, almost a smile it does not permit itself. She does not kiss you. She folds the page and puts it in the inner pocket, where you keep what you will reread on the bus. “Then it wasn’t only me.” Rain hits the sidewalk and misses both of you, for a second, under the awning. She does not ask to come up. You do not ask her to stay. For the first time the lack of a request is not an escape. It is measure. She touches your wrist, two fingers, and lets go. “You can write to this name. I’ll answer.”",
-        letter: { from: "Helena", text: "I read it again on the bus. The sentence about the train hurt less on paper than it did for a year in my head. I won’t show up tomorrow. I’ll write. If you answer one line, I won’t turn this into a whole life without your permission. I only needed to know the kitchen was real." },
-      },
-    },
-    {
-      id: "fim-escada",
-      music: "luar",
-      ending: {
-        key: "escada",
-        title: "The last step",
-        flower: "Violet",
-        body: "One of you crosses the step. It doesn’t matter which. Helena asks for the name you use now, first, so the old one doesn’t hunt you. You say it. She repeats it quietly, trying it, and then says A. Varela the way you return a coat without demanding that someone put it on. Nothing is solved. Her city is still the city you left. The new apartment still has no table worthy of this. She asks if she may write to this address. You say yes. It is more than you said in the kitchen, and less than a film would promise. She stays twenty minutes. Drinks water. Does not sleep here. When she goes down, the hall returns to its size. You go up knowing the exact weight of a small yes.",
-        letter: { from: "Helena", text: "I got home. I won’t romanticize the stairs. You gave me a new name and twenty minutes of water. I kept both. I’ll write on Thursday, if Thursday isn’t too soon. If it is, tear it up and I’ll understand the time." },
-      },
-    },
-    {
-      id: "fim-nome",
-      music: "despedida",
-      ending: {
-        key: "nome",
-        title: "The dead name",
-        flower: "Burnt paper",
-        body: "A. Varela dies a second time, and this time you watch. Helena accepts the empty building with the manners of someone who already rehearsed the loss. She does not argue. An argument would be an intimacy you did not offer. The letters stop after one more, which arrives on Friday and stays sealed until the paper yellows. There are loves that are accurate and unfinished. Yours was both. The new apartment does its job: no one here knows the name you could not carry. At night the mailbox makes a metal sound. Almost always it is the wind.",
-        letter: { from: "Helena", text: "This is the last one. I won’t turn your refusal into a mystery, because it isn’t a mystery. It is an answer. I invented less than I thought and more than you could carry. Be well. I will be too, only I won’t write to a name you buried twice." },
-      },
-    },
-  ],
-};
-
 
 const corredorEn: Story = {
   slug: "corredor",
@@ -377,4 +277,4 @@ const depoimentoEn: Story = {
   ],
 };
 
-export const sharpEn: Story[] = [passageiraEn, correspondenciaEn, corredorEn, depoimentoEn];
+export const sharpEn: Story[] = [passageiraEn, cartasEn, corredorEn, depoimentoEn];

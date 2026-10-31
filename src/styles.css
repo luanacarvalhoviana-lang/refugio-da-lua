@@ -4217,3 +4217,9 @@ a.story-card { color: inherit; text-decoration: none; }
   .house-block:has(.now-title) > .house-note { margin-top: 0; }
 }
 
+
+/* Fix: aviso "Neste celular fica" não sobrepõe título/botão de ouvir */
+.reader-top { flex-wrap: wrap; }
+.reader-top > a { flex: 1 1 auto; min-width: 0; }
+.reader-keep { display: block; clear: both; margin: 10px 0 0; font-size: 13px; line-height: 1.4; max-width: 980px; }
+.reader.has-art .reader-keep { color: rgba(248,245,238,.85); }

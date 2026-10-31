@@ -23,16 +23,7 @@ const frames: Record<string, Record<string, {
     "fim-casaco": { art: "/scenes/passageira-casaco.jpg?v=vida4", where: { pt: "O que ficou no banco", es: "Lo que quedó en el asiento", en: "What stayed on the seat" } },
     "fim-porta": { art: "/scenes/passageira-porta.jpg?v=vida4", where: { pt: "A porta fechada — Renata e Marina", es: "La puerta cerrada — Renata y Marina", en: "The closed door — Renata and Marina" } },
   },
-  correspondencia: {
-    caixa: { art: "/scenes/correspondencia-caixa.jpg?v=vida4", where: { pt: "A caixa de correio", es: "El buzón", en: "The mailbox" } },
-    leitura: { art: "/scenes/correspondencia-leitura.jpg?v=vida4", where: { pt: "A carta", es: "La carta", en: "The letter" } },
-    escada: { art: "/scenes/correspondencia-escada.jpg?v=vida4", where: { pt: "O último lance — Helena", es: "El último tramo — Helena", en: "The last flight — Helena" } },
-    portaria: { art: "/scenes/correspondencia-portaria.jpg?v=vida4", where: { pt: "A portaria", es: "La portería", en: "The lobby desk" } },
-    mesa: { art: "/scenes/correspondencia-mesa.jpg?v=pintura", where: { pt: "Na janela — Helena", es: "En la ventana — Helena", en: "At the window — Helena" } },
-    "fim-resposta": { art: "/scenes/correspondencia-resposta.jpg?v=pintura", where: { pt: "Debaixo da marquise — Helena", es: "Bajo la marquesina — Helena", en: "Under the awning — Helena" } },
-    "fim-escada": { art: "/scenes/correspondencia-escada-fim.jpg?v=vida4", where: { pt: "O copo", es: "El vaso", en: "The glass" } },
-    "fim-nome": { art: "/scenes/correspondencia-nome.jpg?v=vida4", where: { pt: "A carta que amarela", es: "La carta que amarillea", en: "The letter that yellows" } },
-  },
+
   corredor: {
     porta714: { art: "/scenes/corredor-porta.jpg?v=pintura", where: { pt: "A porta — Iara", es: "La puerta — Iara", en: "The door — Iara" } },
     corredor: { art: "/scenes/corredor-corredor.jpg?v=vida4", where: { pt: "O corredor — Iara", es: "El pasillo — Iara", en: "The corridor — Iara" } },

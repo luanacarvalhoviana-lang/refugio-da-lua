@@ -90,82 +90,11 @@ const pt: Beat[] = [
       body: "A Renata não pede de novo. Às nove, uma mensagem sem saudação: “Ela chegou. Não na minha casa.” A chave continua fora do molho. Você tranca o carro duas vezes, como se a segunda pudesse fechar a porta que você já fechou na chuva.",
     },
   },
-  {
-    slug: "correspondencia",
-    scene: "escada",
-    after: [
-      { if: "caixa:nao", line: "A carta continua fechada na sua mão. A Helena vê o envelope, não a frase. Pede um nome porque você não deu o papel." },
-      { if: "leitura:guardar", line: "Você já sabe a cozinha, o trem, o ano. Subiu sem resposta. A Helena não sabe que você leu. Por isso ainda oferece qualquer um dos dois nomes." },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "mesa",
-    after: [
-      { if: "leitura:escrever", line: "As três linhas já estão no verso da conta. O interfone é só o último palmo. Você não decide mais se diz a verdade. Decide se desce com ela na mão." },
-      { if: "portaria:ler", line: "A segunda carta usou o seu nome de agora. As três linhas tremem mais, porque ela atravessou o nome antigo sem você." },
-      { if: "portaria:endereco", line: "O número está no telefone e você não ligou. No papel, a frase continua devida. O interfone toca como se ela ouvisse o número parado." },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-resposta",
-    after: [
-      { if: "escada:carta", line: "Você mostrou a carta em vez de falar. Ela já leu o seu silêncio na escada. O papel que você entrega agora é a segunda voz." },
-      { if: "mesa:descer", line: "Você desceu com a resposta na mão. Ela lê a frase do trem de pé. A escada não precisou falar." },
-    ],
-    morning: {
-      title: "O ônibus",
-      body: "A Helena escreve antes do meio-dia, do trabalho, sem poesia: “Li de novo. Não apareço hoje. Se você responder uma linha, eu respondo uma. A cozinha foi real.” Você lê duas vezes e não transforma isso em plano. Deixa o nome de agora na caixa, sem apagar o antigo da memória.",
-    },
-    morningIf: [
-      {
-        if: "escada:carta",
-        title: "O papel falou",
-        body: "De manhã ela escreve: “Você me mostrou a carta e não a boca. Eu entendi as duas. Não subo sem convite. Escrevo para o nome que você usa agora.” O envelope de ontem continua na mesa, aberto, sem ter precisado de discurso.",
-      },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-escada",
-    after: [
-      { if: "escada:sou", line: "Você disse na escada: sou eu. Ela não precisou subir para ouvir o nome. Os vinte minutos de água começaram ali." },
-      { if: "mesa:subir", line: "Você pediu que ela cruzasse a porta. O apartamento deixou de ser esconderijo antes de o nome novo ser dito em voz alta." },
-    ],
-    morning: {
-      title: "Vinte minutos",
-      body: "A Helena não dormiu aqui. De manhã manda: “Cheguei. Não vou romantizar a escada. Escrevo na quinta, se não for cedo.” Você lava o copo que ela usou. É um sim pequeno e cabe na pia.",
-    },
-    morningIf: [
-      {
-        if: "mesa:subir",
-        title: "A porta que abriu",
-        body: "Ela subiu porque você pediu. De manhã o casaco dela não está na cadeira, só na memória do patamar. A mensagem diz: “Obrigada pelo último degrau ao contrário. Eu desci inteira. Escrevo na quinta para este endereço, não para o nome antigo.”",
-      },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-nome",
-    after: [
-      { if: "leitura:jogar", line: "Os pedaços da carta estão no lixo. Ela vai escrever mais uma mesmo assim. Você já sabe o que vai dizer, porque rasgou a verdadeira." },
-      { if: "escada:morto", line: "Você disse que esse nome não mora aqui. Ela acreditou no prédio. A segunda morte foi dita em voz alta, e isso pesa mais do que papel." },
-      { if: "portaria:devolver", line: "Você devolveu o segundo envelope sem ler. Ela sabe que você recusou o nome de agora, não só o enterrado." },
-      { if: "mesa:nao", line: "O interfone parou. Ela estava embaixo, com a paciência que você não gastou. O ano recomeça idêntico, e você ouviu isso acontecer." },
-    ],
-    morning: {
-      title: "Sexta",
-      body: "Na sexta chega a última carta. Você não abre. O papel amarela no prazo em que papel amarela. A Helena não aparece. O porteiro não comenta. De noite a caixa faz um barulho de metal. Quase sempre é o vento. Quase.",
-    },
-    morningIf: [
-      {
-        if: "leitura:jogar",
-        title: "Os pedaços",
-        body: "Você rasgou antes de responder. De manhã os pedaços ainda estão no lixo, legíveis demais se alguém quiser. Ninguém quer. Na sexta chega outra, fechada. Você não cola a primeira. Enterrar um nome duas vezes não pede simetria. Pede que você pare de abrir.",
-      },
-    ],
-  },
+
+
+
+
+
   {
     slug: "corredor",
     scene: "corredor",
@@ -381,82 +310,11 @@ const es: Beat[] = [
       body: "Renata no pide otra vez. A las nueve, un mensaje sin saludo: “Llegó. No a mi casa.” La llave sigue fuera del llavero. Cierras el coche dos veces, como si la segunda pudiera cerrar la puerta que ya cerraste en la lluvia.",
     },
   },
-  {
-    slug: "correspondencia",
-    scene: "escada",
-    after: [
-      { if: "caixa:nao", line: "La carta sigue cerrada en tu mano. Helena ve el sobre, no la frase. Pide un nombre porque no le diste el papel." },
-      { if: "leitura:guardar", line: "Ya sabes la cocina, el tren, el año. Subiste sin respuesta. Helena no sabe que leíste. Por eso todavía ofrece cualquiera de los dos nombres." },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "mesa",
-    after: [
-      { if: "leitura:escrever", line: "Las tres líneas ya están al dorso de la cuenta. El interfono es solo el último palmo. Ya no decides si dices la verdad. Decides si bajas con ella en la mano." },
-      { if: "portaria:ler", line: "La segunda carta usó tu nombre de ahora. Las tres líneas tiemblan más, porque ella cruzó el nombre antiguo sin ti." },
-      { if: "portaria:endereco", line: "El número está en el teléfono y no llamaste. En el papel, la frase sigue debida. El interfono suena como si ella oyera el número quieto." },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-resposta",
-    after: [
-      { if: "escada:carta", line: "Mostraste la carta en vez de hablar. Ella ya leyó tu silencio en la escalera. El papel que entregas ahora es la segunda voz." },
-      { if: "mesa:descer", line: "Bajaste con la respuesta en la mano. Ella lee la frase del tren de pie. La escalera no tuvo que hablar." },
-    ],
-    morning: {
-      title: "El autobús",
-      body: "Helena escribe antes del mediodía, desde el trabajo, sin poesía: “La leí de nuevo. No aparezco hoy. Si respondes una línea, yo respondo una. La cocina fue real.” La lees dos veces y no conviertes eso en un plan. Dejas el nombre de ahora en el buzón, sin borrar el antiguo de la memoria.",
-    },
-    morningIf: [
-      {
-        if: "escada:carta",
-        title: "Habló el papel",
-        body: "De mañana ella escribe: “Me mostraste la carta y no la boca. Entendí las dos. No subo sin invitación. Escribo al nombre que usas ahora.” El sobre de ayer sigue en la mesa, abierto, sin haber necesitado un discurso.",
-      },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-escada",
-    after: [
-      { if: "escada:sou", line: "Lo dijiste en la escalera: soy yo. Ella no tuvo que subir para oír el nombre. Los veinte minutos de agua empezaron ahí." },
-      { if: "mesa:subir", line: "Le pediste que cruzara la puerta. El departamento dejó de ser escondite antes de que el nombre nuevo se dijera en voz alta." },
-    ],
-    morning: {
-      title: "Veinte minutos",
-      body: "Helena no durmió aquí. De mañana manda: “Llegué. No voy a romantizar la escalera. Escribo el jueves, si no es pronto.” Lavas el vaso que ella usó. Es un sí pequeño y cabe en el fregadero.",
-    },
-    morningIf: [
-      {
-        if: "mesa:subir",
-        title: "La puerta que se abrió",
-        body: "Subió porque tú se lo pediste. De mañana su abrigo no está en la silla, solo en la memoria del rellano. El mensaje dice: “Gracias por el último escalón al revés. Bajé entera. Escribo el jueves a esta dirección, no al nombre antiguo.”",
-      },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-nome",
-    after: [
-      { if: "leitura:jogar", line: "Los pedazos de la carta están en la basura. Ella va a escribir otra igual. Tú ya sabes lo que va a decir, porque rompiste la verdadera." },
-      { if: "escada:morto", line: "Dijiste que ese nombre no vive aquí. Ella le creyó al edificio. La segunda muerte se dijo en voz alta, y eso pesa más que el papel." },
-      { if: "portaria:devolver", line: "Devolviste el segundo sobre sin leer. Ella sabe que rechazaste el nombre de ahora, no solo el enterrado." },
-      { if: "mesa:nao", line: "El interfono paró. Ella estaba abajo, con la paciencia que tú no gastaste. El año vuelve a empezar idéntico, y tú oíste cómo pasaba." },
-    ],
-    morning: {
-      title: "Viernes",
-      body: "El viernes llega la última carta. No la abres. El papel amarillea en el plazo en que el papel amarillea. Helena no aparece. El portero no comenta. De noche el buzón hace un ruido de metal. Casi siempre es el viento. Casi.",
-    },
-    morningIf: [
-      {
-        if: "leitura:jogar",
-        title: "Los pedazos",
-        body: "Romiste antes de responder. De mañana los pedazos siguen en la basura, demasiado legibles si alguien quiere. Nadie quiere. El viernes llega otra, cerrada. No pegas la primera. Enterrar un nombre dos veces no pide simetría. Pide que dejes de abrir.",
-      },
-    ],
-  },
+
+
+
+
+
   {
     slug: "corredor",
     scene: "corredor",
@@ -672,82 +530,11 @@ const en: Beat[] = [
       body: "Renata doesn’t ask again. At nine, a message with no greeting: “She got there. Not to my house.” The key is still off the ring. You lock the car twice, as if the second time could close the door you already closed in the rain.",
     },
   },
-  {
-    slug: "correspondencia",
-    scene: "escada",
-    after: [
-      { if: "caixa:nao", line: "The letter is still sealed in your hand. Helena sees the envelope, not the sentence. She asks for a name because you didn’t give her the paper." },
-      { if: "leitura:guardar", line: "You already know the kitchen, the train, the year. You came up without an answer. Helena doesn’t know you’ve read it. That’s why she still offers either name." },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "mesa",
-    after: [
-      { if: "leitura:escrever", line: "The three lines are already on the back of the bill. The intercom is only the last inch. You are no longer deciding whether to tell the truth. You are deciding whether to carry it down." },
-      { if: "portaria:ler", line: "The second letter used the name you use now. The three lines shake more, because she crossed the old name without you." },
-      { if: "portaria:endereco", line: "The number is in your phone and you have not called. On the paper the sentence is still owed. The intercom rings as if she can hear the number sitting still." },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-resposta",
-    after: [
-      { if: "escada:carta", line: "You showed the letter instead of speaking. She already read your silence on the stair. The paper you hand her now is the second voice." },
-      { if: "mesa:descer", line: "You came down with the answer in your hand. She reads the sentence about the train standing up. The stair never had to speak." },
-    ],
-    morning: {
-      title: "The bus",
-      body: "Helena writes before noon, from work, with no poetry: “I read it again. I won’t show up today. If you answer one line, I’ll answer one. The kitchen was real.” You read it twice and don’t turn it into a plan. You leave the name you use now on the mailbox, without erasing the old one from memory.",
-    },
-    morningIf: [
-      {
-        if: "escada:carta",
-        title: "The paper spoke",
-        body: "In the morning she writes: “You showed me the letter and not your mouth. I understood both. I won’t come up without an invitation. I’ll write to the name you use now.” Yesterday’s envelope is still on the table, open, without having needed a speech.",
-      },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-escada",
-    after: [
-      { if: "escada:sou", line: "You said it on the stair: it’s me. She didn’t have to come up to hear the name. The twenty minutes of water started there." },
-      { if: "mesa:subir", line: "You asked her to cross the door. The apartment stopped being a hiding place before the new name was said out loud." },
-    ],
-    morning: {
-      title: "Twenty minutes",
-      body: "Helena didn’t sleep here. In the morning she sends: “I got home. I won’t romanticize the stair. I’ll write on Thursday, if that isn’t soon.” You wash the glass she used. It is a small yes and it fits in the sink.",
-    },
-    morningIf: [
-      {
-        if: "mesa:subir",
-        title: "The door that opened",
-        body: "She came up because you asked. In the morning her coat is not on the chair, only in the memory of the landing. The message says: “Thank you for the last step the other way. I went down whole. I’ll write on Thursday to this address, not to the old name.”",
-      },
-    ],
-  },
-  {
-    slug: "correspondencia",
-    scene: "fim-nome",
-    after: [
-      { if: "leitura:jogar", line: "The pieces of the letter are in the trash. She will write one more anyway. You already know what it will say, because you tore the true one." },
-      { if: "escada:morto", line: "You said that name doesn’t live here. She believed the building. The second death was said out loud, and that weighs more than paper." },
-      { if: "portaria:devolver", line: "You gave the second envelope back unread. She knows you refused the name you use now, not only the buried one." },
-      { if: "mesa:nao", line: "The intercom stopped. She was downstairs, with the patience you didn’t spend. The year starts over identical, and you heard it happen." },
-    ],
-    morning: {
-      title: "Friday",
-      body: "On Friday the last letter arrives. You don’t open it. The paper yellows the way paper yellows. Helena doesn’t appear. The doorman doesn’t comment. At night the mailbox makes a metal sound. Almost always it is the wind. Almost.",
-    },
-    morningIf: [
-      {
-        if: "leitura:jogar",
-        title: "The pieces",
-        body: "You tore it before you answered. In the morning the pieces are still in the trash, too readable if anyone wants them. No one does. On Friday another arrives, sealed. You don’t tape the first one back together. Burying a name twice doesn’t ask for symmetry. It asks you to stop opening.",
-      },
-    ],
-  },
+
+
+
+
+
   {
     slug: "corredor",
     scene: "corredor",
