@@ -6,14 +6,6 @@ const frames: Record<string, Record<string, {
   where: Record<Lang, string>;
   artIf?: Array<{ if: string; art: string; where: Record<Lang, string> }>;
 }>> = {
-  corredor: {
-    porta714: { art: "/scenes/corredor-porta.jpg?v=pintura", where: { pt: "A porta — Iara", es: "La puerta — Iara", en: "The door — Iara" } },
-    corredor: { art: "/scenes/corredor-corredor.jpg?v=vida4", where: { pt: "O corredor — Iara", es: "El pasillo — Iara", en: "The corridor — Iara" } },
-    elevador: { art: "/scenes/corredor-elevador.jpg?v=vida4", where: { pt: "O elevador — Iara", es: "El ascensor — Iara", en: "The elevator — Iara" } },
-    "fim-saguao": { art: "/scenes/corredor-saguao.jpg?v=vida4", where: { pt: "O saguão — Iara", es: "El vestíbulo — Iara", en: "The lobby — Iara" } },
-    "fim-virar": { art: "/scenes/corredor-virar.jpg?v=vida4", where: { pt: "O quarto", es: "La habitación", en: "The room" } },
-    "fim-batida": { art: "/scenes/corredor-batida.jpg?v=vida4", where: { pt: "Debaixo da porta", es: "Debajo de la puerta", en: "Under the door" } },
-  },
   depoimento: {
     sala: { art: "/scenes/depoimento-sala.jpg?v=pintura", where: { pt: "A sala — Elisa", es: "La sala — Elisa", en: "The room — Elisa" } },
     frase: {

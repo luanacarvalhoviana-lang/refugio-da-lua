@@ -27,20 +27,6 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
       },
     ],
   },
-  corredor: {
-    life: "lamp",
-    people: [
-      {
-        name: "Iara",
-        portrait: "/cast/iara.jpg?v=pintura2",
-        life: line(
-          "Já explicou. Não acreditaram.",
-          "Ya lo explicó. No le creyeron.",
-          "She already explained. They did not believe her.",
-        ),
-      },
-    ],
-  },
   depoimento: {
     life: "room",
     people: [

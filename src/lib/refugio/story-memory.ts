@@ -24,68 +24,6 @@ const pt: Beat[] = [
 
 
   {
-    slug: "corredor",
-    scene: "corredor",
-    after: [
-      { if: "porta714:braco", line: "O braço é a coisa concreta. Quando a voz doce diz o seu nome inteiro, os dedos da Iara apertam esse mesmo braço. A regra deixou de ser ideia. É a marca que você aceitou." },
-      { if: "porta714:perguntar", line: "Você perguntou o que fica para trás antes de caminhar. Quando a voz pede para entrar, você já sabe qual frase é dela e qual é a outra. A boca da Iara forma: não. Você pediu a regra inteira. Isto é o resto." },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "elevador",
-    after: [
-      { if: "corredor:nao", line: "Você não virou. Por isso o espelho mostra duas Iaras e depois uma. A do seu braço entra de costas. Ela confia mais na sua nuca do que nas suas perguntas." },
-      { if: "corredor:responder", line: "Você respondeu sem virar: não. A voz sabe que você ouviu. A Iara também. No espelho ela não agradece. Só diz para não perguntar qual das duas. Um não dito já é muito pescoço." },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-saguao",
-    after: [
-      { if: "elevador:descer", line: "Você desceu com ela. O saguão feio é a regra funcionando. Ela bebe o café ruim porque você não a deixou no espelho." },
-      { if: "elevador:segurar", line: "Você segurou a porta até ela entrar inteira. Por isso a segunda Iara não coube. Ela vai lembrar da porta mais do que de qualquer frase." },
-    ],
-    morning: {
-      title: "Azul",
-      body: "No café, ela está de azul. Come. Olha a sua mesa. Você senta na frente, como ela pediu. O pão é ruim e é o pão. Ninguém pede para entrar. Daqui para a frente, três batidas vêm com a cor dita antes. Você guarda isso como quem guarda a chave da pessoa certa.",
-    },
-    morningIf: [
-      {
-        if: "elevador:segurar",
-        title: "A porta",
-        body: "Ela escreve no papel do hotel, não no celular: “Você segurou a porta até eu entrar inteira. Hoje eu como de azul. Se eu não comer, passa reto.” No café, ela come. A cadeira da frente está no lugar. Você senta. De dia, o elevador é só um elevador.",
-      },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-virar",
-    after: [
-      { if: "corredor:virar", line: "Você virou no corredor. A mulher atrás tinha a boca da Iara e nenhuma das cautelas. O braço que você segurava esvaziou antes de o elevador escolher." },
-      { if: "elevador:qual", line: "Você perguntou qual das duas estava no elevador. A pergunta foi um jeito de virar. O espelho respondeu primeiro. Se a carta chegar, não vai estar na mão dela." },
-    ],
-    morning: {
-      title: "A cama quente",
-      body: "De manhã a cadeira da Iara está vazia. O seu cartão abre o 714. A cama está quente e você não lembra de ter deitado. No banheiro, por um instante, alguém pisca com a sua cara. Você desce sem olhar o corredor. O saguão ainda funciona. Ninguém de azul está comendo.",
-    },
-    morningIf: [
-      {
-        if: "elevador:qual",
-        title: "A pergunta",
-        body: "Você não virou o pescoço. Virou com a frase. De manhã o espelho do elevador mostra só você, e isso não tranquiliza. O 714 abre. A cama quente não é memória sua. No saguão, uma mulher de azul olha o seu prato e não come. Você passa reto. A regra era essa, dita tarde.",
-      },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-batida",
-    morning: {
-      title: "A cadeira a menos",
-      body: "O recepcionista repete que o 714 saiu à meia-noite. Debaixo da sua porta, o papel na sua letra continua: “Eu virei.” Você não virou. Ainda. No café, a cadeira da frente foi tirada. Você toma o café ruim de pé. Se ela estiver em algum lugar, é comendo. Não está. Você não sobe para procurar.",
-    },
-  },
-  {
     slug: "depoimento",
     scene: "frase",
     after: [
@@ -172,68 +110,6 @@ const es: Beat[] = [
 
 
   {
-    slug: "corredor",
-    scene: "corredor",
-    after: [
-      { if: "porta714:braco", line: "El brazo es la cosa concreta. Cuando la voz dulce dice tu nombre entero, los dedos de Iara aprietan ese mismo brazo. La regla dejó de ser una idea. Es la marca que aceptaste." },
-      { if: "porta714:perguntar", line: "Preguntaste qué queda atrás antes de caminar. Cuando la voz pide entrar, ya sabes cuál frase es de ella y cuál es la otra. La boca de Iara forma: no. Pediste la regla entera. Esto es el resto." },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "elevador",
-    after: [
-      { if: "corredor:nao", line: "No te diste vuelta. Por eso el espejo muestra dos Iaras y después una. La de tu brazo entra de espaldas. Confía más en tu nuca que en tus preguntas." },
-      { if: "corredor:responder", line: "Respondiste sin volverte: no. La voz sabe que oíste. Iara también. En el espejo no agradece. Solo dice que no preguntes cuál de las dos. Un no dicho ya es mucho cuello." },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-saguao",
-    after: [
-      { if: "elevador:descer", line: "Bajaste con ella. El vestíbulo feo es la regla funcionando. Bebe el café malo porque no la dejaste en el espejo." },
-      { if: "elevador:segurar", line: "Sostuviste la puerta hasta que ella entró entera. Por eso la segunda Iara no cupo. Va a recordar la puerta más que cualquier frase." },
-    ],
-    morning: {
-      title: "Azul",
-      body: "En el desayuno está de azul. Come. Mira tu mesa. Te sientas enfrente, como pidió. El pan es malo y es el pan. Nadie pide entrar. De aquí en adelante, tres golpes vienen con el color dicho antes. Lo guardas como quien guarda la llave de la persona correcta.",
-    },
-    morningIf: [
-      {
-        if: "elevador:segurar",
-        title: "La puerta",
-        body: "Escribe en el papel del hotel, no en el celular: “Sostuviste la puerta hasta que entré entera. Hoy como de azul. Si no como, pasa de largo.” En el desayuno, come. La silla de enfrente está en su lugar. Te sientas. De día, el ascensor es solo un ascensor.",
-      },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-virar",
-    after: [
-      { if: "corredor:virar", line: "Te diste vuelta en el pasillo. La mujer de atrás tenía la boca de Iara y ninguna de sus cautelas. El brazo que sostenías se vació antes de que el ascensor eligiera." },
-      { if: "elevador:qual", line: "Preguntaste cuál de las dos estaba en el ascensor. La pregunta fue una manera de volverte. El espejo respondió primero. Si la carta llega, no va a estar en su mano." },
-    ],
-    morning: {
-      title: "La cama tibia",
-      body: "De mañana la silla de Iara está vacía. Tu tarjeta abre el 714. La cama está tibia y no recuerdas haberte acostado. En el baño, por un instante, alguien parpadea con tu cara. Bajas sin mirar el pasillo. El vestíbulo todavía funciona. Nadie de azul está comiendo.",
-    },
-    morningIf: [
-      {
-        if: "elevador:qual",
-        title: "La pregunta",
-        body: "No giraste el cuello. Giraste con la frase. De mañana el espejo del ascensor te muestra solo a ti, y eso no tranquiliza. El 714 se abre. La cama tibia no es un recuerdo tuyo. En el vestíbulo, una mujer de azul mira tu plato y no come. Pasas de largo. La regla era esa, dicha tarde.",
-      },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-batida",
-    morning: {
-      title: "La silla de menos",
-      body: "El recepcionista repite que el 714 hizo el check-out a medianoche. Debajo de tu puerta, el papel con tu letra sigue: “Me di vuelta.” Tú no te diste vuelta. Todavía. En el desayuno, la silla de enfrente fue retirada. Tomas el café malo de pie. Si ella está en algún lugar, es comiendo. No está. No subes a buscarla.",
-    },
-  },
-  {
     slug: "depoimento",
     scene: "frase",
     after: [
@@ -319,68 +195,6 @@ const en: Beat[] = [
 
 
 
-  {
-    slug: "corredor",
-    scene: "corredor",
-    after: [
-      { if: "porta714:braco", line: "The arm is the concrete thing. When the sweet voice says your whole name, Iara’s fingers tighten on that same arm. The rule is no longer an idea. It is the mark you agreed to." },
-      { if: "porta714:perguntar", line: "You asked what stays behind before you walked. When the voice asks to come in, you already know which sentence is hers and which is the other. Iara’s mouth forms: no. You asked for the whole rule. This is the rest." },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "elevador",
-    after: [
-      { if: "corredor:nao", line: "You didn’t turn. That’s why the mirror shows two Iaras and then one. The one on your arm steps in backward. She trusts the back of your head more than your questions." },
-      { if: "corredor:responder", line: "You answered without turning: no. The voice knows you heard. Iara heard too. In the mirror she doesn’t thank you. She only says don’t ask which of us. A spoken no is already a lot of neck." },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-saguao",
-    after: [
-      { if: "elevador:descer", line: "You went down with her. The ugly lobby is the rule working. She drinks the bad coffee because you didn’t leave her at the mirror." },
-      { if: "elevador:segurar", line: "You held the door until she was all the way in. That’s why the second Iara didn’t fit. She will remember the door more than any sentence." },
-    ],
-    morning: {
-      title: "Blue",
-      body: "At breakfast she is in blue. She eats. She looks at your table. You sit across from her, as she asked. The bread is bad and it is the bread. No one asks to come in. From here on, three knocks come with the color said first. You keep that the way you keep the key to the right person.",
-    },
-    morningIf: [
-      {
-        if: "elevador:segurar",
-        title: "The door",
-        body: "She writes on hotel paper, not on the phone: “You held the door until I was all the way in. Today I eat in blue. If I’m not eating, walk past.” At breakfast, she eats. The chair across from you is in its place. You sit. By day, the elevator is only an elevator.",
-      },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-virar",
-    after: [
-      { if: "corredor:virar", line: "You turned in the corridor. The woman behind had Iara’s mouth and none of her caution. The arm you were holding emptied before the elevator chose." },
-      { if: "elevador:qual", line: "You asked which of them was in the elevator. The question was a way of turning. The mirror answered first. If the letter comes, it will not be in her hand." },
-    ],
-    morning: {
-      title: "The warm bed",
-      body: "In the morning Iara’s chair is empty. Your card opens 714. The bed is warm and you don’t remember lying down. In the bathroom, for a moment, someone blinks with your face. You go down without looking at the corridor. The lobby still works. No one in blue is eating.",
-    },
-    morningIf: [
-      {
-        if: "elevador:qual",
-        title: "The question",
-        body: "You didn’t turn your neck. You turned with the sentence. In the morning the elevator mirror shows only you, and that doesn’t settle anything. 714 opens. The warm bed is not a memory of yours. In the lobby, a woman in blue looks at your plate and doesn’t eat. You walk past. That was the rule, said late.",
-      },
-    ],
-  },
-  {
-    slug: "corredor",
-    scene: "fim-batida",
-    morning: {
-      title: "The missing chair",
-      body: "The receptionist repeats that 714 checked out at midnight. Under your door, the paper in your handwriting is still there: “I turned.” You didn’t turn. Not yet. At breakfast the chair across from you has been taken away. You drink the bad coffee standing up. If she is anywhere, she is eating. She isn’t. You don’t go up to look.",
-    },
-  },
   {
     slug: "depoimento",
     scene: "frase",
