@@ -6,24 +6,6 @@ const frames: Record<string, Record<string, {
   where: Record<Lang, string>;
   artIf?: Array<{ if: string; art: string; where: Record<Lang, string> }>;
 }>> = {
-  passageira: {
-    banco: { art: "/scenes/passageira-banco.jpg?v=pintura", where: { pt: "Dentro do carro — Renata", es: "Dentro del coche — Renata", en: "Inside the car — Renata" } },
-    tras: { art: "/scenes/passageira-tras.jpg?v=vida4", where: { pt: "O banco de trás", es: "El asiento de atrás", en: "The back seat" } },
-    marginal: { art: "/scenes/passageira-marginal.jpg?v=vida4", where: { pt: "Na marginal — Renata", es: "En la avenida — Renata", en: "On the overpass — Renata" } },
-    posto: { art: "/scenes/passageira-posto.jpg?v=vida4", where: { pt: "Posto fechado — Renata", es: "Estación cerrada — Renata", en: "Closed station — Renata" } },
-    farol: {
-      art: "/scenes/passageira-farol.jpg?v=vida4",
-      where: { pt: "Debaixo do farol — Marina", es: "Bajo el farol — Marina", en: "Under the light — Marina" },
-      artIf: [
-        { if: "posto:atender", art: "/scenes/passageira-farol-atender.jpg?v=vida4", where: { pt: "Debaixo do farol — Marina", es: "Bajo el farol — Marina", en: "Under the light — Marina" } },
-        { if: "posto:viva", art: "/scenes/passageira-farol-viva.jpg?v=vida5", where: { pt: "O viva-voz — Renata e Marina", es: "El altavoz — Renata y Marina", en: "On speaker — Renata and Marina" } },
-      ],
-    },
-    "fim-curva": { art: "/scenes/passageira-curva.jpg?v=pintura", where: { pt: "A curva — Renata e Marina", es: "La curva — Renata y Marina", en: "The curve — Renata and Marina" } },
-    "fim-casaco": { art: "/scenes/passageira-casaco.jpg?v=vida4", where: { pt: "O que ficou no banco", es: "Lo que quedó en el asiento", en: "What stayed on the seat" } },
-    "fim-porta": { art: "/scenes/passageira-porta.jpg?v=vida4", where: { pt: "A porta fechada — Renata e Marina", es: "La puerta cerrada — Renata y Marina", en: "The closed door — Renata and Marina" } },
-  },
-
   corredor: {
     porta714: { art: "/scenes/corredor-porta.jpg?v=pintura", where: { pt: "A porta — Iara", es: "La puerta — Iara", en: "The door — Iara" } },
     corredor: { art: "/scenes/corredor-corredor.jpg?v=vida4", where: { pt: "O corredor — Iara", es: "El pasillo — Iara", en: "The corridor — Iara" } },

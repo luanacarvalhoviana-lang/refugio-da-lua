@@ -12,29 +12,7 @@ export type HousePerson = {
 const line = (pt: string, es: string, en: string): Record<Lang, string> => ({ pt, es, en });
 
 export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
-  passageira: {
-    life: "rain",
-    people: [
-      {
-        name: "Renata",
-        portrait: "/cast/renata.jpg?v=pintura2",
-        life: line(
-          "Onze meses sem uma frase, e a chave ainda abre.",
-          "Once meses sin una frase, y la llave todavía abre.",
-          "Eleven months without a sentence, and the key still turns.",
-        ),
-      },
-      {
-        name: "Marina",
-        portrait: "/cast/marina.jpg?v=pintura2",
-        life: line(
-          "Sem casaco, debaixo do farol, e mesmo assim não corre.",
-          "Sin abrigo, bajo el farol, y aun así no corre.",
-          "No coat, under the light, and still she does not run.",
-        ),
-      },
-    ],
-  },
+
   correspondencia: {
     life: "paper",
     people: [
@@ -98,9 +76,7 @@ export const HOUSE: Record<string, { life: Life; people: HousePerson[] }> = {
 };
 
 export const MOTION: Record<string, Record<string, string>> = {
-  passageira: {
-    "fim-curva": "/motion/passageira-curva.mp4?v=pintura2",
-  },
+
   correspondencia: {
     mesa: "/motion/correspondencia-mesa.mp4?v=pintura2",
     "fim-resposta": "/motion/correspondencia-resposta.mp4?v=pintura2",

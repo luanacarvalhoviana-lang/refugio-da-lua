@@ -12,84 +12,12 @@ type Beat = {
 };
 
 const pt: Beat[] = [
-  {
-    slug: "passageira",
-    scene: "marginal",
-    after: [
-      { if: "banco:dirigir", line: "Você não olhou. A Renata sabe. Fala com o retrovisor como se o banco de trás ainda pudesse ser um boato, e como se vocês duas estivessem mais seguras enquanto isso for verdade." },
-      { if: "tras:guardar", line: "O cartão do quarto 4 está no seu bolso. Ela viu você guardar. Não pede de volta. O número a lápis fica mais alto do que a chuva." },
-      { if: "tras:ferida", line: "Você perguntou se a Marina está ferida. A Renata só responde agora, para o para-brisa: “Viva. Não bem. Não me faz dizer o resto com aquele carro atrás.”" },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "posto",
-    after: [
-      { if: "marginal:quem", line: "O nome já é seu. Quando o telefone acende Marina, a Renata não repete Celina. Só olha, como quem entrega um nome que agora também pesa na sua boca." },
-      { if: "marginal:silencio", line: "Porque você não perguntou, ela diz aqui, menor: “A Celina é a mulher dela. Eu sou a porta, não o motivo.” O silêncio comprou a frase." },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "farol",
-    after: [
-      { if: "posto:atender", line: "A voz da Marina ainda está no seu ouvido. Ela pediu para a Celina não encontrar vocês. Debaixo do farol, vê o seu rosto e sabe qual das duas atendeu. A boca completa o resto daquela frase." },
-      { if: "posto:tocar", line: "O toque morreu no porta-copos. A Marina não sabe que você ouviu. Só sabe um carro. Por isso a boca não decide entre para e não para." },
-      { if: "posto:viva", line: "Vocês duas ouviram. Dois quarteirões, a pé, sem casaco. A Renata não traduz. O farol é exatamente o lugar que a voz disse. A covardia educada veio com endereço." },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-curva",
-    after: [
-      { if: "farol:parar", line: "Você parou sem buzina. O carro da Celina passou um desconhecido na chuva. O silêncio é o motivo de o rosto não ter sido visto." },
-      { if: "farol:buzina", line: "A buzina continua na noite. A Celina olhou. Não viu o rosto. Ouviu qual era o carro. A testa da Renata no seu ombro também é um pedido de desculpa pelo som." },
-    ],
-    morning: {
-      title: "A chave, de manhã",
-      body: "A Renata manda uma frase só, às oito: “A Marina dormiu. A Celina não entrou. A chave fica comigo até você dizer.” Você ainda não responde. O banco do carona seca torto. No porta-luvas, o 4 a lápis continua capaz de provar a noite.",
-    },
-    morningIf: [
-      {
-        if: "farol:buzina",
-        title: "O som que ficou",
-        body: "Às oito quem escreve é a Marina, não a Renata: “Ela ouviu a buzina. Não viu o meu rosto. Viu o seu carro.” A Renata manda em seguida, só: “Eu levo a chave hoje, se você quiser sumir do número.” De dia o farol é um poste. O som não.",
-      },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-casaco",
-    after: [
-      { if: "tras:devolver", line: "Você devolveu o casaco antes de a cidade abrir. O que secou no bolso ainda era delas. Você só levou o cheiro até a calçada." },
-      { if: "marginal:encostar", line: "Você encostou na marginal. Elas desceram na mesma chuva. O papel no bolso era para quem estivesse dirigindo. Era você." },
-      { if: "farol:reto", line: "Você passou reto no farol. A Renata correu o casaco de volta a pé. O papel sabe que você viu o carro e não parou." },
-    ],
-    morning: {
-      title: "O papel seco",
-      body: "De manhã o papel cabe na mesa: “Se for ela dirigindo, diz que eu vi o carro.” Você não responde à Marina. Também não joga fora. A chave reserva não volta para o molho. A Renata não escreve. Algumas noites mudam de dona e não avisam.",
-    },
-    morningIf: [
-      {
-        if: "tras:devolver",
-        title: "O casaco devolvido",
-        body: "A Renata escreve de manhã, sem pedido: “A Marina chegou na casa dela. O casaco ficou comigo, como você quis. A chave eu ainda tenho. Não vou usar.” Você olha a fechadura do próprio carro e sente a falta de uma cópia que já não era sua antes da chuva.",
-      },
-      {
-        if: "marginal:encostar",
-        title: "Na calçada",
-        body: "Você parou cedo demais para ser heroína e tarde demais para ser neutra. De manhã o banco do carona está vazio e a chave reserva está no tapete, sem bilhete. A Marina não escreve. A Renata manda uma linha: “A gente desceu. Você não precisava ver o resto.”",
-      },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-porta",
-    morning: {
-      title: "A marginal de manhã",
-      body: "A Renata não pede de novo. Às nove, uma mensagem sem saudação: “Ela chegou. Não na minha casa.” A chave continua fora do molho. Você tranca o carro duas vezes, como se a segunda pudesse fechar a porta que você já fechou na chuva.",
-    },
-  },
+
+
+
+
+
+
 
 
 
@@ -232,84 +160,12 @@ const pt: Beat[] = [
 ];
 
 const es: Beat[] = [
-  {
-    slug: "passageira",
-    scene: "marginal",
-    after: [
-      { if: "banco:dirigir", line: "No miraste. Renata lo sabe. Habla con el retrovisor como si el asiento de atrás todavía pudiera ser un rumor, y como si las dos estuvieran más a salvo mientras eso sea verdad." },
-      { if: "tras:guardar", line: "La tarjeta de la habitación 4 está en tu bolsillo. Ella te vio guardarla. No la pide. El número a lápiz suena más alto que la lluvia." },
-      { if: "tras:ferida", line: "Preguntaste si Marina está herida. Renata recién responde ahora, al parabrisas: “Viva. No bien. No me hagas decir el resto con ese coche atrás.”" },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "posto",
-    after: [
-      { if: "marginal:quem", line: "El nombre ya es tuyo. Cuando el teléfono se enciende con Marina, Renata no repite Celina. Solo mira, como quien entrega un nombre que ahora también pesa en tu boca." },
-      { if: "marginal:silencio", line: "Porque no preguntaste, lo dice aquí, más bajo: “Celina es la mujer de ella. Yo soy la puerta, no el motivo.” El silencio compró la frase." },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "farol",
-    after: [
-      { if: "posto:atender", line: "La voz de Marina sigue en tu oído. Pidió que Celina no las encontrara. Bajo el semáforo ve tu cara y sabe cuál de las dos atendió. La boca completa el resto de aquella frase." },
-      { if: "posto:tocar", line: "El timbre murió en el posavasos. Marina no sabe que oíste. Solo sabe un coche. Por eso la boca no decide entre para y no pares." },
-      { if: "posto:viva", line: "Las dos oyeron. Dos cuadras, a pie, sin abrigo. Renata no traduce. El semáforo es exactamente el lugar que dijo la voz. La cobardía educada vino con dirección." },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-curva",
-    after: [
-      { if: "farol:parar", line: "Paraste sin bocina. El coche de Celina pasó a una desconocida en la lluvia. El silencio es el motivo de que la cara no se viera." },
-      { if: "farol:buzina", line: "La bocina sigue en la noche. Celina miró. No vio la cara. Oyó cuál era el coche. La frente de Renata en tu hombro también es una disculpa por el sonido." },
-    ],
-    morning: {
-      title: "La llave, de mañana",
-      body: "Renata manda una sola frase, a las ocho: “Marina durmió. Celina no entró. La llave se queda conmigo hasta que tú digas.” Todavía no respondes. El asiento del copiloto se seca torcido. En la guantera, el 4 a lápiz sigue pudiendo probar la noche.",
-    },
-    morningIf: [
-      {
-        if: "farol:buzina",
-        title: "El sonido que quedó",
-        body: "A las ocho escribe Marina, no Renata: “Ella oyó la bocina. No vio mi cara. Vio tu coche.” Renata manda después, solo: “Llevo la llave hoy, si quieres desaparecer del número.” De día el semáforo es un poste. El sonido no.",
-      },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-casaco",
-    after: [
-      { if: "tras:devolver", line: "Devolviste el abrigo antes de que la ciudad se abriera. Lo que se secó en el bolsillo seguía siendo de ellas. Tú solo llevaste el olor hasta la vereda." },
-      { if: "marginal:encostar", line: "Paraste en la avenida. Ellas bajaron a la misma lluvia. El papel del bolsillo era para quien estuviera conduciendo. Eras tú." },
-      { if: "farol:reto", line: "Seguiste de largo en el semáforo. Renata corrió el abrigo de vuelta a pie. El papel sabe que viste el coche y no paraste." },
-    ],
-    morning: {
-      title: "El papel seco",
-      body: "De mañana el papel cabe en la mesa: “Si es ella la que conduce, dile que vi el coche.” No le respondes a Marina. Tampoco lo tiras. La llave de repuesto no vuelve al llavero. Renata no escribe. Algunas noches cambian de dueña y no avisan.",
-    },
-    morningIf: [
-      {
-        if: "tras:devolver",
-        title: "El abrigo devuelto",
-        body: "Renata escribe de mañana, sin pedido: “Marina llegó a su casa. El abrigo se quedó conmigo, como quisiste. La llave todavía la tengo. No la voy a usar.” Miras la cerradura de tu propio coche y extrañas una copia que ya no era tuya antes de la lluvia.",
-      },
-      {
-        if: "marginal:encostar",
-        title: "En la vereda",
-        body: "Paraste demasiado pronto para ser heroína y demasiado tarde para ser neutra. De mañana el asiento del copiloto está vacío y la llave de repuesto está en el tapete, sin nota. Marina no escribe. Renata manda una línea: “Bajamos. No tenías que ver el resto.”",
-      },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-porta",
-    morning: {
-      title: "La avenida de mañana",
-      body: "Renata no pide otra vez. A las nueve, un mensaje sin saludo: “Llegó. No a mi casa.” La llave sigue fuera del llavero. Cierras el coche dos veces, como si la segunda pudiera cerrar la puerta que ya cerraste en la lluvia.",
-    },
-  },
+
+
+
+
+
+
 
 
 
@@ -452,84 +308,12 @@ const es: Beat[] = [
 ];
 
 const en: Beat[] = [
-  {
-    slug: "passageira",
-    scene: "marginal",
-    after: [
-      { if: "banco:dirigir", line: "You didn’t look. Renata knows. She talks to the mirror as if the back seat could still be a rumor, and as if the two of you are safer while that stays true." },
-      { if: "tras:guardar", line: "The card for room 4 is in your pocket. She saw you keep it. She doesn’t ask for it back. The pencil number is louder than the rain." },
-      { if: "tras:ferida", line: "You asked if Marina is hurt. Renata answers only now, to the windshield: “Alive. Not well. Don’t make me say the rest with that car behind us.”" },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "posto",
-    after: [
-      { if: "marginal:quem", line: "The name is already yours. When the phone lights up Marina, Renata doesn’t repeat Celina. She only looks, like someone handing over a name that now weighs in your mouth too." },
-      { if: "marginal:silencio", line: "Because you didn’t ask, she says it here, smaller: “Celina is her wife. I am the door, not the reason.” The silence bought the sentence." },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "farol",
-    after: [
-      { if: "posto:atender", line: "Marina’s voice is still in your ear. She asked you not to let Celina find you. Under the light she sees your face and knows which of you answered. Her mouth finishes that sentence." },
-      { if: "posto:tocar", line: "The ringing died in the cup holder. Marina doesn’t know you heard. She only knows a car. That’s why her mouth can’t decide between stop and don’t." },
-      { if: "posto:viva", line: "You both heard her. Two blocks, on foot, no coat. Renata doesn’t translate. The light is exactly where the voice said. Polite cowardice came with an address." },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-curva",
-    after: [
-      { if: "farol:parar", line: "You stopped without a horn. Celina’s car passed a stranger in the rain. The quiet is why the face was not seen." },
-      { if: "farol:buzina", line: "The horn is still in the night. Celina looked. She didn’t see the face. She heard which car. Renata’s forehead on your shoulder is also an apology for the sound." },
-    ],
-    morning: {
-      title: "The key, in the morning",
-      body: "Renata sends one sentence, at eight: “Marina slept. Celina didn’t come in. The key stays with me until you say.” You don’t answer yet. The passenger seat dries crooked. In the glove box, the pencil 4 can still prove the night.",
-    },
-    morningIf: [
-      {
-        if: "farol:buzina",
-        title: "The sound that stayed",
-        body: "At eight it is Marina who writes, not Renata: “She heard the horn. She didn’t see my face. She saw your car.” Renata sends, after that, only: “I’ll bring the key today, if you want to disappear from the number.” By day the light is a pole. The sound isn’t.",
-      },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-casaco",
-    after: [
-      { if: "tras:devolver", line: "You gave the coat back before the city opened. What dried in the pocket was still theirs. You only drove the smell as far as the curb." },
-      { if: "marginal:encostar", line: "You pulled over on the overpass. They got out into the same rain. The paper in the pocket was for whoever was driving. That was you." },
-      { if: "farol:reto", line: "You drove past the light. Renata ran the coat back on foot. The paper knows you saw the car and did not stop." },
-    ],
-    morning: {
-      title: "The dry paper",
-      body: "In the morning the paper fits on the table: “If she’s the one driving, tell her I saw the car.” You don’t answer Marina. You don’t throw it away either. The spare key does not come back to the ring. Renata doesn’t write. Some nights change owners and don’t send word.",
-    },
-    morningIf: [
-      {
-        if: "tras:devolver",
-        title: "The coat returned",
-        body: "Renata writes in the morning, without asking: “Marina got to her house. The coat stayed with me, the way you wanted. I still have the key. I won’t use it.” You look at your own car lock and miss a copy that wasn’t yours even before the rain.",
-      },
-      {
-        if: "marginal:encostar",
-        title: "On the curb",
-        body: "You stopped too early to be a heroine and too late to be neutral. In the morning the passenger seat is empty and the spare key is on the mat, no note. Marina doesn’t write. Renata sends one line: “We got out. You didn’t need to see the rest.”",
-      },
-    ],
-  },
-  {
-    slug: "passageira",
-    scene: "fim-porta",
-    morning: {
-      title: "The overpass in the morning",
-      body: "Renata doesn’t ask again. At nine, a message with no greeting: “She got there. Not to my house.” The key is still off the ring. You lock the car twice, as if the second time could close the door you already closed in the rain.",
-    },
-  },
+
+
+
+
+
+
 
 
 
